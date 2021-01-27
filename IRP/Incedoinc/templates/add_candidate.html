@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Create Candidate</title>
+    <title>Incedo Recruitment Portal</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <style>
@@ -85,30 +85,11 @@
       }
     </style>
   </head>
-
-
   <body>
-    <form method='POST'> {% csrf_token %}
-      <h1>Enter Candidate Details</h1>
-      <div class="info">
-          <input type='text' placeholder='Email' name='email'><br>
-          <input type='text' placeholder='First Name'  name='f_name'><br>
-          <input type='text' placeholder='Middle Name'  name='m_name'><br>
-          <input type='text' placeholder='Last Name'  name='l_name'><br>
-          <input type='text' placeholder='Total Experience'  name=total_experience><br>
-          <div>
-              <p>Graduation details</p>
-              <input type='text' placeholder='College/University'  name='grad_college_name'><br>
-              <input type='text' placeholder='CGPA'  name='grad_cgpa'><br>
-              <input type='text' placeholder='Graduation Year'  name='grad_year'><br>
-          </div>
-          <div>
-              <label for="resume">Upload Resume:</label>
-              <input type="file" id="resume" name="resume">
-          </div>
-          <input type='text' placeholder="Notice Period" name='notice_period'><br>
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+      <form method='POST'> {% csrf_token %}
+        <h1>Enter Candidate Details</h1>
+          {{ candidate_details_form.as_p }}
+        <button type="submit">Add Candidate</button>
+      </form>
   </body>
 </html>
