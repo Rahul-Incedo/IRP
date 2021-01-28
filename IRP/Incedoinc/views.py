@@ -36,3 +36,7 @@ def upload_jd_view(request, *args, **kwargs):
         'form' : form
     }
     return render(request, 'upload_jd.html', context)
+    
+def home(request):
+    context={}
+    return render(request,'home.html',context)
