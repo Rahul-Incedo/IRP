@@ -31,21 +31,21 @@ class Candidate(models.Model):
     requisitionId = models.ForeignKey(Job, null=True, on_delete = models.CASCADE)
     registeredBy = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE )
     emailId = models.EmailField(max_length=254, primary_key=True)
-    gender_choice = [('M', 'Male'),
-                    ('F', 'Female')]
-    gender = models.CharField(max_length=1,
-                            choices= gender_choice)
-    universityRollNo = models.CharField(max_length=64 )
-    graduationCGPA = models.FloatField(null=True)
+    # gender_choice = [('M', 'Male'),
+    #                 ('F', 'Female')]
+    # gender = models.CharField(max_length=1,
+    #                         choices= gender_choice)
+    # universityRollNo = models.CharField(max_length=64 )
+    graduationCGPA = models.DecimalField(null=True, max_digits=5, decimal_places=3)
     graduationYear = models.IntegerField(null=True)
-    collegeName = models.CharField(max_length = 254 )
+    collegeName = models.CharField(max_length = 254)
     experience = models.IntegerField(null=True)
     mobileNo = models.CharField(max_length=10)
     DOB = models.DateField(auto_now = True)
     projectsLink = models.URLField(null=True)
     resume = models.FileField(upload_to=None, max_length=100)#path for saving the resume
     noticePeriod = models.IntegerField(null=True)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{firstName} {lastName} : {emailId}'

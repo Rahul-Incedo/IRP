@@ -1,6 +1,5 @@
 from django import forms
 
-
 class Candidate_details_form(forms.Form):
     email = forms.EmailField(label='Email', required=True)
     f_name = forms.CharField(label='First Name')
@@ -24,10 +23,8 @@ class Candidate_details_form(forms.Form):
             raise forms.ValidationError('cgpa should be in within 0.0 to 10.0')
         return cgpa
 
-    # def clean_resume(self, *args, **kwargs):
-    #     filename = self.cleaned_data.get('resume')
-    #     print(filename)
-    #     print(type(filename))
-    #     if not filename.endswith('.pdf'):
-    #         raise forms.ValidationError('resume should be pdf file')
-    #     return filename
+    def clean_resume(self, *args, **kwargs):
+        filename = self.data.get('resume')
+        if filename != '' and not filename.endswith('.pdf'):
+            raise forms.ValidationError('Resume should be pdf file')
+        return self.cleaned_data

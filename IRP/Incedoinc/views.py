@@ -18,6 +18,5 @@ def add_candidate_view(request, *args, **kwargs):
         'candidate_details_form' : candidate_details_form
     }
     if request.method == 'POST':
-        print(request.POST.get('resume'))
-        
+        pass
     return render(request, 'add_candidate.html', context)
