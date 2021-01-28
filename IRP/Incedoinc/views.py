@@ -9,6 +9,10 @@ def create_candidate_view(request, *args, **kwargs):
     if request.method == 'POST':
         form_fields = request.POST
         print(form_fields)
-        
+
     context = {}
     return render(request, 'create_candidate.html', context)
+
+def home(request):
+    context={}
+    return render(request,'home.html',context)

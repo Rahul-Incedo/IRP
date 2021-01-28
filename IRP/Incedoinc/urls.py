@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
+from Incedoinc import views
 
 urlpatterns = [
     path("", views.index),
-    path("candidate/create", views.create_candidate_view, name="create_candidate_page")
+    path("candidate/create", views.create_candidate_view, name="create_candidate_page"),
+    path("home/",views.home),
 ]
