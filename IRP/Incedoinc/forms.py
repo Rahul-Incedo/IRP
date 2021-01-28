@@ -24,7 +24,18 @@ class Candidate_details_form(forms.Form):
         return cgpa
 
     def clean_resume(self, *args, **kwargs):
-        filename = self.data.get('resume')
-        if filename != '' and not filename.endswith('.pdf'):
-            raise forms.ValidationError('Resume should be pdf file')
-        return self.cleaned_data
+        file = self.cleaned_data.get('resume')
+        if (file is not None) and (not file.name.endswith('.pdf')):
+            raise forms.ValidationError('Only pdf format is supported')
+        return file
+
+class Upload_jd_form(forms.Form):
+    jd = forms.FileField(label='Select JobDescription')
+    pos_owner_name = forms.CharField(label='Name of Position owner')
+    pos_owner_emp_code = forms.IntegerField(label='EmloyeeCode of Position owner')
+
+    def clean_jd(self):
+        file = self.cleaned_data.get('jd')
+        if (file is not None) and (not file.name.endswith('.pdf')):
+            raise forms.ValidationError('Only pdf type is supported')
+        return file
