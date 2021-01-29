@@ -9,5 +9,6 @@ urlpatterns = [
     path("search_jd/<str:requisition_id>/", views.search_jd_view),
     path('<str:req_id>/<str:email_id><int:level>/', views.feedback, name='feedback'),
     path("search_candidate/", views.search_candidate, name = 'search_candidate'),
-    path('test/', views.test, name = 'test_name'),
+    path('test/', views.feedback, name = 'test_name'),
+
 ]

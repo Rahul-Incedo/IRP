@@ -9,7 +9,7 @@ from datetime import datetime
 from .models import Employee, Job, Candidate, Feedback
 
 #include forms
-from .forms import Candidate_details_form, Upload_jd_form
+from .forms import CandidateForm, UploadJdForm
 
 
 # Create your views here.
@@ -18,11 +18,11 @@ def index(request):
     
 def add_candidate_view(request, *args, **kwargs):
     if request.method == 'POST':
-        form = Candidate_details_form(request.POST, request.FILES)
+        form = CandidateForm(request.POST, request.FILES)
         if form.is_valid():
-            form = Candidate_details_form()
+            form = CandidateForm()
     else:
-        form = Candidate_details_form()
+        form = CandidateForm()
     context = {
         'form':form
     }
@@ -30,12 +30,12 @@ def add_candidate_view(request, *args, **kwargs):
 
 def upload_jd_view(request, *args, **kwargs):
     if request.method == 'POST':
-        form = Upload_jd_form(request.POST, request.FILES)
+        form = UploadJdForm(request.POST, request.FILES)
         if form.is_valid():
             print('_____submitted_form_is_valid______')
-            form = Upload_jd_form()
+            form = UploadJdForm()
     else:
-        form = Upload_jd_form()
+        form = UploadJdForm()
     context = {
         'form' : form
     }

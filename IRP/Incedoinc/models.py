@@ -34,19 +34,22 @@ class Candidate(models.Model):
     gender = models.CharField(max_length=1,
                             choices= gender_choice)
 
-    CGPA = models.FloatField(null=True)
-    college_name = models.CharField(max_length = 254 )
+    CGPA = models.DecimalField(null=True, max_digits=5, decimal_places=3)
+    college_name = models.CharField(max_length = 254)
     experience = models.IntegerField(null=True)
     mobile = models.CharField(max_length=10)
     DOB = models.DateField(auto_now = True)
-    projects_link = models.URLField(null=True)
+    projects_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to=None)
     noticePeriod = models.IntegerField(null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     @property
     def full_name(self):
-    	return f'{self.f_name} {self.m_name} {self.l_name}'
+        if self.m_name is not None:
+    	    return f'{self.f_name} {self.m_name} {self.l_name}'
+        else:
+            return f'{self.f_name} {self.l_name}'
 
     def __str__(self):
         return f'{self.f_name} : {self.email}'
