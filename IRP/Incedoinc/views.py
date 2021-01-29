@@ -46,7 +46,10 @@ def feedback(request, req_id, email_id, level):
                     'University_name':'candidate_college_name'}
 
         if(level == 1):
-             prv_feedback[level] = None
+             context = {
+                 'basic_detail':basic_detail,
+                 'level':level
+             }
 
         if(level == 2):
             level_1 = { 'staus':'pass',
@@ -59,6 +62,7 @@ def feedback(request, req_id, email_id, level):
             context = {
                 'basic_detail':basic_detail,
                 'level_1': level_1,
+                'level':level
             }
 
         if(level == 3):
