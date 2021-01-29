@@ -14,15 +14,28 @@ Candidate feedback {{candiate.id}}
 </ul>
 </header>
 
+
+
 <h3 style="background-color: rgb(201, 76, 76)">Candidate feedback</h3>
 <div class='margin'>
   <h4> Basic Details </h4>
-  {% for field in basic_detail%}
-    <ul>
-      {{field}}<br/>
-    </ul>
-  {% endfor %}<br/>
+  <ul class='details'>
+    <li> Candidate Name : {{basic_detail.Name}}</li><br/>
+    <li> Email Id : {{basic_detail.Email}}</li><br/>
+    <li> Graduation CGPA : {{basic_detail.Graduation_CGPA}}</li><br/>
+    <li> University Name : {{basic_detail.University_name}}</li>
+  </ul>
 
+  {% if level == 2 %}
+    <h4> Level 1 </h4>
+    {% for field in level_1%}
+      <ul>
+        {{field}}<br/>
+      </ul>
+    {% endfor %}<br/>
+  {% endif %}
+
+  {% if level == 3 %}
   <h4> Level 1 </h4>
   {% for field in level_1%}
     <ul>
@@ -36,10 +49,14 @@ Candidate feedback {{candiate.id}}
       {{field}}<br/>
     </ul>
   {% endfor %}<br/>
+  {% endif %}
 
 </div>
 
+
+
 <hr>
+<h4> Level {{level}} </h4>
 <div class='centre_'>
   <form name='feedback_form' id='feedback_form' method="POST">{% csrf_token %} <!# action takes us to the name of that url>
       <!--<label for="candidate_email">Candidate Email*: </label><br/>
