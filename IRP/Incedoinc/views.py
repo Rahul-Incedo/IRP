@@ -1,8 +1,9 @@
 from django.core.exceptions import ValidationError
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 
-
+#include models
+from .models import Job
 
 #include forms
 from .forms import Candidate_details_form, Upload_jd_form
@@ -38,5 +39,25 @@ def upload_jd_view(request, *args, **kwargs):
     return render(request, 'upload_jd.html', context)
     
 def home(request):
+    if request.method == 'POST':
+        requisition_id = request.POST.get('requisition_id')
+        return redirect(f'/search_jd{requisition_id}')
+    
     context={}
     return render(request,'home.html',context)
+
+
+def search_jd_view(request, requisition_id):
+    obj = Job.objects.get(requisitionId=requisition_id)
+    context = {
+        'file':
+    }
+    return render(request, 'jd_results.html', context)
+
+# class Job(models.Model):
+#     requisitionId = models.CharField(max_length=100, primary_key=True)
+#     raisedByEmployee = models.ForeignKey(Employee, null = True, related_name='raisedByEmployee', on_delete=models.CASCADE)
+#     positionOwner = models.ForeignKey(Employee, null = True, related_name='positionOwner', on_delete=models.CASCADE)
+#     #positionOwner = models.ManyToOneField(Employee, blank=True, related_name='owner')
+
+#     description = models.FileField()
