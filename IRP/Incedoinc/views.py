@@ -14,7 +14,7 @@ from .forms import Candidate_details_form, Upload_jd_form
 
 # Create your views here.
 def index(request):
-    return HttpResponse('Welcome to Incedo Portal')
+    return HttpResponse('<h1>Welcome to Incedo Recruitment Portal<h1>')
     
 def add_candidate_view(request, *args, **kwargs):
     if request.method == 'POST':
