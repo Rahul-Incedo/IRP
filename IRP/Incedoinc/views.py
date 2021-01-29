@@ -41,7 +41,7 @@ def upload_jd_view(request, *args, **kwargs):
 def home(request):
     if request.method == 'POST':
         requisition_id = request.POST.get('requisition_id')
-        return redirect(f'/search_jd{requisition_id}')
+        return redirect(f'/search_jd/{requisition_id}')
     
     context={}
     return render(request,'home.html',context)
@@ -50,7 +50,7 @@ def home(request):
 def search_jd_view(request, requisition_id):
     obj = Job.objects.get(requisitionId=requisition_id)
     context = {
-        'file':
+        'file': obj.description
     }
     return render(request, 'jd_results.html', context)
 
