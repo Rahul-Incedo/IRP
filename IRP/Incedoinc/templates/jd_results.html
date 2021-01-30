@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <style>
+    <meta charset="utf-8">
+    <title>JD Results</title>
+    h1{
+      color:red;
+    }
+
+    </style>
+  </head>
+  <body>
+    <h1>Here is the JD result</h1>
+    <div class="jd_results">
+      <table>
+        <thead>
+          <th>requisitionId</th>
+          <th>Raised BY</th>
+          <th>Position Owner ID</th>
+        </thead>
+        <tr>
+          <td>{{ obj.requisition_id }}</td>
+          <td>{{ obj.raised_by_employee }}</td>
+          <td>{{ obj.position_owner_id }}</td>
+        </tr>
+      </table>
+    </div>
+
+  </body>
+</html>

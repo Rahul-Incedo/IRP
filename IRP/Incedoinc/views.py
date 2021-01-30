@@ -34,6 +34,7 @@ def upload_jd_view(request, *args, **kwargs):
         if form.is_valid():
             print('_____submitted_form_is_valid______')
             form = UploadJdForm()
+            form.save()
     else:
         form = UploadJdForm()
     context = {
@@ -45,17 +46,30 @@ def home(request):
     if request.method == 'POST':
         requisition_id = request.POST.get('requisition_id')
         return redirect(f'/search_jd/{requisition_id}')
-    
+
     context={}
     return render(request,'home.html',context)
 
 
+# def search_jd_view(request, requisition_id):
+#     try:
+#         obj = Job.objects.get(requisitionId=requisition_id)
+#         context = {
+#             'obj': obj
+#         }
+#     except Exception:
+#         raise Http404("JD is not exist")
+#     return render(request, 'jd_results.html', context)
+
 def search_jd_view(request, requisition_id):
-    obj = Job.objects.get(requisitionId=requisition_id)
-    context = {
-        'file': obj.description
-    }
-    return render(request, 'jd_results.html', context)
+    obj = Job.objects.get(requisition_id=requisition_id)
+    if obj is not None:
+        context = {
+            'obj': obj
+        }
+        return render(request, 'jd_results.html', context)
+    else:
+        raise Http404("JD is not exist")
 
 
 def search_candidate(request):
