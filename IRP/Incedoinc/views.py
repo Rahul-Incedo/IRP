@@ -18,23 +18,25 @@ def index(request):
     
 def add_candidate_view(request, *args, **kwargs):
     if request.method == 'POST':
-        form = CandidateForm(request.POST, request.FILES)
+        obj = Candidate()
+        form = CandidateForm(request.POST, request.FILES, instance=obj)
         if form.is_valid():
+            form.save()
             form = CandidateForm()
     else:
         form = CandidateForm()
     context = {
-        'form':form
+        'form': form
     }
     return render(request, 'add_candidate.html', context)
 
 def upload_jd_view(request, *args, **kwargs):
     if request.method == 'POST':
-        form = UploadJdForm(request.POST, request.FILES)
+        obj = Job()
+        form = UploadJdForm(request.POST, request.FILES, instance=obj)
         if form.is_valid():
-            print('_____submitted_form_is_valid______')
-            form = UploadJdForm()
             form.save()
+            form = UploadJdForm()
     else:
         form = UploadJdForm()
     context = {
