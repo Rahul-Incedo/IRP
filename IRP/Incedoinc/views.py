@@ -32,10 +32,16 @@ def add_candidate_view(request, *args, **kwargs):
 
 def upload_jd_view(request, *args, **kwargs):
     if request.method == 'POST':
-        obj = Job()
-        form = UploadJdForm(request.POST, request.FILES, instance=obj)
+        employee_id = request.session['employee_id']
+        employee = Employee.objects.get(employee_id=employee_id)
+        print(employee_id)
+        form = UploadJdForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            cleaned_data = form.cleaned_data
+            # print(form.cleaned_data)
+            obj = form.save()
+            obj.raised_by_employee = employee
+            obj.save()
             form = UploadJdForm()
     else:
         form = UploadJdForm()
@@ -43,25 +49,16 @@ def upload_jd_view(request, *args, **kwargs):
         'form' : form
     }
     return render(request, 'upload_jd.html', context)
-    
+
 def home(request):
+    employee_id = 101   # it is gotton from login page
+    request.session['employee_id'] = employee_id
     if request.method == 'POST':
         requisition_id = request.POST.get('requisition_id')
-        return redirect(f'/search_jd/{requisition_id}')
+        return redirect(f'../search_jd/{requisition_id}')
 
     context={}
     return render(request,'home.html',context)
-
-
-# def search_jd_view(request, requisition_id):
-#     try:
-#         obj = Job.objects.get(requisitionId=requisition_id)
-#         context = {
-#             'obj': obj
-#         }
-#     except Exception:
-#         raise Http404("JD is not exist")
-#     return render(request, 'jd_results.html', context)
 
 def search_jd_view(request, requisition_id):
     obj = Job.objects.get(requisition_id=requisition_id)
