@@ -389,7 +389,7 @@ def search_candidate(request):
                         temp_dict[1]='pass'
                         temp_dict[2]='pass'
                         temp_dict[3]='pass'
-                context[str(x)]=temp_dict
+            context[str(x)]=temp_dict
 
 
 
