@@ -129,84 +129,84 @@ def search_jd_view(request, requisition_id):
     else:
         raise Http404("JD is not exist")
 
+#######rudra's previous part ###############
+# def search_candidate_view(request):
+#     return HttpResponseRedirect(reverse("feedback", args=('python_1', 'rudra@gmail.com', 3)))
 
-def search_candidate_view(request):
-    return HttpResponseRedirect(reverse("feedback", args=('python_1', 'rudra@gmail.com', 3)))
+# def feedback(request, req_id, email_id, level):
+#     if request.method == "POST":
+#         #candidate_email = Candidate.objects.get()
+#         #candidate_email = Candidate.objects.get(emailId='rudra@gmail.com')
+#         #interviewer_code = Employee.objects.get(incedoCode=201201)
+#         #time_stamp = datetime.timestamp(datetime.now())
 
-def feedback(request, req_id, email_id, level):
-    if request.method == "POST":
-        #candidate_email = Candidate.objects.get()
-        #candidate_email = Candidate.objects.get(emailId='rudra@gmail.com')
-        #interviewer_code = Employee.objects.get(incedoCode=201201)
-        #time_stamp = datetime.timestamp(datetime.now())
+#         requisition_id = 'req_id'
+#         candidate_email = request.POST['candidate_email']
+#         interviewer_code = request.POST['interviewer_code']
+#         status = request.POST['status']
+#         rating_python = request.POST['rating_python']
+#         rating_java = request.POST['rating_java']
+#         rating_cpp = request.POST['rating_cpp']
+#         rating_sql = request.POST['rating_sql']
+#         comments = request.POST['comments']
 
-        requisition_id = 'req_id'
-        candidate_email = request.POST['candidate_email']
-        interviewer_code = request.POST['interviewer_code']
-        status = request.POST['status']
-        rating_python = request.POST['rating_python']
-        rating_java = request.POST['rating_java']
-        rating_cpp = request.POST['rating_cpp']
-        rating_sql = request.POST['rating_sql']
-        comments = request.POST['comments']
+#         Feedback.objects.create(candidateEmail=Candidate.objects.get(emailId=candidate_email),
+#                                 interviewerCode=Employee.objects.get(incedoCode=interviewer_code),
+#                                 level=int(level)+1,
+#                                 status=status,
+#                                 ratingPython=rating_python,
+#                                 ratingJava=rating_java,
+#                                 ratingCPP=rating_cpp,
+#                                 ratingSQL=rating_sql,
+#                                 comments=comments,)
+#         return HttpResponseRedirect(reverse('test_name'))
 
-        Feedback.objects.create(candidateEmail=Candidate.objects.get(emailId=candidate_email),
-                                interviewerCode=Employee.objects.get(incedoCode=interviewer_code),
-                                level=int(level)+1,
-                                status=status,
-                                ratingPython=rating_python,
-                                ratingJava=rating_java,
-                                ratingCPP=rating_cpp,
-                                ratingSQL=rating_sql,
-                                comments=comments,)
-        return HttpResponseRedirect(reverse('test_name'))
+#     try:
+#         basic_detail={'Name' :'candidate_name',
+#                     'Email':email_id,
+#                     'Graduation_CGPA':'candidate_cgpa',
+#                     'University_name':'candidate_college_name'}
 
-    try:
-        basic_detail={'Name' :'candidate_name',
-                    'Email':email_id,
-                    'Graduation_CGPA':'candidate_cgpa',
-                    'University_name':'candidate_college_name'}
+#         if(level == 1):
+#              prv_feedback[level] = None
 
-        if(level == 1):
-             prv_feedback[level] = None
+#         if(level == 2):
+#             level_1 = { 'staus':'pass',
+#                         'python_rating':'python_rating',
+#                         'java_rating':'java_rating',
+#                         'cpp_rating': 'cpp_rating',
+#                         'sql_rating': 'sql_rating',
+#                         'comments' : 'comments'}
 
-        if(level == 2):
-            level_1 = { 'staus':'pass',
-                        'python_rating':'python_rating',
-                        'java_rating':'java_rating',
-                        'cpp_rating': 'cpp_rating',
-                        'sql_rating': 'sql_rating',
-                        'comments' : 'comments'}
+#             context = {
+#                 'basic_detail':basic_detail,
+#                 'level_1': level_1,
+#             }
 
-            context = {
-                'basic_detail':basic_detail,
-                'level_1': level_1,
-            }
+#         if(level == 3):
+#             level_1 = { 'staus':'pass',
+#                         'python_rating':'python_rating',
+#                         'java_rating':'java_rating',
+#                         'cpp_rating': 'cpp_rating',
+#                         'sql_rating': 'sql_rating',
+#                         'comments' : 'comments'}
 
-        if(level == 3):
-            level_1 = { 'staus':'pass',
-                        'python_rating':'python_rating',
-                        'java_rating':'java_rating',
-                        'cpp_rating': 'cpp_rating',
-                        'sql_rating': 'sql_rating',
-                        'comments' : 'comments'}
+#             level_2 = { 'staus':'pass',
+#                         'python_rating':'python_rating',
+#                         'java_rating':'java_rating',
+#                         'cpp_rating': 'cpp_rating',
+#                         'sql_rating': 'sql_rating',
+#                         'comments' : 'comments'}
+#             context = {
+#                 'basic_detail':basic_detail,
+#                 'level_1': level_1,
+#                 'level_2': level_2,
+#             }
 
-            level_2 = { 'staus':'pass',
-                        'python_rating':'python_rating',
-                        'java_rating':'java_rating',
-                        'cpp_rating': 'cpp_rating',
-                        'sql_rating': 'sql_rating',
-                        'comments' : 'comments'}
-            context = {
-                'basic_detail':basic_detail,
-                'level_1': level_1,
-                'level_2': level_2,
-            }
+#     except Feedback.DoesNotExist:
+#         raise Http404('Feedback does not exist')
 
-    except Feedback.DoesNotExist:
-        raise Http404('Feedback does not exist')
-
-    return render(request, 'registration/feedback.html', Context)
+#     return render(request, 'registration/feedback.html', Context)
 
 
 def test_view(request, *args, **kwargs):
@@ -340,3 +340,170 @@ def dashboard(request):
     #    form = SignUpForm()
    # return render(request, 'SignUp_Login/signup.html', {'form': form})
     
+
+##################### RUDRA #################################
+def search_candidate(request):
+    if request.method == 'POST':
+        candidate_email= request.POST['search_element']
+        req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
+        print(type(req_id))
+        print(req_id)
+
+        context = {}
+        for x in range(len(req_id)):
+            temp_dict={}
+            print(type(req_id[x][0]))
+            l1=Feedback.objects.get(requisition_id=req_id[x][0],candidate_email=candidate_email, level = 1).status
+
+            temp_dict['req_id']=req_id[x][0];
+            temp_dict['email']=candidate_email;
+            if l1=='pending':
+                temp_dict[1]='pending'
+                temp_dict[2]='-'
+                temp_dict[3]='-'
+            elif l1=='fail':
+                temp_dict[1]='fail'
+                temp_dict[2]='NA'
+                temp_dict[3]='NA'
+            else :
+                l2=Feedback.objects.get(requisition_id=req_id[x][0],candidate_email=candidate_email, level = 2).status
+                if l2=='pending':
+                    temp_dict[1]='pass'
+                    temp_dict[2]='pending'
+                    temp_dict[3]='-'
+                elif l1=='fail':
+                    temp_dict[1]='pass'
+                    temp_dict[2]='fail'
+                    temp_dict[3]='NA'
+                else :
+                    l3=Feedback.objects.get(requisition_id=req_id[x][0],candidate_email=candidate_email, level = 3).status
+                    if l3=='pending':
+                        temp_dict[1]='pass'
+                        temp_dict[2]='pass'
+                        temp_dict[3]='pending'
+                    elif l3=='fail':
+                        temp_dict[1]='pass'
+                        temp_dict[2]='pass'
+                        temp_dict[3]='fail'
+                    else:
+                        temp_dict[1]='pass'
+                        temp_dict[2]='pass'
+                        temp_dict[3]='pass'
+                context[str(x)]=temp_dict
+
+
+
+        return render(request, 'search.html',{'context':context})
+
+
+
+    return render(request, 'search.html')
+
+def feedback(request, req_id, email_id, level):
+    if request.method == "POST":
+        interviewer_code = request.POST['interviewer_code']
+        status = request.POST['status']
+        rating_python = request.POST['rating_python']
+        rating_java = request.POST['rating_java']
+        rating_cpp = request.POST['rating_cpp']
+        rating_sql = request.POST['rating_sql']
+        comments = request.POST['comments']
+
+        feedback_object = Feedback.objects.get(candidate_email=Candidate.objects.get(email=email_id), requisition_id=Job.objects.get(requisition_id = req_id), level=level, status='pending')
+        feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_code)
+        feedback_object.status=status
+        feedback_object.rating_python=rating_python
+        feedback_object.rating_java=rating_java
+        feedback_object.rating_cpp=rating_cpp
+        feedback_object.rating_sql=rating_sql
+        feedback_object.comments=comments
+        feedback_object.save()
+        '''
+        Feedback.objects.create(candidate_email=Candidate.objects.get(email=email_id),
+                                interviewer_id=Employee.objects.get(employee_id=interviewer_code),
+                                requisition_id=Job.objects.get(requisition_id = req_id),
+                                level=int(level)+1,
+                                status=status,
+                                rating_python=rating_python,
+                                rating_java=rating_java,
+                                rating_cpp=rating_cpp,
+                                rating_sql=rating_sql,
+                                comments=comments,)'''
+        return HttpResponseRedirect(reverse('test_name'))
+
+    try:
+        candidate_name = Candidate.objects.get(email=email_id).full_name
+        candidate_cgpa = Candidate.objects.get(email=email_id).CGPA
+        candidate_college_name =  Candidate.objects.get(email=email_id).college_name
+        basic_detail={'Name' :candidate_name,
+                    'Email':email_id,
+                    'Graduation_CGPA':candidate_cgpa,
+                    'University_name':candidate_college_name}
+
+        if(level == 1):
+             context = {
+                 'basic_detail':basic_detail,
+                 'level':level
+             }
+
+        if(level == 2):
+            status = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).status
+            python_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_python
+            java_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_java
+            cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
+            sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
+            comments = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
+            level_1 = { 'status': status,
+                        'python_rating': python_rating,
+                        'java_rating': java_rating,
+                        'cpp_rating': cpp_rating,
+                        'sql_rating': sql_rating,
+                        'comments' : comments}
+
+            context = {
+                'basic_detail':basic_detail,
+                'level_1': level_1,
+                'level':level
+            }
+
+        if(level == 3):
+            status = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).status
+            python_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_python
+            java_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_java
+            cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_cpp
+            sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_sql
+            comments = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).comments
+
+            status_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).status
+            python_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_python
+            java_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_java
+            cpp_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
+            sql_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
+            comments_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
+            level_1 = { 'status': status,
+                        'python_rating': python_rating,
+                        'java_rating': java_rating,
+                        'cpp_rating': cpp_rating,
+                        'sql_rating': sql_rating,
+                        'comments' : comments}
+
+            level_2 = { 'status': status_,
+                        'python_rating': python_rating_,
+                        'java_rating': java_rating_,
+                        'cpp_rating': cpp_rating_,
+                        'sql_rating': sql_rating_,
+                        'comments' : comments_}
+            context = {
+                'basic_detail':basic_detail,
+                'level_1': level_1,
+                'level_2': level_2,
+                'level': level,
+            }
+
+    except Feedback.DoesNotExist:
+        raise Http404('Feedback does not exist')
+
+    return render(request, 'registration/feedback.html', context)
+
+def test(request):
+    return HttpResponse('inside the test')
