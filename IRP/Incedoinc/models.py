@@ -40,7 +40,7 @@ class Candidate(models.Model):
     mobile = models.CharField(max_length=10)
     DOB = models.DateField(auto_now = True)
     projects_link = models.URLField(null=True, blank=True)
-    resume = models.FileField(upload_to=None)
+    resume = models.FileField()
     noticePeriod = models.IntegerField(null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -74,3 +74,8 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f'{self.status}'
+
+
+class TestModel(models.Model):
+    field1 = models.CharField(blank=True, max_length=100)
+    field2 = models.CharField(default=100, max_length=100)

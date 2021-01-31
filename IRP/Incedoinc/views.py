@@ -7,9 +7,11 @@ from datetime import datetime
 
 #include models
 from .models import Employee, Job, Candidate, Feedback
+from .models import TestModel
 
 #include forms
 from .forms import CandidateForm, UploadJdForm
+from .forms import TestForm
 
 
 # Create your views here.
@@ -17,48 +19,59 @@ def index(request):
     return HttpResponse('<h1>Welcome to Incedo Recruitment Portal<h1>')
     
 def add_candidate_view(request, *args, **kwargs):
+    user_id = request.session['user_id']
+    user = Employee.objects.get(employee_id=user_id)
     if request.method == 'POST':
-        obj = Candidate()
-        form = CandidateForm(request.POST, request.FILES, instance=obj)
+        form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
+        form.fields['registered_by'].disabled = True
         if form.is_valid():
             form.save()
-            form = CandidateForm()
+            redirect('home_page')
     else:
-        form = CandidateForm()
+        form = CandidateForm(initial={'registered_by': user})
+        form.fields['registered_by'].disabled = True
     context = {
         'form': form
     }
     return render(request, 'add_candidate.html', context)
 
 def upload_jd_view(request, *args, **kwargs):
+    user_id = request.session['user_id']
+    user = Employee.objects.get(employee_id=user_id)
     if request.method == 'POST':
-        employee_id = request.session['employee_id']
-        employee = Employee.objects.get(employee_id=employee_id)
-        print(employee_id)
-        form = UploadJdForm(request.POST, request.FILES)
+        #if someone forcefully entered raised_by_field using tampering of form
+        if 'raised_by_employee' in request.POST:
+            raise ValidationError('FORM IS TAMPERED')
+        print(request.POST)
+        form = UploadJdForm(request.POST, request.FILES, initial={'raised_by_employee':user})
+        form.fields['raised_by_employee'].disabled = True
         if form.is_valid():
-            cleaned_data = form.cleaned_data
-            # print(form.cleaned_data)
+            print(form.cleaned_data)
             obj = form.save()
-            obj.raised_by_employee = employee
-            obj.save()
-            form = UploadJdForm()
+            return redirect('home_page')
     else:
-        form = UploadJdForm()
+        form = UploadJdForm(initial={'raised_by_employee':user})
+        form.fields['raised_by_employee'].disabled = True
     context = {
         'form' : form
     }
     return render(request, 'upload_jd.html', context)
 
-def home(request):
-    employee_id = 101   # it is gotton from login page
-    request.session['employee_id'] = employee_id
+def home_view(request):
+    user_id = 101   # it is currently hardcoded but will be derived from login page itself
+    request.session['user_id'] = user_id
     if request.method == 'POST':
-        requisition_id = request.POST.get('requisition_id')
-        return redirect(f'../search_jd/{requisition_id}')
-
-    context={}
-    return render(request,'home.html',context)
+        print(request.POST)
+        if 'search_requisition_id_button' in request.POST:
+            requisition_id = request.POST.get('requisition_id')
+            return redirect('search_jd_page', requisition_id)
+        elif 'upload_jd_button' in request.POST:
+            return redirect('upload_jd_page')
+        elif 'search_candidate_button' in request.POST:
+            return redirect('search_candidate_page')
+        else:
+            return Http404('Page Not Exist')
+    return render(request,'home.html')
 
 def search_jd_view(request, requisition_id):
     obj = Job.objects.get(requisition_id=requisition_id)
@@ -70,8 +83,7 @@ def search_jd_view(request, requisition_id):
     else:
         raise Http404("JD is not exist")
 
-
-def search_candidate(request):
+def search_candidate_view(request):
     return HttpResponseRedirect(reverse("feedback", args=('python_1', 'rudra@gmail.com', 3)))
 
 def feedback(request, req_id, email_id, level):
@@ -150,5 +162,19 @@ def feedback(request, req_id, email_id, level):
     return render(request, 'registration/feedback.html', context)
 
 
-def test(request):
-    return HttpResponse('inside the test')
+def test_view(request, *args, **kwargs):
+    if request.method == 'POST':
+        print(request.POST)
+        form = TestForm(request.POST, request.FILES)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj = TestForm()
+    else:
+        form = TestForm(initial={'field1': 'initial_val'})
+        form.fields['field1'].readonly = True
+        print(form.fields['field1'].readonly)
+        form.fields['field1'].disabled = True
+    context = {
+        'form' : form
+    }
+    return render(request, 'test.html', context)

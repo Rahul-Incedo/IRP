@@ -1,6 +1,6 @@
 from django.core import validators
 from django import forms
-from .models import Candidate, Job
+from .models import Candidate, Job, TestModel
 
 class CandidateForm(forms.ModelForm):
     CGPA = forms.DecimalField(max_digits=5, decimal_places=3,
@@ -21,7 +21,13 @@ class UploadJdForm(forms.ModelForm):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf']
     )
+    
     job_description = forms.FileField(validators = [pdf_validator])
     class Meta:
         model = Job
-        fields = ['requisition_id', 'job_description', 'position_owner_id']
+        fields = ['raised_by_employee', 'requisition_id', 'job_description', 'position_owner_id']
+
+class TestForm(forms.ModelForm):
+    class Meta:
+        model = TestModel
+        fields = ['field1', 'field2']
