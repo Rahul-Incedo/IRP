@@ -1,4 +1,9 @@
 from django.db import models
+from django.contrib.auth import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
 
 # Create your models here.
 class Employee(models.Model):
@@ -70,6 +75,12 @@ class Feedback(models.Model):
     def __str__(self):
         return f'Result for {self.candidateEmail} at level {self.level} is {self.status}'
 
+
+
+
+
+
+   
 '''
 class CandidateJobInfo(models.Model):
     jobInfoId =  models.AutoField(primary_key=True)

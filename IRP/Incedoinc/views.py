@@ -1,9 +1,34 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
+from decimal import Context
+from django.contrib.auth.backends import UserModel
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 
 from datetime import datetime
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from .forms import LoginForm, SignUpForm
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
+
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+import re
+
+UserModel = get_user_model()
+from .forms import SignUpForm
+
+
+
 
 #include models
 from .models import Employee, Job, Candidate, Feedback
@@ -16,7 +41,8 @@ from .forms import TestForm
 
 # Create your views here.
 def index(request):
-    return HttpResponse('<h1>Welcome to Incedo Recruitment Portal<h1>')
+    return render(request, 'rudra_base.html' )
+
     
 def add_candidate_view(request, *args, **kwargs):
     user_id = request.session['user_id']
@@ -82,6 +108,7 @@ def search_jd_view(request, requisition_id):
         return render(request, 'jd_results.html', context)
     else:
         raise Http404("JD is not exist")
+
 
 def search_candidate_view(request):
     return HttpResponseRedirect(reverse("feedback", args=('python_1', 'rudra@gmail.com', 3)))
@@ -159,7 +186,7 @@ def feedback(request, req_id, email_id, level):
     except Feedback.DoesNotExist:
         raise Http404('Feedback does not exist')
 
-    return render(request, 'registration/feedback.html', context)
+    return render(request, 'registration/feedback.html', Context)
 
 
 def test_view(request, *args, **kwargs):
@@ -178,3 +205,118 @@ def test_view(request, *args, **kwargs):
         'form' : form
     }
     return render(request, 'test.html', context)
+
+# def signup_view(request):
+#    if request.method == 'POST':
+#        form = SignUpForm(request.POST)
+#       if form.is_valid():
+#            form.save()
+#            return redirect('posts:list')
+ #   else:
+ #       form = SignUpForm()
+  #  return render(request, 'Signup_login/signup.html', {'form': form})
+
+
+# def login_view(request):
+#     if request.method == 'POST':
+        
+#         form = LoginForm(data=request.POST)
+#         if form.is_valid():
+            
+#             return render(request,'SignUp_Login/dashboard.html')
+#     else:
+#         form = LoginForm()
+#     return render(request, 'Signup_Login/login.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            
+            return render(request,'SignUp_Login/dashboard.html')
+    else:
+        form = LoginForm()
+    return render(request, 'Signup_Login/login.html', {'form': form})
+
+
+
+
+#
+# def login_view(request):
+  #  username = request.POST['username']
+ #   password = request.POST['password']
+  #  print(username)
+
+  #  user = authenticate(request, username=username, password=password)
+  #  if user is not None:
+   #     login(request, user)
+  #      return HttpResponseRedirect(reverse('index'))
+    #else:
+ #       return render(request, "users/login.html", {"message":"Invalid credential"})    
+
+
+def signup_view(request):
+    
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+     
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your account.'
+            message = render_to_string('accounts/acc_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            })
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(
+                mail_subject, message, to=[to_email]
+            )
+            email.send()
+            return HttpResponse('Please confirm your email address to complete the registration')
+    else:
+        form = SignUpForm()
+    return render(request, 'SignUp_Login/signup.html', {'form': form})
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = UserModel._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
+            
+    
+
+def dashboard(request):
+    return render(request, "SignUp_Login/dashboard.html")
+
+    
+
+
+
+
+
+
+#user = form.save()
+           # username = form.cleaned_data.get('username')
+           # raw_password = form.cleaned_data.get('password1')
+           # user = authenticate(username=username, password=raw_password)
+           # login(request, user)
+            
+           # return redirect('home')
+            #else:
+    #    form = SignUpForm()
+   # return render(request, 'SignUp_Login/signup.html', {'form': form})
+    
