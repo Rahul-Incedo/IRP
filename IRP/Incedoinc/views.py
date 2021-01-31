@@ -50,8 +50,28 @@ def add_candidate_view(request, *args, **kwargs):
     if request.method == 'POST':
         form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
+
         if form.is_valid():
-            form.save()
+            candidate_obj = form.save()
+            job_obj = Job.objects.get(requisition_id='python_1')
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=1, 
+                requisition_id=job_obj,
+                status='pending',
+            )
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=2, 
+                requisition_id=job_obj,
+                status='pending',
+            )
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=3, 
+                requisition_id=job_obj,
+                status='pending',
+            )
             redirect('home_page')
     else:
         form = CandidateForm(initial={'registered_by': user})

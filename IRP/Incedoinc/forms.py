@@ -68,5 +68,3 @@ class LoginForm(AuthenticationForm):
         fields = ['username', 'email', 'password']   
 
  
-
-    

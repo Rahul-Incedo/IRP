@@ -62,14 +62,14 @@ class Feedback(models.Model):
     requisition_id = models.ForeignKey(Job, blank=True, on_delete = models.CASCADE)
     level = models.IntegerField(null=True)
     status_choices = [('pass', 'pass'),
-                        ('Fail', 'fail'),
-                        ('Pending', 'pending'),]
+                        ('fail', 'fail'),
+                        ('pending', 'pending'),]
     status = models.CharField(choices = status_choices, max_length=10)
     rating_python = models.IntegerField(null=True, blank=True)
     rating_java = models.IntegerField(null=True, blank=True)
     rating_cpp = models.IntegerField(null=True, blank=True)
     rating_sql = models.IntegerField(null=True, blank=True)
-    comments = models.TextField(max_length=500, null=True)
+    comments = models.TextField(max_length=500, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
