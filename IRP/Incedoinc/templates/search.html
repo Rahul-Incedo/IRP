@@ -56,13 +56,41 @@
           font-size: 25px;
         }
 
+        ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #40423f;
+          color: #b6b8b5;
+        }
+
+        li {
+          float: left;
+        }
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
 
 
     </style>
 </head>
 <body>
+  <header>
+    <ul class = 'main'  style="background-color: black">
+      <li><a href='{% url "home" %}'>Incedo Recruitment Portal</a></li>
+      <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
+    </ul>
+  </header>
   <div id="header">
-      <h1><br>INCEDO RECURITMENT PORTAL</h1>
+    <!--  <h1><br>INCEDO RECRUITMENT PORTAL</h1>-->
   </div><!--closing of header-->
   <form action=""  method="post">{% csrf_token %}
     <table>

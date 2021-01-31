@@ -41,10 +41,14 @@ from .forms import TestForm
 
 # Create your views here.
 def index(request):
-    return render(request, 'rudra_base.html' )
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
+    return HttpResponseRedirect(reverse('index'))
 
-    
+
 def add_candidate_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
     user_id = request.session['user_id']
     user = Employee.objects.get(employee_id=user_id)
     if request.method == 'POST':
@@ -56,19 +60,19 @@ def add_candidate_view(request, *args, **kwargs):
             job_obj = Job.objects.get(requisition_id='python_1')
             Feedback.objects.create(
                 candidate_email=candidate_obj,
-                level=1, 
+                level=1,
                 requisition_id=job_obj,
                 status='pending',
             )
             Feedback.objects.create(
                 candidate_email=candidate_obj,
-                level=2, 
+                level=2,
                 requisition_id=job_obj,
                 status='pending',
             )
             Feedback.objects.create(
                 candidate_email=candidate_obj,
-                level=3, 
+                level=3,
                 requisition_id=job_obj,
                 status='pending',
             )
@@ -82,6 +86,8 @@ def add_candidate_view(request, *args, **kwargs):
     return render(request, 'add_candidate.html', context)
 
 def upload_jd_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
     user_id = request.session['user_id']
     user = Employee.objects.get(employee_id=user_id)
     if request.method == 'POST':
@@ -104,6 +110,8 @@ def upload_jd_view(request, *args, **kwargs):
     return render(request, 'upload_jd.html', context)
 
 def home_view(request):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
     user_id = 101   # it is currently hardcoded but will be derived from login page itself
     request.session['user_id'] = user_id
     if request.method == 'POST':
@@ -120,6 +128,8 @@ def home_view(request):
     return render(request,'home.html')
 
 def search_jd_view(request, requisition_id):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
     obj = Job.objects.get(requisition_id=requisition_id)
     if obj is not None:
         context = {
@@ -210,6 +220,8 @@ def search_jd_view(request, requisition_id):
 
 
 def test_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
     if request.method == 'POST':
         print(request.POST)
         form = TestForm(request.POST, request.FILES)
@@ -239,10 +251,10 @@ def test_view(request, *args, **kwargs):
 
 # def login_view(request):
 #     if request.method == 'POST':
-        
+
 #         form = LoginForm(data=request.POST)
 #         if form.is_valid():
-            
+
 #             return render(request,'SignUp_Login/dashboard.html')
 #     else:
 #         form = LoginForm()
@@ -250,10 +262,10 @@ def test_view(request, *args, **kwargs):
 
 def login_view(request):
     if request.method == 'POST':
-        
+
         form = LoginForm(data=request.POST)
         if form.is_valid():
-            
+
             return render(request,'SignUp_Login/dashboard.html')
     else:
         form = LoginForm()
@@ -273,14 +285,14 @@ def login_view(request):
    #     login(request, user)
   #      return HttpResponseRedirect(reverse('index'))
     #else:
- #       return render(request, "users/login.html", {"message":"Invalid credential"})    
+ #       return render(request, "users/login.html", {"message":"Invalid credential"})
 
 
 def signup_view(request):
-    
+
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-     
+
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
@@ -316,13 +328,13 @@ def activate(request, uidb64, token):
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
     else:
         return HttpResponse('Activation link is invalid!')
-            
-    
+
+
 
 def dashboard(request):
     return render(request, "SignUp_Login/dashboard.html")
 
-    
+
 
 
 
@@ -334,15 +346,17 @@ def dashboard(request):
            # raw_password = form.cleaned_data.get('password1')
            # user = authenticate(username=username, password=raw_password)
            # login(request, user)
-            
+
            # return redirect('home')
             #else:
     #    form = SignUpForm()
    # return render(request, 'SignUp_Login/signup.html', {'form': form})
-    
+
 
 ##################### RUDRA #################################
 def search_candidate(request):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
     if request.method == 'POST':
         candidate_email= request.POST['search_element']
         req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
@@ -400,6 +414,8 @@ def search_candidate(request):
     return render(request, 'search.html')
 
 def feedback(request, req_id, email_id, level):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
     if request.method == "POST":
         interviewer_code = request.POST['interviewer_code']
         status = request.POST['status']
@@ -506,4 +522,7 @@ def feedback(request, req_id, email_id, level):
     return render(request, 'registration/feedback.html', context)
 
 def test(request):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
+
     return HttpResponse('inside the test')

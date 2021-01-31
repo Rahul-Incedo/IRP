@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'users.apps.UsersConfig',
     'Incedoinc.apps.IncedoincConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,7 +64,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            Path.joinpath(BASE_DIR, 'templates')
+            Path.joinpath(BASE_DIR, 'templates'),
+            Path.joinpath(BASE_DIR, 'Incedoinc/templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -138,8 +140,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'incedo.verify.yourmail@gmail.com'
 EMAIL_HOST_PASSWORD = 'qwerty741852963*'
-
-
-
-
-

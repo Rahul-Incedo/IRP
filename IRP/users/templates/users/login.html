@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+login
+{% endblock %}
+
+{% block body %}
+<h2> Login Page </h2>
+
+{{message}}
+<form method ='post',  action = '{% url "login" %}'>
+  {% csrf_token %}
+  <input name = "username" type ='text', placeholder = 'Enter your name'><br/>
+  <input name = "password" type = 'password', placeholder = 'Enter your password'><br/>
+  <input type='submit', value='login'>
+</form>
+{% endblock %}

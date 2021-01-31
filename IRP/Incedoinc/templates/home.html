@@ -15,7 +15,7 @@
     }
     a{
       text-decoration:none;
-      color:white;
+      /*color:white;*/
     }
 
     .button1 {background-color: #4CAF50;} /* Green */
@@ -24,6 +24,14 @@
   </style>
 </head>
   <body>
+    <header>
+      <ul class = 'main'  style="background-color: black">
+        <li><a href='{% url "home" %}'>Incedo Recruitment Portal</a></li>
+        <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
+        <li style="float:right"><a href="{% url 'home' %}">Contact</a></li>
+        <li style="float:right"><a href="{% url 'home' %}">About us</a></li>
+      </ul>
+    </header>
   <form method="POST"> {% csrf_token %}
     <input type='text' placeholder="search requisition_id" name="requisition_id" required>
     <button type='submit' class="button button1" name='search_requisition_id_button'>Search</button><br>
