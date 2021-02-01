@@ -57,7 +57,8 @@ def add_candidate_view(request, *args, **kwargs):
 
         if form.is_valid():
             candidate_obj = form.save()
-            job_obj = Job.objects.get(requisition_id='python_1')
+            requisition_id = form.cleaned_data['requisition_id']
+            job_obj = Job.objects.get(requisition_id=requisition_id)
             Feedback.objects.create(
                 candidate_email=candidate_obj,
                 level=1,
@@ -76,7 +77,7 @@ def add_candidate_view(request, *args, **kwargs):
                 requisition_id=job_obj,
                 status='pending',
             )
-            redirect('home_page')
+            return redirect('search_candidate')
     else:
         form = CandidateForm(initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
@@ -122,7 +123,7 @@ def home_view(request):
         elif 'upload_jd_button' in request.POST:
             return redirect('upload_jd_page')
         elif 'search_candidate_button' in request.POST:
-            return redirect('search_candidate_page')
+            return redirect('search_candidate')
         else:
             return Http404('Page Not Exist')
     return render(request,'home.html')
