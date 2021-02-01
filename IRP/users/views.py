@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from .forms import SignUpForm
 
 # Create your views here.
 def index(request):
@@ -24,6 +25,16 @@ def login_view(request):
         return HttpResponseRedirect(reverse('index'))
     else:
         return render(request, "users/login.html", {"message":"Invalid credential"})
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            return HttpResponseRedirect(reverse('home_page'))
+    else:
+        form = SignUpForm()
+    return render(request, 'SignUp_Login/signup.html', {'form': form})
 
 def logout_view(request):
     logout(request)

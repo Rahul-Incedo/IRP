@@ -15,7 +15,7 @@ urlpatterns = [
     path("search-jd/<str:requisition_id>/", views.search_jd_view, name='search_jd_page'),
 
     #vaishnavi
-    path('signup/', views.signup_view, name='signup'),
+    path('signup_/', views.signup_view, name='signup_'),
     path('login_/', views.login_view, name='login_'),
     #    url(r"^dashboard/", dashboard, name="dashboard"),
 
