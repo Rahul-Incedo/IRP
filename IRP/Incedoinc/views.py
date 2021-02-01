@@ -446,7 +446,7 @@ def feedback(request, req_id, email_id, level):
                                 rating_cpp=rating_cpp,
                                 rating_sql=rating_sql,
                                 comments=comments,)'''
-        return HttpResponseRedirect(reverse('test_name'))
+        return HttpResponseRedirect(reverse('search_candidate'))
 
     try:
         candidate_name = Candidate.objects.get(email=email_id).full_name
