@@ -10,7 +10,7 @@ login
 {{message}}
 <form method ='post',  action = '{% url "login" %}'>
   {% csrf_token %}
-  <input name = "username" type ='text', placeholder = 'Enter your name'><br/>
+  <input name = "username" type ='text', placeholder = 'Enter your email'><br/>
   <input name = "password" type = 'password', placeholder = 'Enter your password'><br/>
   <input type='submit', value='login'><br/>
   <a href='{% url "signup" %}'>Not an user Create New User </a>
