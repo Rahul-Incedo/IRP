@@ -62,6 +62,7 @@ class SignUpForm(UserCreationForm):
         return username 
 
 
+
 class LoginForm(AuthenticationForm):
     email = forms.EmailField(max_length=254, required = 'True')
     class Meta:
