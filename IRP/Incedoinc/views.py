@@ -58,6 +58,9 @@ def add_candidate_view(request, *args, **kwargs):
         if form.is_valid():
             candidate_obj = form.save()
             requisition_id = form.cleaned_data['requisition_id']
+
+            candidate_email = form.cleaned_data['email']
+
             job_obj = Job.objects.get(requisition_id=requisition_id)
             Feedback.objects.create(
                 candidate_email=candidate_obj,
@@ -77,7 +80,7 @@ def add_candidate_view(request, *args, **kwargs):
                 requisition_id=job_obj,
                 status='pending',
             )
-            return redirect('search_candidate')
+            return redirect('search_candidate', args={candidate_email})
     else:
         form = CandidateForm(initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
@@ -355,9 +358,13 @@ def dashboard(request):
 
 
 ##################### RUDRA #################################
-def search_candidate(request):
+def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
+    if kwargs:
+        email = kwargs['candidate_email']
+        print(email)
+        return render(request, 'test.html')
     if request.method == 'POST':
         candidate_email= request.POST['search_element']
         req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
