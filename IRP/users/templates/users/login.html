@@ -12,7 +12,7 @@ login
   {% csrf_token %}
   <input name = "username" type ='text', placeholder = 'Enter your email'><br/>
   <input name = "password" type = 'password', placeholder = 'Enter your password'><br/>
-  <input type='submit', value='login'><br/>
-  <a href='{% url "signup" %}'>Not an user Create New User </a>
+  <button type="submit" class = "addBtn" value="Login">Log In</button>
+  <a href='{% url "signup" %}'>Sign Up</a>
 </form>
 {% endblock %}

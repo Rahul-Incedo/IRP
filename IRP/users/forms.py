@@ -8,13 +8,12 @@ from django.contrib.auth.models import User
 class SignUpForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=20, required=True)
     full_name = forms.CharField(max_length=64, required=True)
-    #last_name = forms.CharField(max_length=64, required=False)
     email = forms.EmailField(max_length=254, required =True)
     password= forms.CharField(max_length=10)
 
     class Meta:
         model = Employee
-        fields = '__all__'
+        fields = ['full_name', 'email', 'employee_id', 'password']
 
     def clean_email(self):
         email = self.cleaned_data['email']

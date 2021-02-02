@@ -522,6 +522,31 @@ def feedback(request, req_id, email_id, level):
 
     return render(request, 'registration/feedback.html', context)
 
+def edit(request, req_id, email_id, level):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
+
+    if request.method == 'POST':
+        obj_ = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
+        obj_.interviewer_id = Employee.objects.get(employee_id=request.POST['interviewer_id'])
+        obj_.status = request.POST['status']
+        obj_.rating_python = request.POST['rating_python']
+        obj_.rating_java = request.POST['rating_java']
+        obj_.rating_cpp = request.POST['rating_cpp']
+        obj_.rating_sql = request.POST['rating_sql']
+        obj_.comments = request.POST['commets']
+        obj_.save()
+
+        return HttpResponseRedirect(reverse('search_candidate'))
+
+    try:
+        obj= Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
+        Context = vars(obj)
+        return render(request, 'registration/edit.html', Context)
+    except:
+        return HttpResponse('No details Found')
+
+
 def test(request):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
