@@ -80,7 +80,7 @@ def add_candidate_view(request, *args, **kwargs):
                 requisition_id=job_obj,
                 status='pending',
             )
-            return redirect('search_candidate', args={candidate_email})
+            return redirect('../'+'search_candidate'+'/'+str(candidate_email))
     else:
         form = CandidateForm(initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
@@ -361,12 +361,13 @@ def dashboard(request):
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
-    if kwargs:
-        email = kwargs['candidate_email']
-        print(email)
-        return render(request, 'test.html')
-    if request.method == 'POST':
-        candidate_email= request.POST['search_element']
+
+    if request.method == 'POST' or kwargs['candidate_email']:
+        if request.method == 'GET' and kwargs:
+            candidate_email = kwargs['candidate_email']
+        elif request.method == 'POST':
+            candidate_email= request.POST['search_element']
+        
         req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
         print(type(req_id))
         print(req_id)
