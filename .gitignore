@@ -4,4 +4,3 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 *.pyc
-IRP/Incedoinc/migrations/0001_initial.py
