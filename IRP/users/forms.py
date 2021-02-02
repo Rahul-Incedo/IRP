@@ -5,11 +5,12 @@ from Incedoinc.models import Candidate, Job, TestModel, Employee
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
+
 class SignUpForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=20, required=True)
     full_name = forms.CharField(max_length=64, required=True)
     email = forms.EmailField(max_length=254, required =True)
-    password= forms.CharField(max_length=10)
+    password= forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = Employee

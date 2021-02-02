@@ -534,7 +534,7 @@ def edit(request, req_id, email_id, level):
         obj_.rating_java = request.POST['rating_java']
         obj_.rating_cpp = request.POST['rating_cpp']
         obj_.rating_sql = request.POST['rating_sql']
-        obj_.comments = request.POST['commets']
+        obj_.comments = request.POST['comments']
         obj_.save()
 
         return HttpResponseRedirect(reverse('search_candidate'))
