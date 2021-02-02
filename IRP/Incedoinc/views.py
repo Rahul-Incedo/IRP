@@ -105,7 +105,6 @@ def upload_jd_view(request, *args, **kwargs):
             print(form.cleaned_data)
             obj = form.save()
             return redirect('home_page')
-            
     else:
         form = UploadJdForm(initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
@@ -370,7 +369,7 @@ def search_candidate(request, *args, **kwargs):
             candidate_email = kwargs['candidate_email']
         elif request.method == 'POST':
             candidate_email= request.POST['search_element']
-
+        
         req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
         print(type(req_id))
         print(req_id)
