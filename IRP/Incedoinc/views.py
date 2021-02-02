@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db.models import query
 from django.shortcuts import redirect, render
 from decimal import Context
 from django.contrib.auth.backends import UserModel
@@ -122,7 +123,10 @@ def home_view(request):
         print(request.POST)
         if 'search_requisition_id_button' in request.POST:
             requisition_id = request.POST.get('requisition_id')
-            query_set = Job.objects.filter(requisition_id__contains=requisition_id)
+            if len(requisition_id) >= 3:
+                query_set = Job.objects.filter(requisition_id__contains=requisition_id)
+            else:
+                query_set = Job.objects.filter(requisition_id=requisition_id)
             print(query_set)
             context = {
                 'requisition_id' : requisition_id,
