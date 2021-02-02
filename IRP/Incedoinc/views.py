@@ -362,8 +362,10 @@ def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
 
-    if request.method == 'POST' or kwargs['candidate_email']:
+    if request.method == 'POST' or kwargs:
         if request.method == 'GET' and kwargs:
+            if not kwargs['candidate_email']:
+                raise ValidationError('Get request has arguments type which are not supported')
             candidate_email = kwargs['candidate_email']
         elif request.method == 'POST':
             candidate_email= request.POST['search_element']
