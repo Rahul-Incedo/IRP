@@ -69,7 +69,7 @@
 
 </head>
 <body>
-<h1 style="color : white;text-align:center;  margin-top: 100px;">Welcome to Incedo Recruitment Portal</h1>
+<h1 style="color : white;text-align:center;  margin-top: 50px; margin-bottom: 1px;">Welcome to Incedo Recruitment Portal</h1>
 	<div class="container h-100">
 		<div class="d-flex justify-content-center h-100">
 			<div class="user_card">
@@ -80,17 +80,25 @@
 
 					<form method="POST" action="">
 						{% csrf_token %}
+                        <div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="	far fa-address-book"></i></span>
+							</div>
+							{{form.employee_id}}
+						</div>
+						<div cla
+
 						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
+							</div>
+							{{form.username}}
+						</div>
+						<div class="input-group mb-2">
 							<div class="input-group-append">
 								<span class="input-group-text"><i class="fas fa-user"></i></span>
 							</div>
 							{{form.name}}
-						</div>
-						<div class="input-group mb-2">
-							<div class="input-group-append">
-								<span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
-							</div>
-							{{form.email}}
 						</div>
 						<div class="input-group mb-2">
 							<div class="input-group-append">
@@ -131,10 +139,11 @@
 
 		//Query All input fields
 		var form_fields = document.getElementsByTagName('input')
-		form_fields[1].placeholder='Name..';
+		form_fields[1].placeholder='Employee ID..';
 		form_fields[2].placeholder='Email..';
-		form_fields[3].placeholder='Enter password...';
-		form_fields[4].placeholder='Re-enter Password...';
+		form_fields[3].placeholder='Name...';
+		form_fields[4].placeholder='Enter Password...';
+		form_fields[5].placeholder='Re-enter Password..';
 
 
 		for (var field in form_fields){	

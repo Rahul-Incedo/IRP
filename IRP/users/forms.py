@@ -15,15 +15,25 @@ class SignUpForm(UserCreationForm):
     # email = forms.EmailField(max_length=254, required = 'True')
     class Meta:
         model = CustomUser
-        fields = ['name', 'email', 'password1','password2']
+        fields = ['employee_id', 'username','name', 'password1','password2']  #username is email
+        list_display = ('employee','name', 'username')
 
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Email already exists")
-        if "@incedoinc.com" not in email:   
-            raise forms.ValidationError("Must be an Incedo Email address")
-        return email  
+    def clean_employee_id(self):
+       
+        employee_id = self.cleaned_data['employee_id']
+        if CustomUser.objects.filter(employee_id=employee_id).exists():
+            raise forms.ValidationError("Employee ID  already exists")
+        return employee_id 
+    
+    def clean_username(self):       #username means Email
+       
+        username = self.cleaned_data['username']
+        if CustomUser.objects.filter(username=username).exists():
+            raise forms.ValidationError("Email  already exists")
+        if "@incedoinc.com" not in username:   
+            raise forms.ValidationError("Must be an Incedo Email address")  
+        return username
+    
         
     
 
