@@ -16,7 +16,7 @@ class CandidateForm(forms.ModelForm):
         allowed_extensions=['pdf']
     )
     resume = forms.FileField(validators = [pdf_validator])
-    requisition_id = forms.CharField(required=True)
+    requisition_id = forms.ModelChoiceField(Job.objects.all(), required=True)
     class Meta:
         model = Candidate
         fields = '__all__'
