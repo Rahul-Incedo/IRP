@@ -24,7 +24,8 @@ Candidate feedback {{candiate.id}}
       <li> &emsp; Python Rating : {{level_1.python_rating}} </li>
       <li> &emsp; Java Rating : {{level_1.java_rating}} </li>
       <li> &emsp; Cpp Rating : {{level_1.cpp_rating}}</li>
-      <li> &emsp; SQL Rating : {{level_1.cpp_rating}}</li><br/>
+      <li> &emsp; SQL Rating : {{level_1.cpp_rating}}</li>
+      <li style = 'float:right'><a href = 'edit/'> Edit </a></li><br/>
       <li> Comments : {{level_1.comments}}</li>
     </ul>
   {% endif %}
@@ -36,7 +37,8 @@ Candidate feedback {{candiate.id}}
     <li> &emsp; Python Rating : {{level_1.python_rating}} </li>
     <li> &emsp; Java Rating : {{level_1.java_rating}} </li>
     <li> &emsp; Cpp Rating : {{level_1.cpp_rating}}</li>
-    <li> &emsp; SQL Rating : {{level_1.cpp_rating}}</li><br/>
+    <li> &emsp; SQL Rating : {{level_1.cpp_rating}}</li>
+    <li style = 'float:right'><a href = 'edit/'> Edit </a></li><br/>
     <li> Comments : {{level_1.comments}}</li>
   </ul>
 
@@ -46,21 +48,22 @@ Candidate feedback {{candiate.id}}
     <li> &emsp; Python Rating : {{level_2.python_rating}} </li>
     <li> &emsp; Java Rating : {{level_2.java_rating}} </li>
     <li> &emsp; Cpp Rating : {{level_2.cpp_rating}}</li>
-    <li> &emsp; SQL Rating : {{level_2.cpp_rating}}</li><br/>
+    <li> &emsp; SQL Rating : {{level_2.cpp_rating}}</li>
+    <li style = 'float:right'><a href = 'edit/'> Edit </a></li><br/>
     <li> Comments : {{level_2.comments}}</li>
   </ul>
   {% endif %}
 </div>
 
 <hr>
-<h4> Level {{level}} </h4>
+<h4> Level {{level}} </h4><br>
 <div class='centre_'>
   <form name='feedback_form' id='feedback_form' method="POST">{% csrf_token %} <!# action takes us to the name of that url>
       <!--<label for="candidate_email">Candidate Email*: </label><br/>
       <input type="text" id="candidate_email" name="candidate_email"><br/>
       -->
 
-      <!--<label for="interviewer_code">interviewer Code*:</label><br/>-->
+      <label for="interviewer_code">interviewer Code :</label><br/>
       <input type="text" id="interviewer_code" name="interviewer_code" placeholder="Enter your Employee id here"><br>
 
       <!--<label for="level_">Level: </label><br/>
@@ -75,7 +78,7 @@ Candidate feedback {{candiate.id}}
       </datalist>
 
       <div>
-        <!--<label for = "status">Status: </label><br>-->
+        <label for = "status">Status: </label><br>
         <input name = "status" id = "status" list = "status_choices" placeholder = "status">
           <datalist id = "status_choices">
                   <option value = "pass">
@@ -84,25 +87,25 @@ Candidate feedback {{candiate.id}}
           </datalist>
       </div>
 
-      <!--<label for = "rating_python">Python rating out of 5: </label><br>-->
+      <label for = "rating_python">Python rating out of 5: </label><br>
       <input name = "rating_python" type =number id = "rating_python" list = "choices" placeholder = "Python rating out of 5"><br/>
 
       <!--<label for="rating_python">Python Rating Out of 5: </label><br/>
       <input type="number" id="rating_python" name="rating_python"><br> -->
 
-      <!--<label for = "rating_java">java rating out of 5: </label><br>-->
+      <label for = "rating_java">java rating out of 5: </label><br>
       <input name = "rating_java" type =number id = "rating_java" list = "choices" placeholder = "java rating out of 5"><br/>
 
       <!--<label for="rating_java">JAVA Rating Out of 5: </label><br/>
       <input type="number" id="rating_java" name="rating_java"><br> -->
 
-      <!--<label for = "rating_cpp">java rating out of 5: </label><br>-->
+      <label for = "rating_cpp">java rating out of 5: </label><br>
       <input name = "rating_cpp" type =number id = "rating_cpp" list = "choices" placeholder = "C++ rating out of 5"><br/>
 
       <!--<label for="rating_cpp">CPP Rating Out of 5:</label><br/>
       <input type="number" id="rating_cpp" name="rating_cpp"><br>-->
 
-      <!--<label for = "rating_sql">java rating out of 5: </label><br>-->
+      <label for = "rating_sql">java rating out of 5: </label><br>
       <input name = "rating_sql" type =number id = "rating_sql" list = "choices" placeholder = "SQL rating out of 5"><br/>
 
       <!--<label for="rating_sql">SQL Rating Out of 5: </label><br/>

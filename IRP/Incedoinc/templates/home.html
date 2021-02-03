@@ -2,33 +2,70 @@
 <html>
 <head>
   <style>
-      ul {
-        list-style-type: none;
-        margin: 0;
+      html, body {
+        min-height: 100%;
         padding: 0;
-        overflow: hidden;
-        background-color: #40423f;
-        color: #b6b8b5;
+        margin: 0;
+        font-family: Roboto, Arial, sans-serif;
+        font-size: 14px;
+        background: #f5f5f5;
+        color: #666;
       }
-
-      li {
-        float: left;
+      .main-block {
+        justify-content: center;
+        padding: 0px;
+        margin: 0px;
+        margin-top: 20px;
+        /* margin-left: 200px; */
+        margin-right: 200px;
+        box-shadow: 0 2px 5px #f5f5f5;
       }
+      table
+        {
+            border-collapse: collapse;
+            width: 100%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 30px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        th
+        {
+            background-color: #588c7e;
+            color: yellow;
+        }
+        tr:nth-child(even)
+        {
+            background-color: #f2f2f2;
+        }
+        button
+        {
+          font-size: 25px;
+          margin-left: 0px;
+        }
 
-      li a {
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-      }
+        ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #40423f;
+          color: #b6b8b5;
+        }
 
-      li a:hover:not(.active) {
-        background-color: #111;
-      }
+        li {
+          float: left;
+        }
 
-
-
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
 
 
     .button {
@@ -47,6 +84,30 @@
       /*color:white;*/
     }
 
+
+
+      /* search.html */
+      table
+        {
+            border-collapse: collapse;
+            width: 100%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 20px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        th
+        {
+            background-color: #588c7e;
+            color: yellow;
+        }
+        tr:nth-child(even)
+        {
+            background-color: #f2f2f2;
+        }
+
     .button1 {background-color: #4CAF50;} /* Green */
     .button2 {background-color: #008CBA;} /* Blue */
     .button3 {background-color: #4CAF50;}
@@ -61,11 +122,47 @@
         <li style="float:right"><a href="{% url 'home' %}">About us</a></li>
       </ul>
     </header>
-  <form method="POST"> {% csrf_token %}
-    <input type='text' placeholder="search requisition_id" name="requisition_id">
-    <button type='submit' class="button button1" name='search_requisition_id_button'>Search</button><br>
-    <input type='submit' class="button button2" value='Upload JD' name='upload_jd_button' /><br>
-    <input type='submit' class="button button3" value='Search Candidate' name='search_candidate_button' /><br>
-  </form>
+    <form method="POST"> {% csrf_token %}
+      <table>
+        <tr>
+          <th>
+            <input type="text" placeholder="Search Requisition Id" name="requisition_id">
+            <!-- <button type='submit' name='search_requisition_id_button'>Search</button> -->
+            <input type="submit" value="search" name = 'search_requisition_id_button'>
+          </th>
+        </tr>
+      </table>
+      {% if query_set is not None %}
+      <div class="jd_results">
+        {% if not query_set|length %}
+          <tr>No Results Found</tr>
+        {% else %}
+          <table>
+            <thead>
+              <th>RequisitionId</th>
+              <th>RaisedBy</th>
+              <th>PositionOwner</th>
+              <th>Job description</th>
+            </thead>
+              {% for obj in query_set %}
+              <tr>
+                <td>{{ obj.requisition_id }}</td>
+                <td>{{ obj.raised_by_employee }}</td>
+                <td>{{ obj.position_owner_id }}</td>
+                <td><a href="../{{ obj.job_description }}" download>Download</a></td>
+              </tr>
+              {% endfor %}
+          </table>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class='main-block'>
+        <input type='submit' class="button button2" value='Create Requisition ID and Upload JD' name='upload_jd_button' />
+        <input type='submit' class="button button3" value='Candidate and Feedback' name='search_candidate_button' /><br>
+      </div>
+    </form>
 </body>
 </html>
+
+

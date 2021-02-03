@@ -40,7 +40,7 @@ def signup_view(request):
             return HttpResponseRedirect(reverse('home_page'))
     else:
         form = SignUpForm()
-    return render(request, 'SignUp_Login/signup.html', {'form': form})
+    return render(request, 'Signup_Login/signup.html', {'form': form})
 
 def logout_view(request):
     logout(request)
