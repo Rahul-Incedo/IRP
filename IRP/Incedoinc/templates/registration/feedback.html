@@ -26,7 +26,8 @@ Candidate feedback {{candiate.id}}
       <li> &emsp; Cpp Rating : {{level_1.cpp_rating}}</li>
       <li> &emsp; SQL Rating : {{level_1.cpp_rating}}</li>
       <li style = 'float:right'><a href = 'edit1/'> Edit </a></li><br/>
-      <li> Comments : {{level_1.comments}}</li>
+      <li> Comments : {{level_1.comments}}</li><br/>
+      <li> Interviwer Id : {{level_1.interviewer_id}} <li>
     </ul>
   {% endif %}
 
@@ -39,7 +40,8 @@ Candidate feedback {{candiate.id}}
     <li> &emsp; Cpp Rating : {{level_1.cpp_rating}}</li>
     <li> &emsp; SQL Rating : {{level_1.cpp_rating}}</li>
     <li style = 'float:right'><a href = 'edit1/'> Edit </a></li><br/>
-    <li> Comments : {{level_1.comments}}</li>
+    <li> Comments : {{level_1.comments}}</li><br/>
+    <li> Interviwer Id : {{level_1.interviewer_id}} <li>
   </ul>
 
   <h4> Level 2 </h4>
@@ -50,7 +52,8 @@ Candidate feedback {{candiate.id}}
     <li> &emsp; Cpp Rating : {{level_2.cpp_rating}}</li>
     <li> &emsp; SQL Rating : {{level_2.cpp_rating}}</li>
     <li style = 'float:right'><a href = 'edit2/'> Edit </a></li><br/>
-    <li> Comments : {{level_2.comments}}</li>
+    <li> Comments : {{level_2.comments}}</li><br/>
+    <li> Interviwer Id : {{level_2.interviewer_id}} <li>
   </ul>
   {% endif %}
 </div>
@@ -63,8 +66,8 @@ Candidate feedback {{candiate.id}}
       <input type="text" id="candidate_email" name="candidate_email"><br/>
       -->
 
-      <label for="interviewer_code">interviewer Code :</label><br/>
-      <input type="text" id="interviewer_code" name="interviewer_code" placeholder="Enter your Employee id here"><br>
+      <label for="interviewer_code"><h4>Interviewer Id : {{basic_detail.interviewer_id}}</h4></label>
+      <!-- <input type="text" id="interviewer_code" name="interviewer_code" placeholder="Enter your Employee id here"><br> -->
 
       <!--<label for="level_">Level: </label><br/>
       <input type="number" id="level" name=level"><br>
