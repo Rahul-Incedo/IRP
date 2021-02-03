@@ -1,2 +1,0 @@
-# IRP
-Incedo Recruitment Portal
