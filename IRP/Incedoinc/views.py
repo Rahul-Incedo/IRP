@@ -463,25 +463,35 @@ def feedback(request, req_id, email_id, level):
 
     return render(request, 'registration/feedback.html', context)
 
-def edit(request, req_id, email_id, level):
+def edit(request, req_id, email_id, level, edit_level):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
 
     if request.method == 'POST':
-        obj_ = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
-        obj_.interviewer_id = Employee.objects.get(employee_id=request.POST['interviewer_id'])
-        obj_.status = request.POST['status']
-        obj_.rating_python = request.POST['rating_python']
-        obj_.rating_java = request.POST['rating_java']
-        obj_.rating_cpp = request.POST['rating_cpp']
-        obj_.rating_sql = request.POST['rating_sql']
-        obj_.comments = request.POST['comments']
+        interviewer_id=request.POST['interviewer_id']
+        status=request.POST['status']
+        rating_python=request.POST['rating_python']
+        rating_java=request.POST['rating_java']
+        rating_cpp=request.POST['rating_cpp']
+        rating_sql=request.POST['rating_sql']
+        comments=request.POST['comments']
+
+        obj_ = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
+        print(vars(obj_))
+        print('-------------------------')
+        obj_.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
+        obj_.status = status
+        obj_.rating_python = rating_python
+        obj_.rating_java = rating_java
+        obj_.rating_cpp = rating_cpp
+        obj_.rating_sql = rating_sql
+        obj_.comments = comments
         obj_.save()
 
         return HttpResponseRedirect(reverse('search_candidate'))
 
     try:
-        obj= Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
+        obj= Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
         Context = vars(obj)
         return render(request, 'registration/edit.html', Context)
     except:
