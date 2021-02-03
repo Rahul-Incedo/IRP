@@ -29,6 +29,8 @@ from django.contrib import messages
 UserModel = get_user_model()
 from .forms import SignUpForm
 
+from Incedoinc import templates
+ 
 
 # def index(request):
 #     return HttpResponse('Vaishnavi here!')
@@ -54,12 +56,12 @@ def signup_view(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
-            to_email = form.cleaned_data.get('email')
+            to_email = form.cleaned_data.get('username')
             email = EmailMessage(
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            return HttpResponse('Please confirm your email address to complete the registration')
+            return HttpResponse('<h2 >Please click the link sent to your email to complete the registration.</h2>')
     else:
         form = SignUpForm()
     return render(request, 'SignUp_Login/signup.html', {'form': form})
@@ -68,7 +70,7 @@ def signup_view(request):
 def activate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
-        user = UserModel._default_manager.get(pk=uid)
+        user = UserModel._default_manager.get(pk=uid) #Giving Error
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     if user is not None and default_token_generator.check_token(user, token):
@@ -77,42 +79,123 @@ def activate(request, uidb64, token):
         form = LoginForm(data=request.POST)
         return render(request, 'Signup_Login/login.html', {'form': form})
     else:
-        return HttpResponse('Activation link is invalid!')
+        return HttpResponse('<h1>Activation link is invalid!</h1>')
+
+
+
+# def login_view(request):
+#     if request.method == 'GET':
+#         return render(request,'Signup_Login/login.html', {'form': LoginForm()})
+#     else:
+#         user = authenticate(request,username= request.POST.get('username'), password= request.POST.get('password'))
+#         if user is None:
+#             return HttpResponse('Haaaaan')
+#             #return render(request,'Signup_Login/login.html',{'form': LoginForm(),'error':'Hmse na ho payega'}  ) 
+#         else:
+#             login(request, user)
+#             # return redirect('home_page')    
+#             return HttpResponse('Login ho gaya bro')   
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request=request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}")
+                return redirect('home')
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+    form = LoginForm()
+    return render(request = request,
+                    template_name = "SignUp_Login/login.html",
+                    context={"form":form})
+
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request,user) #edited : added user
+        return redirect('home')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # def login_view(request):
 #     if request.method == 'POST':
-
+#         username = request.POST.get('username')   # Here Username refers to Email
+#         password =request.POST.get('password')
 #         form = LoginForm(data=request.POST)
 #         if form.is_valid():
-
-#             return render(request,'SignUp_Login/dashboard.html')  #homepage
+#             return HttpResponse('Form valid hai') 
+# #        return HttpResponse('Form valid nahi hai')
+#             # return render(request,'templates/home.html')  #homepage
 #     else:
 #         form = LoginForm()
-#     return render(request, 'Signup_Login/login.html', {'form': form})
+#         return render(request, 'Signup_Login/login.html', {'form': form})
 
 
 
 
-def login_view(request):
-	if request.user.is_authenticated:
-		return redirect('home')
-	else:
-		if request.method == 'POST':
-			email = request.POST.get('email')
-			password =request.POST.get('password')
+# def login_view(request):
+# 	if request.user.is_authenticated:
+# 		return redirect('home')
+# 	else:
+# 		if request.method == 'POST':
+# 			username = request.POST.get('username')   # Here Username refers to Email
+# 			password =request.POST.get('password')
 
-			user = authenticate(request, email=email, password=password)
+# 			user = authenticate(request, username = username, password=password)   # Here Username refers to Email
 
-			if user is not None:
-				login(request, user)
-				return redirect('home')
-			else:
-				messages.info(request, 'Username OR password is incorrect')
+# 			if user is not None:
+# 				login(request, user)
+# 				return redirect('home')
+# 			else:
+# 				messages.info(request,'Email OR password is incorrect')
 
-		context = {}
-		return render(request, 'SignUp_Login/login.html', context)
+# 		context = {}
+# 		return render(request, 'SignUp_Login/login.html', context)
 
+
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('username')   # Here Username refers to Email
+#         password =request.POST.get('password')
+#         user = authenticate(request, username = username, password=password)   # Here Username refers to Email
+#         if user is not None:
+#             login(request,user)
+#             return redirect('home_page')
+#         else:
+#             messages.info(request,'Email OR password is incorrect')
+#     context = {}
+#     return render(request, 'SignUp_Login/login.html', context)
+		
+
+			
+
+			
+
+		
 
 
 

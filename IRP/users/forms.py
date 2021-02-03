@@ -22,14 +22,14 @@ class SignUpForm(UserCreationForm):
        
         employee_id = self.cleaned_data['employee_id']
         if CustomUser.objects.filter(employee_id=employee_id).exists():
-            raise forms.ValidationError("Employee ID  already exists")
+            raise forms.ValidationError("Employee ID already exists")
         return employee_id 
     
     def clean_username(self):       #username means Email
        
         username = self.cleaned_data['username']
         if CustomUser.objects.filter(username=username).exists():
-            raise forms.ValidationError("Email  already exists")
+            raise forms.ValidationError("Email already exists")
         if "@incedoinc.com" not in username:   
             raise forms.ValidationError("Must be an Incedo Email address")  
         return username
@@ -42,7 +42,8 @@ class SignUpForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-    email = forms.EmailField(max_length=254, required = 'True')
+    username = forms.EmailField(max_length=150, required = True)
+    
     class Meta:
         model = CustomUser
-        fields = ['email', 'password']   
+        fields = ['username', 'password']   
