@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db.models import query
 from django.shortcuts import redirect, render
 from decimal import Context
 from django.contrib.auth.backends import UserModel
@@ -122,7 +123,16 @@ def home_view(request):
         print(request.POST)
         if 'search_requisition_id_button' in request.POST:
             requisition_id = request.POST.get('requisition_id')
-            return redirect('search_jd_page', requisition_id)
+            if len(requisition_id) >= 3:
+                query_set = Job.objects.filter(requisition_id__contains=requisition_id)
+            else:
+                query_set = Job.objects.filter(requisition_id=requisition_id)
+            print(query_set)
+            context = {
+                'requisition_id' : requisition_id,
+                'query_set': query_set
+            }
+            return render(request, 'home.html', context)
         elif 'upload_jd_button' in request.POST:
             return redirect('upload_jd_page')
         elif 'search_candidate_button' in request.POST:
@@ -142,85 +152,6 @@ def search_jd_view(request, requisition_id):
         return render(request, 'jd_results.html', context)
     else:
         raise Http404("JD is not exist")
-
-#######rudra's previous part ###############
-# def search_candidate_view(request):
-#     return HttpResponseRedirect(reverse("feedback", args=('python_1', 'rudra@gmail.com', 3)))
-
-# def feedback(request, req_id, email_id, level):
-#     if request.method == "POST":
-#         #candidate_email = Candidate.objects.get()
-#         #candidate_email = Candidate.objects.get(emailId='rudra@gmail.com')
-#         #interviewer_code = Employee.objects.get(incedoCode=201201)
-#         #time_stamp = datetime.timestamp(datetime.now())
-
-#         requisition_id = 'req_id'
-#         candidate_email = request.POST['candidate_email']
-#         interviewer_code = request.POST['interviewer_code']
-#         status = request.POST['status']
-#         rating_python = request.POST['rating_python']
-#         rating_java = request.POST['rating_java']
-#         rating_cpp = request.POST['rating_cpp']
-#         rating_sql = request.POST['rating_sql']
-#         comments = request.POST['comments']
-
-#         Feedback.objects.create(candidateEmail=Candidate.objects.get(emailId=candidate_email),
-#                                 interviewerCode=Employee.objects.get(incedoCode=interviewer_code),
-#                                 level=int(level)+1,
-#                                 status=status,
-#                                 ratingPython=rating_python,
-#                                 ratingJava=rating_java,
-#                                 ratingCPP=rating_cpp,
-#                                 ratingSQL=rating_sql,
-#                                 comments=comments,)
-#         return HttpResponseRedirect(reverse('test_name'))
-
-#     try:
-#         basic_detail={'Name' :'candidate_name',
-#                     'Email':email_id,
-#                     'Graduation_CGPA':'candidate_cgpa',
-#                     'University_name':'candidate_college_name'}
-
-#         if(level == 1):
-#              prv_feedback[level] = None
-
-#         if(level == 2):
-#             level_1 = { 'staus':'pass',
-#                         'python_rating':'python_rating',
-#                         'java_rating':'java_rating',
-#                         'cpp_rating': 'cpp_rating',
-#                         'sql_rating': 'sql_rating',
-#                         'comments' : 'comments'}
-
-#             context = {
-#                 'basic_detail':basic_detail,
-#                 'level_1': level_1,
-#             }
-
-#         if(level == 3):
-#             level_1 = { 'staus':'pass',
-#                         'python_rating':'python_rating',
-#                         'java_rating':'java_rating',
-#                         'cpp_rating': 'cpp_rating',
-#                         'sql_rating': 'sql_rating',
-#                         'comments' : 'comments'}
-
-#             level_2 = { 'staus':'pass',
-#                         'python_rating':'python_rating',
-#                         'java_rating':'java_rating',
-#                         'cpp_rating': 'cpp_rating',
-#                         'sql_rating': 'sql_rating',
-#                         'comments' : 'comments'}
-#             context = {
-#                 'basic_detail':basic_detail,
-#                 'level_1': level_1,
-#                 'level_2': level_2,
-#             }
-
-#     except Feedback.DoesNotExist:
-#         raise Http404('Feedback does not exist')
-
-#     return render(request, 'registration/feedback.html', Context)
 
 
 def test_view(request, *args, **kwargs):
@@ -369,7 +300,7 @@ def search_candidate(request, *args, **kwargs):
             candidate_email = kwargs['candidate_email']
         elif request.method == 'POST':
             candidate_email= request.POST['search_element']
-        
+
         req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
         print(type(req_id))
         print(req_id)
@@ -456,7 +387,9 @@ def feedback(request, req_id, email_id, level):
                                 rating_cpp=rating_cpp,
                                 rating_sql=rating_sql,
                                 comments=comments,)'''
-        return HttpResponseRedirect(reverse('search_candidate'))
+        # return HttpResponseRedirect(reverse('search_candidate'))
+        candidate_email=email_id
+        return redirect('../../../../search_candidate/'+str(candidate_email))
 
     try:
         candidate_name = Candidate.objects.get(email=email_id).full_name
@@ -532,25 +465,38 @@ def feedback(request, req_id, email_id, level):
 
     return render(request, 'registration/feedback.html', context)
 
-def edit(request, req_id, email_id, level):
+def edit(request, req_id, email_id, level, edit_level):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
 
     if request.method == 'POST':
-        obj_ = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
-        obj_.interviewer_id = Employee.objects.get(employee_id=request.POST['interviewer_id'])
-        obj_.status = request.POST['status']
-        obj_.rating_python = request.POST['rating_python']
-        obj_.rating_java = request.POST['rating_java']
-        obj_.rating_cpp = request.POST['rating_cpp']
-        obj_.rating_sql = request.POST['rating_sql']
-        obj_.comments = request.POST['comments']
+        interviewer_id=request.POST['interviewer_id']
+        status=request.POST['status']
+        rating_python=request.POST['rating_python']
+        rating_java=request.POST['rating_java']
+        rating_cpp=request.POST['rating_cpp']
+        rating_sql=request.POST['rating_sql']
+        comments=request.POST['comments']
+
+        obj_ = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
+        print(vars(obj_))
+        print('-------------------------')
+        obj_.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
+        obj_.status = status
+        obj_.rating_python = rating_python
+        obj_.rating_java = rating_java
+        obj_.rating_cpp = rating_cpp
+        obj_.rating_sql = rating_sql
+        obj_.comments = comments
         obj_.save()
 
-        return HttpResponseRedirect(reverse('search_candidate'))
+        # return HttpResponseRedirect(reverse('search_candidate'))
+        candidate_email=email_id
+        return redirect('../../../../../search_candidate/'+str(candidate_email))
+
 
     try:
-        obj= Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
+        obj= Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
         Context = vars(obj)
         return render(request, 'registration/edit.html', Context)
     except:
