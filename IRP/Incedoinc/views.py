@@ -300,7 +300,7 @@ def search_candidate(request, *args, **kwargs):
             candidate_email = kwargs['candidate_email']
         elif request.method == 'POST':
             candidate_email= request.POST['search_element']
-        
+
         req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
         print(type(req_id))
         print(req_id)
@@ -387,7 +387,9 @@ def feedback(request, req_id, email_id, level):
                                 rating_cpp=rating_cpp,
                                 rating_sql=rating_sql,
                                 comments=comments,)'''
-        return HttpResponseRedirect(reverse('search_candidate'))
+        # return HttpResponseRedirect(reverse('search_candidate'))
+        candidate_email=email_id
+        return redirect('../../../../search_candidate/'+str(candidate_email))
 
     try:
         candidate_name = Candidate.objects.get(email=email_id).full_name
@@ -488,7 +490,10 @@ def edit(request, req_id, email_id, level, edit_level):
         obj_.comments = comments
         obj_.save()
 
-        return HttpResponseRedirect(reverse('search_candidate'))
+        # return HttpResponseRedirect(reverse('search_candidate'))
+        candidate_email=email_id
+        return redirect('../../../../../search_candidate/'+str(candidate_email))
+
 
     try:
         obj= Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
