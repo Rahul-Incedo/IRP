@@ -302,6 +302,9 @@ def search_candidate(request, *args, **kwargs):
             candidate_email= request.POST['search_element']
 
         req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
+        if len(req_id)==0 :
+            return render(request, 'search.html',{'error_message':'There are no results for this input'})
+
         print(type(req_id))
         print(req_id)
 
