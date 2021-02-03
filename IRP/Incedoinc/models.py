@@ -16,7 +16,7 @@ class Job(models.Model):
     requisition_id = models.CharField(max_length=64, primary_key=True)
     raised_by_employee = models.ForeignKey(Employee, null = True, related_name='raisedByEmployee', on_delete=models.CASCADE)
     position_owner_id = models.ForeignKey(Employee, null = True, related_name='positionOwner', on_delete=models.CASCADE)
-    job_description = models.FileField(upload_to='__MEDIA/JD/')
+    job_description = models.FileField(upload_to='JD/')
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -40,7 +40,7 @@ class Candidate(models.Model):
     mobile = models.CharField(max_length=10)
     DOB = models.DateField(auto_now = True)
     projects_link = models.URLField(null=True, blank=True)
-    resume = models.FileField(upload_to='__MEDIA/RESUME/')
+    resume = models.FileField(upload_to='Resume/')
     noticePeriod = models.IntegerField(null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 

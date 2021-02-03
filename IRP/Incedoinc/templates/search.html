@@ -121,7 +121,10 @@
     <br>
     <tr>
       <td>{{value.req_id}}</td>
-      <td>{{value.email}}</td>
+      <td>
+        {{value.email}}
+        <a href='{{ value.resume.url }}'><button>Resume</button></a>
+      </td>
 
         <td>
           {% if value.1 == "pending" %}
