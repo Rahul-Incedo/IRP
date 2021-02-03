@@ -4,13 +4,10 @@
 Edit candidate information
 {% endblock %}
 
-{% block body %}
+{% block body %} <br/>
+<h4 style="text-align: centre">Edit Form : Level {{level}} </h4><br/>
 <div class='centre_'>
   <form name='edit_form' id='edit_form' method="POST">{% csrf_token %} <!# action takes us to the name of that url>
-
-      <label for="interviewer_code">Enter your ID here:</label><br/>
-      <input type="text" id="interviewer_id" name="interviewer_id" placeholder="Enter your Employee id here", value = {{interviewer_id_id}}><br>
-
       <datalist id = "choices">
               <option value = 1>
               <option value = 2>

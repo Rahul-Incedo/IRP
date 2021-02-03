@@ -351,9 +351,8 @@ def search_candidate(request, *args, **kwargs):
 
         return render(request, 'search.html',{'context':context})
 
-
-
     return render(request, 'search.html')
+
 
 def feedback(request, req_id, email_id, level):
     if not request.user.is_authenticated:
@@ -368,7 +367,7 @@ def feedback(request, req_id, email_id, level):
         comments = request.POST['comments']
 
         feedback_object = Feedback.objects.get(candidate_email=Candidate.objects.get(email=email_id), requisition_id=Job.objects.get(requisition_id = req_id), level=level, status='pending')
-        feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_code)
+        # feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_code)
         feedback_object.status=status
         feedback_object.rating_python=rating_python
         feedback_object.rating_java=rating_java
@@ -395,10 +394,14 @@ def feedback(request, req_id, email_id, level):
         candidate_name = Candidate.objects.get(email=email_id).full_name
         candidate_cgpa = Candidate.objects.get(email=email_id).CGPA
         candidate_college_name =  Candidate.objects.get(email=email_id).college_name
+        interviewer_id = Employee.objects.get(email=request.user._wrapped.username).employee_id
+        # print(interviewer_id, '======================================')
         basic_detail={'Name' :candidate_name,
                     'Email':email_id,
                     'Graduation_CGPA':candidate_cgpa,
-                    'University_name':candidate_college_name}
+                    'University_name':candidate_college_name,
+                    'interviewer_id':interviewer_id,
+                    }
 
         if(level == 1):
              context = {
@@ -413,12 +416,15 @@ def feedback(request, req_id, email_id, level):
             cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
             sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
             comments = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
+            interviewer_id_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).interviewer_id.employee_id
             level_1 = { 'status': status,
                         'python_rating': python_rating,
                         'java_rating': java_rating,
                         'cpp_rating': cpp_rating,
                         'sql_rating': sql_rating,
-                        'comments' : comments}
+                        'comments' : comments,
+                        'interviewer_id': interviewer_id,
+                        }
 
             context = {
                 'basic_detail':basic_detail,
@@ -433,6 +439,7 @@ def feedback(request, req_id, email_id, level):
             cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_cpp
             sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_sql
             comments = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).comments
+            interviewer_id = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).interviewer_id.employee_id
 
             status_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).status
             python_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_python
@@ -440,19 +447,26 @@ def feedback(request, req_id, email_id, level):
             cpp_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
             sql_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
             comments_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
+            interviewer_id_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).interviewer_id.employee_id
+
             level_1 = { 'status': status,
                         'python_rating': python_rating,
                         'java_rating': java_rating,
                         'cpp_rating': cpp_rating,
                         'sql_rating': sql_rating,
-                        'comments' : comments}
+                        'comments' : comments,
+                        'interviewer_id' : interviewer_id,
+                        }
 
             level_2 = { 'status': status_,
                         'python_rating': python_rating_,
                         'java_rating': java_rating_,
                         'cpp_rating': cpp_rating_,
                         'sql_rating': sql_rating_,
-                        'comments' : comments_}
+                        'comments' : comments_,
+                        'interviewer_id': interviewer_id_,
+                        }
+
             context = {
                 'basic_detail':basic_detail,
                 'level_1': level_1,
@@ -470,7 +484,6 @@ def edit(request, req_id, email_id, level, edit_level):
         return render(request, "users/login.html")
 
     if request.method == 'POST':
-        interviewer_id=request.POST['interviewer_id']
         status=request.POST['status']
         rating_python=request.POST['rating_python']
         rating_java=request.POST['rating_java']
@@ -479,9 +492,8 @@ def edit(request, req_id, email_id, level, edit_level):
         comments=request.POST['comments']
 
         obj_ = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
-        print(vars(obj_))
-        print('-------------------------')
-        obj_.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
+        # print(vars(obj_))
+        # print('-------------------------')
         obj_.status = status
         obj_.rating_python = rating_python
         obj_.rating_java = rating_java
