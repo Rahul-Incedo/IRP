@@ -103,7 +103,9 @@
     </table>
   </form>
 
-
+  {% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
 
   <table>
     <tr>
