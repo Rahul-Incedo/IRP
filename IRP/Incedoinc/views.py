@@ -50,8 +50,8 @@ def index(request):
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
-    user_id = request.session['user_id']
-    user = Employee.objects.get(employee_id=user_id)
+    
+    user = Employee.objects.get(email=request.user.username)
     if request.method == 'POST':
         form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
@@ -93,8 +93,8 @@ def add_candidate_view(request, *args, **kwargs):
 def upload_jd_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
-    user_id = request.session['user_id']
-    user = Employee.objects.get(employee_id=user_id)
+    username = request.user.username
+    user = Employee.objects.get(email=username)
     if request.method == 'POST':
         #if someone forcefully entered raised_by_field using tampering of form
         if 'raised_by_employee' in request.POST:
