@@ -23,7 +23,6 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-import re
 
 UserModel = get_user_model()
 from .forms import SignUpForm
@@ -39,6 +38,21 @@ from .models import TestModel
 from .forms import CandidateForm, UploadJdForm
 from .forms import TestForm
 
+#for downloading file
+# import os
+# from django.conf import settings
+# from django.http import HttpResponse, Http404
+# def download_view(request, path):
+#     print('path: ', path)
+#     file_path = os.path.join(settings.MEDIA_ROOT, path)
+#     print('file_path: ', file_path)
+#     if os.path.exists(file_path):
+#         with open(file_path, 'rb') as fh:
+#             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+#             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+#             return response
+#     raise Http404
+################################################################################
 
 # Create your views here.
 def index(request):
@@ -260,6 +274,7 @@ def search_candidate(request, *args, **kwargs):
 
             temp_dict['req_id']=req_id[x][0];
             temp_dict['email']=candidate_email;
+            temp_dict['resume'] = Candidate.objects.get(email=candidate_email).resume
             if l1=='pending':
                 temp_dict[1]='pending'
                 temp_dict[2]='-'
