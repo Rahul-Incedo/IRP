@@ -23,7 +23,6 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-import re
 
 UserModel = get_user_model()
 from .forms import SignUpForm
@@ -39,6 +38,21 @@ from .models import TestModel
 from .forms import CandidateForm, UploadJdForm
 from .forms import TestForm
 
+#for downloading file
+# import os
+# from django.conf import settings
+# from django.http import HttpResponse, Http404
+# def download_view(request, path):
+#     print('path: ', path)
+#     file_path = os.path.join(settings.MEDIA_ROOT, path)
+#     print('file_path: ', file_path)
+#     if os.path.exists(file_path):
+#         with open(file_path, 'rb') as fh:
+#             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+#             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+#             return response
+#     raise Http404
+################################################################################
 
 # Create your views here.
 def index(request):
@@ -50,7 +64,7 @@ def index(request):
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
-    
+
     user = Employee.objects.get(email=request.user.username)
     if request.method == 'POST':
         form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
@@ -99,11 +113,11 @@ def upload_jd_view(request, *args, **kwargs):
         #if someone forcefully entered raised_by_field using tampering of form
         if 'raised_by_employee' in request.POST:
             raise ValidationError('FORM IS TAMPERED')
-        print(request.POST)
+        # print(request.POST)
         form = UploadJdForm(request.POST, request.FILES, initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
         if form.is_valid():
-            print(form.cleaned_data)
+            # print(form.cleaned_data)
             obj = form.save()
             return redirect('home_page')
     else:
@@ -120,14 +134,14 @@ def home_view(request):
     user_id = 101   # it is currently hardcoded but will be derived from login page itself
     request.session['user_id'] = user_id
     if request.method == 'POST':
-        print(request.POST)
+        # print(request.POST)
         if 'search_requisition_id_button' in request.POST:
             requisition_id = request.POST.get('requisition_id')
             if len(requisition_id) >= 3:
                 query_set = Job.objects.filter(requisition_id__contains=requisition_id)
             else:
                 query_set = Job.objects.filter(requisition_id=requisition_id)
-            print(query_set)
+            # print(query_set)
             context = {
                 'requisition_id' : requisition_id,
                 'query_set': query_set
@@ -158,7 +172,7 @@ def test_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
     if request.method == 'POST':
-        print(request.POST)
+        # print(request.POST)
         form = TestForm(request.POST, request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
@@ -166,34 +180,13 @@ def test_view(request, *args, **kwargs):
     else:
         form = TestForm(initial={'field1': 'initial_val'})
         form.fields['field1'].readonly = True
-        print(form.fields['field1'].readonly)
+        # print(form.fields['field1'].readonly)
         form.fields['field1'].disabled = True
     context = {
         'form' : form
     }
     return render(request, 'test.html', context)
 
-# def signup_view(request):
-#    if request.method == 'POST':
-#        form = SignUpForm(request.POST)
-#       if form.is_valid():
-#            form.save()
-#            return redirect('posts:list')
- #   else:
- #       form = SignUpForm()
-  #  return render(request, 'Signup_login/signup.html', {'form': form})
-
-
-# def login_view(request):
-#     if request.method == 'POST':
-
-#         form = LoginForm(data=request.POST)
-#         if form.is_valid():
-
-#             return render(request,'SignUp_Login/dashboard.html')
-#     else:
-#         form = LoginForm()
-#     return render(request, 'Signup_Login/login.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
@@ -205,22 +198,6 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request, 'Signup_Login/login.html', {'form': form})
-
-
-
-
-#
-# def login_view(request):
-  #  username = request.POST['username']
- #   password = request.POST['password']
-  #  print(username)
-
-  #  user = authenticate(request, username=username, password=password)
-  #  if user is not None:
-   #     login(request, user)
-  #      return HttpResponseRedirect(reverse('index'))
-    #else:
- #       return render(request, "users/login.html", {"message":"Invalid credential"})
 
 
 def signup_view(request):
@@ -270,25 +247,6 @@ def dashboard(request):
     return render(request, "SignUp_Login/dashboard.html")
 
 
-
-
-
-
-
-
-#user = form.save()
-           # username = form.cleaned_data.get('username')
-           # raw_password = form.cleaned_data.get('password1')
-           # user = authenticate(username=username, password=raw_password)
-           # login(request, user)
-
-           # return redirect('home')
-            #else:
-    #    form = SignUpForm()
-   # return render(request, 'SignUp_Login/signup.html', {'form': form})
-
-
-##################### RUDRA #################################
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
@@ -300,8 +258,11 @@ def search_candidate(request, *args, **kwargs):
             candidate_email = kwargs['candidate_email']
         elif request.method == 'POST':
             candidate_email= request.POST['search_element']
-        
+
         req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
+        if len(req_id)==0 :
+            return render(request, 'search.html',{'error_message':'There are no results for this input'})
+
         print(type(req_id))
         print(req_id)
 
@@ -313,6 +274,7 @@ def search_candidate(request, *args, **kwargs):
 
             temp_dict['req_id']=req_id[x][0];
             temp_dict['email']=candidate_email;
+            temp_dict['resume'] = Candidate.objects.get(email=candidate_email).resume
             if l1=='pending':
                 temp_dict[1]='pending'
                 temp_dict[2]='-'
@@ -351,52 +313,47 @@ def search_candidate(request, *args, **kwargs):
 
         return render(request, 'search.html',{'context':context})
 
-
-
     return render(request, 'search.html')
+
 
 def feedback(request, req_id, email_id, level):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
     if request.method == "POST":
-        interviewer_code = request.POST['interviewer_code']
         status = request.POST['status']
         rating_python = request.POST['rating_python']
         rating_java = request.POST['rating_java']
         rating_cpp = request.POST['rating_cpp']
         rating_sql = request.POST['rating_sql']
         comments = request.POST['comments']
+        interviewer_id = Employee.objects.get(email=request.user._wrapped.username).employee_id
 
         feedback_object = Feedback.objects.get(candidate_email=Candidate.objects.get(email=email_id), requisition_id=Job.objects.get(requisition_id = req_id), level=level, status='pending')
-        feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_code)
+        # feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_code)
         feedback_object.status=status
         feedback_object.rating_python=rating_python
         feedback_object.rating_java=rating_java
         feedback_object.rating_cpp=rating_cpp
         feedback_object.rating_sql=rating_sql
         feedback_object.comments=comments
+        feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
         feedback_object.save()
-        '''
-        Feedback.objects.create(candidate_email=Candidate.objects.get(email=email_id),
-                                interviewer_id=Employee.objects.get(employee_id=interviewer_code),
-                                requisition_id=Job.objects.get(requisition_id = req_id),
-                                level=int(level)+1,
-                                status=status,
-                                rating_python=rating_python,
-                                rating_java=rating_java,
-                                rating_cpp=rating_cpp,
-                                rating_sql=rating_sql,
-                                comments=comments,)'''
-        return HttpResponseRedirect(reverse('search_candidate'))
 
+        candidate_email=email_id
+        return redirect('../../../../search_candidate/'+str(candidate_email))
+
+    '''GET part'''
     try:
         candidate_name = Candidate.objects.get(email=email_id).full_name
         candidate_cgpa = Candidate.objects.get(email=email_id).CGPA
         candidate_college_name =  Candidate.objects.get(email=email_id).college_name
+        interviewer_id = Employee.objects.get(email=request.user._wrapped.username).employee_id
         basic_detail={'Name' :candidate_name,
                     'Email':email_id,
                     'Graduation_CGPA':candidate_cgpa,
-                    'University_name':candidate_college_name}
+                    'University_name':candidate_college_name,
+                    'interviewer_id':interviewer_id,
+                    }
 
         if(level == 1):
              context = {
@@ -411,12 +368,16 @@ def feedback(request, req_id, email_id, level):
             cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
             sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
             comments = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
+            interviewer_id = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).interviewer_id
+
             level_1 = { 'status': status,
                         'python_rating': python_rating,
                         'java_rating': java_rating,
                         'cpp_rating': cpp_rating,
                         'sql_rating': sql_rating,
-                        'comments' : comments}
+                        'comments' : comments,
+                        'interviewer_id': interviewer_id,
+                        }
 
             context = {
                 'basic_detail':basic_detail,
@@ -431,6 +392,7 @@ def feedback(request, req_id, email_id, level):
             cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_cpp
             sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_sql
             comments = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).comments
+            interviewer_id = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).interviewer_id
 
             status_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).status
             python_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_python
@@ -438,19 +400,26 @@ def feedback(request, req_id, email_id, level):
             cpp_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
             sql_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
             comments_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
+            interviewer_id_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).interviewer_id
+
             level_1 = { 'status': status,
                         'python_rating': python_rating,
                         'java_rating': java_rating,
                         'cpp_rating': cpp_rating,
                         'sql_rating': sql_rating,
-                        'comments' : comments}
+                        'comments' : comments,
+                        'interviewer_id' : interviewer_id,
+                        }
 
             level_2 = { 'status': status_,
                         'python_rating': python_rating_,
                         'java_rating': java_rating_,
                         'cpp_rating': cpp_rating_,
                         'sql_rating': sql_rating_,
-                        'comments' : comments_}
+                        'comments' : comments_,
+                        'interviewer_id': interviewer_id_,
+                        }
+
             context = {
                 'basic_detail':basic_detail,
                 'level_1': level_1,
@@ -468,7 +437,6 @@ def edit(request, req_id, email_id, level, edit_level):
         return render(request, "users/login.html")
 
     if request.method == 'POST':
-        interviewer_id=request.POST['interviewer_id']
         status=request.POST['status']
         rating_python=request.POST['rating_python']
         rating_java=request.POST['rating_java']
@@ -477,9 +445,6 @@ def edit(request, req_id, email_id, level, edit_level):
         comments=request.POST['comments']
 
         obj_ = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
-        print(vars(obj_))
-        print('-------------------------')
-        obj_.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
         obj_.status = status
         obj_.rating_python = rating_python
         obj_.rating_java = rating_java
@@ -488,7 +453,9 @@ def edit(request, req_id, email_id, level, edit_level):
         obj_.comments = comments
         obj_.save()
 
-        return HttpResponseRedirect(reverse('search_candidate'))
+        candidate_email=email_id
+        return redirect('../../../../../search_candidate/'+str(candidate_email))
+
 
     try:
         obj= Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
