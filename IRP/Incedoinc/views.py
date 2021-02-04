@@ -49,10 +49,10 @@ from .forms import TestForm
 ################################################################################
 
 # Create your views here.
-# def index(request):
-#     if not request.user.is_authenticated:
-#         return render(request, "users/login.html")
-#     return HttpResponseRedirect(reverse('index'))
+def index(request):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
+    return HttpResponseRedirect(reverse('first_page'))
 
 
 def add_candidate_view(request, *args, **kwargs):
@@ -60,6 +60,7 @@ def add_candidate_view(request, *args, **kwargs):
         return render(request, "users/login.html")
 
     user = Employee.objects.get(email=request.user.username)
+    print(user)
     if request.method == 'POST':
         form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
