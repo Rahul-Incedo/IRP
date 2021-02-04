@@ -150,7 +150,7 @@ def upload_job_view(request, *args, **kwargs):
         if form.is_valid():
             # print(form.cleaned_data)
             obj = form.save()
-            return redirect('home_page')
+            return redirect('manage_job_page')
     else:
         form = UploadJobForm(initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
@@ -268,8 +268,8 @@ def add_candidate_view(request, *args, **kwargs):
 
 
 
-# def dashboard(request):
-#     return render(request, "SignUp_Login/dashboard.html")
+def dashboard(request):
+    return render(request, "Signup_Login/dashboard.html")
 
 
 def search_candidate_original(request, *args, **kwargs):
