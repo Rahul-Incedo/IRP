@@ -1,6 +1,6 @@
 from django.core import validators
 from django import forms
-from .models import Candidate, Job, TestModel, Employee
+from .models import Candidate, Job, TestModel, Employee, JD
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
@@ -25,17 +25,21 @@ class UploadJdForm(forms.ModelForm):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf']
     )
-    
-    job_description = forms.FileField(validators = [pdf_validator])
+    jd_file = forms.FileField(validators = [pdf_validator])
+    class Meta:
+        model = JD
+        fields = ['uploaded_by_employee',  'jd_name', 'jd_file']
+
+
+class UploadJobForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields = ['raised_by_employee', 'requisition_id', 'job_description', 'position_owner_id']
+        fields = ['raised_by_employee', 'position_owner_id', 'requisition_id', 'jd_name']
 
 class TestForm(forms.ModelForm):
     class Meta:
         model = TestModel
         fields = ['field1', 'field2']
-
 
 
 class SignUpForm(UserCreationForm):

@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from django.conf.urls import url
 from  . import views as core_views
-from .views import dashboard
+from .views import dashboard, upload_jd_view, upload_job_view
 from django.contrib.auth import views as auth_views
 
 #download-file
@@ -14,9 +14,11 @@ urlpatterns = [
     path("", views.index, name='home'),
     path("home/",views.home_view, name='home_page'),
     path("upload-jd/", views.upload_jd_view, name='upload_jd_page'),
-    path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
-    path("search-jd/<str:requisition_id>/", views.search_jd_view, name='search_jd_page'),
+    path("upload-job/", views.upload_job_view, name='upload_job_page'),
+    # path("upload-jd/", views.upload_jd_view, name='upload_jd_page'),
+    # path("search-jd/<str:requisition_id>/", views.search_jd_view, name='search_jd_page'),
     # path('media/<str:path>/', views.download_view),
+    path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
 
     #vaishnavi
     path('signup_/', views.signup_view, name='signup_'),

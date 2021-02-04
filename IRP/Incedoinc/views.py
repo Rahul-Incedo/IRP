@@ -31,11 +31,11 @@ from .forms import SignUpForm
 
 
 #include models
-from .models import Employee, Job, Candidate, Feedback
+from .models import Employee, JD, Job, Candidate, Feedback
 from .models import TestModel
 
 #include forms
-from .forms import CandidateForm, UploadJdForm
+from .forms import CandidateForm, UploadJdForm, UploadJobForm
 from .forms import TestForm
 
 #for downloading file
@@ -59,6 +59,117 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
     return HttpResponseRedirect(reverse('index'))
+
+
+def upload_jd_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
+    username = request.user.username
+    user = Employee.objects.get(email=username)
+    if request.method == 'POST':
+        #if someone forcefully entered raised_by_field using tampering of form
+        if 'uploaded_by_employee' in request.POST:
+            raise ValidationError('FORM IS TAMPERED')
+        # print(request.POST)
+        form = UploadJdForm(request.POST, request.FILES, initial={'uploaded_by_employee':user})
+        form.fields['uploaded_by_employee'].disabled = True
+        if form.is_valid():
+            # print(form.cleaned_data)
+            obj = form.save()
+            return redirect('home_page')
+    else:
+        form = UploadJdForm(initial={'uploaded_by_employee':user})
+        form.fields['uploaded_by_employee'].disabled = True
+    context = {
+        'form' : form
+    }
+    return render(request, 'upload_jd.html', context)
+
+
+def upload_job_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
+    username = request.user.username
+    user = Employee.objects.get(email=username)
+    if request.method == 'POST':
+        #if someone forcefully entered raised_by_field using tampering of form
+        if 'raised_by_employee' in request.POST:
+            raise ValidationError('FORM IS TAMPERED')
+        # print(request.POST)
+        form = UploadJobForm(request.POST, initial={'raised_by_employee':user})
+        form.fields['raised_by_employee'].disabled = True
+        if form.is_valid():
+            # print(form.cleaned_data)
+            obj = form.save()
+            return redirect('home_page')
+    else:
+        form = UploadJobForm(initial={'raised_by_employee':user})
+        form.fields['raised_by_employee'].disabled = True
+    context = {
+        'form' : form
+    }
+    return render(request, 'upload_job.html', context)
+
+
+def home_view(request):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
+    
+    if request.method == 'POST':
+        # print(request.POST)
+        if 'search_requisition_id_button' in request.POST:
+            requisition_id = request.POST.get('requisition_id')
+            if len(requisition_id) >= 3:
+                query_set = Job.objects.filter(requisition_id__contains=requisition_id)
+            else:
+                query_set = Job.objects.filter(requisition_id=requisition_id)
+            # print(query_set)
+            context = {
+                'requisition_id' : requisition_id,
+                'query_set': query_set,
+            }
+            return render(request, 'home.html', context)
+        elif 'upload_jd_button' in request.POST:
+            return redirect('upload_jd_page')
+        elif 'upload_job_button' in request.POST:
+            return redirect('upload_job_page')
+        elif 'search_candidate_button' in request.POST:
+            return redirect('search_candidate')
+        else:
+            return Http404('Page Not Exist')
+    return render(request,'home.html')
+
+# def search_jd_view(request, requisition_id):
+#     if not request.user.is_authenticated:
+#         return render(request, "users/login.html")
+#     obj = Job.objects.get(requisition_id=requisition_id)
+#     if obj is not None:
+#         context = {
+#             'obj': obj
+#         }
+#         return render(request, 'jd_results.html', context)
+#     else:
+#         raise Http404("JD is not exist")
+
+
+# def test_view(request, *args, **kwargs):
+#     if not request.user.is_authenticated:
+#         return render(request, "users/login.html")
+#     if request.method == 'POST':
+#         # print(request.POST)
+#         form = TestForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             obj = form.save(commit=False)
+#             obj = TestForm()
+#     else:
+#         form = TestForm(initial={'field1': 'initial_val'})
+#         form.fields['field1'].readonly = True
+#         # print(form.fields['field1'].readonly)
+#         form.fields['field1'].disabled = True
+#     context = {
+#         'form' : form
+#     }
+#     return render(request, 'test.html', context)
 
 
 def add_candidate_view(request, *args, **kwargs):
@@ -103,89 +214,7 @@ def add_candidate_view(request, *args, **kwargs):
         'form': form
     }
     return render(request, 'add_candidate.html', context)
-
-def upload_jd_view(request, *args, **kwargs):
-    if not request.user.is_authenticated:
-        return render(request, "users/login.html")
-    username = request.user.username
-    user = Employee.objects.get(email=username)
-    if request.method == 'POST':
-        #if someone forcefully entered raised_by_field using tampering of form
-        if 'raised_by_employee' in request.POST:
-            raise ValidationError('FORM IS TAMPERED')
-        # print(request.POST)
-        form = UploadJdForm(request.POST, request.FILES, initial={'raised_by_employee':user})
-        form.fields['raised_by_employee'].disabled = True
-        if form.is_valid():
-            # print(form.cleaned_data)
-            obj = form.save()
-            return redirect('home_page')
-    else:
-        form = UploadJdForm(initial={'raised_by_employee':user})
-        form.fields['raised_by_employee'].disabled = True
-    context = {
-        'form' : form
-    }
-    return render(request, 'upload_jd.html', context)
-
-def home_view(request):
-    if not request.user.is_authenticated:
-        return render(request, "users/login.html")
-    user_id = 101   # it is currently hardcoded but will be derived from login page itself
-    request.session['user_id'] = user_id
-    if request.method == 'POST':
-        # print(request.POST)
-        if 'search_requisition_id_button' in request.POST:
-            requisition_id = request.POST.get('requisition_id')
-            if len(requisition_id) >= 3:
-                query_set = Job.objects.filter(requisition_id__contains=requisition_id)
-            else:
-                query_set = Job.objects.filter(requisition_id=requisition_id)
-            # print(query_set)
-            context = {
-                'requisition_id' : requisition_id,
-                'query_set': query_set
-            }
-            return render(request, 'home.html', context)
-        elif 'upload_jd_button' in request.POST:
-            return redirect('upload_jd_page')
-        elif 'search_candidate_button' in request.POST:
-            return redirect('search_candidate')
-        else:
-            return Http404('Page Not Exist')
-    return render(request,'home.html')
-
-def search_jd_view(request, requisition_id):
-    if not request.user.is_authenticated:
-        return render(request, "users/login.html")
-    obj = Job.objects.get(requisition_id=requisition_id)
-    if obj is not None:
-        context = {
-            'obj': obj
-        }
-        return render(request, 'jd_results.html', context)
-    else:
-        raise Http404("JD is not exist")
-
-
-def test_view(request, *args, **kwargs):
-    if not request.user.is_authenticated:
-        return render(request, "users/login.html")
-    if request.method == 'POST':
-        # print(request.POST)
-        form = TestForm(request.POST, request.FILES)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj = TestForm()
-    else:
-        form = TestForm(initial={'field1': 'initial_val'})
-        form.fields['field1'].readonly = True
-        # print(form.fields['field1'].readonly)
-        form.fields['field1'].disabled = True
-    context = {
-        'form' : form
-    }
-    return render(request, 'test.html', context)
+########################################################################################3
 
 
 def login_view(request):
