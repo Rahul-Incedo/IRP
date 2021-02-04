@@ -12,11 +12,18 @@ class Employee(models.Model):
         return f'{self.full_name}'
 
 
+class JD(models.Model):
+    jd_name = models.CharField(max_length=64, primary_key=True)
+    jd_file = models.FileField(upload_to='JD/')
+    uploaded_by_employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+#different requisition_id are mapped to one job_description
 class Job(models.Model):
     requisition_id = models.CharField(max_length=64, primary_key=True)
-    raised_by_employee = models.ForeignKey(Employee, null = True, related_name='raisedByEmployee', on_delete=models.CASCADE)
-    position_owner_id = models.ForeignKey(Employee, null = True, related_name='positionOwner', on_delete=models.CASCADE)
-    job_description = models.FileField(upload_to='JD/')
+    raised_by_employee = models.ForeignKey(Employee, related_name='raised_by_employee', null = True, on_delete=models.CASCADE)
+    position_owner_id = models.ForeignKey(Employee, related_name='position_owner', null = True, on_delete=models.CASCADE)
+    jd_name = models.ForeignKey(JD, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -24,10 +31,10 @@ class Job(models.Model):
 
 
 class Candidate(models.Model):
+    registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE )
     f_name = models.CharField(max_length=64)
     m_name = models.CharField(max_length=64, null=True, blank=True)
     l_name = models.CharField(max_length=64)
-    registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE )
     email = models.EmailField(max_length=254, primary_key=True)
     gender_choice = [('M', 'Male'),
                     ('F', 'Female')]
