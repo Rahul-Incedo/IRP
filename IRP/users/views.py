@@ -29,7 +29,7 @@ from django.contrib import messages
 UserModel = get_user_model()
 from .forms import SignUpForm
 
-from Incedoinc import templates
+
  
 
 # def index(request):
@@ -106,7 +106,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}")
-                return redirect('home')
+                return redirect('home_page')
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -119,8 +119,8 @@ def login_view(request):
 
 def logout_view(request):
     if request.method == 'POST':
-        logout(request,user) #edited : added user
-        return redirect('home')
+        logout(request) #edited : added user
+        return render('first_page')
 
 
 

@@ -13,7 +13,7 @@ urlpatterns = [
     path("upload-jd/", views.upload_jd_view, name='upload_jd_page'),
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
     path("search-jd/<str:requisition_id>/", views.search_jd_view, name='search_jd_page'),
-
+    
     #vaishnavi
     
 

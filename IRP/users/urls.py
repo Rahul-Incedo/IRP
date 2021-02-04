@@ -11,7 +11,7 @@ urlpatterns = [
     path('', views.signup_view, name = 'first_page'),
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup_view, name = 'signup'),
-   
+    path('logout/', views.logout_view, name = 'logout_page'),
     #    url(r"^dashboard/", dashboard, name="dashboard"),
 
     path('reset_password/',
