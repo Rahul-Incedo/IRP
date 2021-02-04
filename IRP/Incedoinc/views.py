@@ -51,13 +51,13 @@ from .forms import TestForm
 # Create your views here.
 def index(request):
     if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+        return redirect('login')
     return HttpResponseRedirect(reverse('first_page'))
 
 
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+        return redirect('login')
 
     user = Employee.objects.get(email=request.user.username)
     print(user)
@@ -101,7 +101,7 @@ def add_candidate_view(request, *args, **kwargs):
 
 def upload_jd_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+        return redirect('login')
     username = request.user.username
     user = Employee.objects.get(email=username)
     if request.method == 'POST':
@@ -125,7 +125,7 @@ def upload_jd_view(request, *args, **kwargs):
 
 def home_view(request):
     if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+        return redirect('login')
     user_id = 101   # it is currently hardcoded but will be derived from login page itself
     request.session['user_id'] = user_id
     if request.method == 'POST':
@@ -152,7 +152,7 @@ def home_view(request):
 
 def search_jd_view(request, requisition_id):
     if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+        return redirect('login')
     obj = Job.objects.get(requisition_id=requisition_id)
     if obj is not None:
         context = {
@@ -165,7 +165,7 @@ def search_jd_view(request, requisition_id):
 
 def test_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+        return redirect('login')
     if request.method == 'POST':
         # print(request.POST)
         form = TestForm(request.POST, request.FILES)
@@ -213,7 +213,7 @@ def test_view(request, *args, **kwargs):
 
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+        return redirect('login')
 
     if request.method == 'POST' or kwargs:
         if request.method == 'GET' and kwargs:
@@ -282,7 +282,7 @@ def search_candidate(request, *args, **kwargs):
 
 def feedback(request, req_id, email_id, level):
     if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+        return redirect('login')
     if request.method == "POST":
         status = request.POST['status']
         rating_python = request.POST['rating_python']
@@ -398,7 +398,7 @@ def feedback(request, req_id, email_id, level):
 
 def edit(request, req_id, email_id, level, edit_level):
     if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+        return redirect('login')
 
     if request.method == 'POST':
         status=request.POST['status']
