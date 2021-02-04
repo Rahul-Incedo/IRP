@@ -31,10 +31,10 @@ class Job(models.Model):
 
 
 class Candidate(models.Model):
+    registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE )
     f_name = models.CharField(max_length=64)
     m_name = models.CharField(max_length=64, null=True, blank=True)
     l_name = models.CharField(max_length=64)
-    registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE )
     email = models.EmailField(max_length=254, primary_key=True)
     gender_choice = [('M', 'Male'),
                     ('F', 'Female')]
