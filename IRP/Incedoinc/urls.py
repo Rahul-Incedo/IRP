@@ -11,7 +11,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     #pulkit-kartikeyan
-    #path("", views.index, name='home'),
+    path("", views.index, name='home'),
     path("home/",views.home_view, name='home_page'),
     path("upload-jd/", views.upload_jd_view, name='upload_jd_page'),
     path("upload-job/", views.upload_job_view, name='upload_job_page'),
@@ -26,7 +26,7 @@ urlpatterns = [
     ## rudra
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/', views.feedback, name='feedback'),
     path("search_candidate/", views.search_candidate, name = 'search_candidate'),
-    path('test/', views.test, name = 'test_name'),
+    # path('test/', views.test, name = 'test_name'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/edit<int:edit_level>/', views.edit, name ='edit'),
     path("search_candidate/<str:candidate_email>", views.search_candidate, name = 'search_candidate_email'),
 ]

@@ -118,9 +118,9 @@
     <header>
       <ul class = 'main'  style="background-color: black">
         <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
-        <li style="float:right"><a href="{% url 'logout_page' %}">Log out</a></li>
-        <li style="float:right"><a href="{% url 'home_page' %}">Contact</a></li>
-        <li style="float:right"><a href="{% url 'home_page' %}">About us</a></li>
+        <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
+        <li style="float:right"><a href="{% url 'home' %}">Contact</a></li>
+        <li style="float:right"><a href="{% url 'home' %}">About us</a></li>
       </ul>
     </header>
     <form method="POST"> {% csrf_token %}

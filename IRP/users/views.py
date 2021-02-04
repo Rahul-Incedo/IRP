@@ -64,7 +64,7 @@ def signup_view(request):
             return HttpResponse('<h2 >Please click the link sent to your email to complete the registration.</h2>')
     else:
         form = SignUpForm()
-    return render(request, 'SignUp_Login/signup.html', {'form': form})
+    return render(request, 'Signup_Login/signup.html', {'form': form})
 
 
 def activate(request, uidb64, token):
@@ -113,7 +113,7 @@ def login_view(request):
             messages.error(request, "Invalid username or password.")
     form = LoginForm()
     return render(request = request,
-                    template_name = "SignUp_Login/login.html",
+                    template_name = "Signup_Login/login.html",
                     context={"form":form})
 
 
