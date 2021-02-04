@@ -59,7 +59,7 @@ Candidate feedback {{candiate.id}}
 </div>
 
 <hr>
-<h4> Level {{level}} </h4><br>
+<h4> Level {{level}} </h4>
 <div class='centre_'>
   <form name='feedback_form' id='feedback_form' method="POST">{% csrf_token %} <!# action takes us to the name of that url>
       <!--<label for="candidate_email">Candidate Email*: </label><br/>
@@ -81,7 +81,7 @@ Candidate feedback {{candiate.id}}
       </datalist>
 
       <div>
-        <label for = "status">Status: </label><br>
+        <!--<label for = "status">Status: </label><br>-->
         <input name = "status" id = "status" list = "status_choices" placeholder = "status">
           <datalist id = "status_choices">
                   <option value = "pass">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+ <html>
 <head>
   <style>
       html, body {
@@ -132,10 +132,15 @@
   <body>
     <header>
       <ul class = 'main'  style="background-color: black">
-        <li><a href='{% url "home" %}'>Incedo Recruitment Portal</a></li>
-        <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
-        <li style="float:right"><a href="{% url 'home' %}">Contact</a></li>
-        <li style="float:right"><a href="{% url 'home' %}">About us</a></li>
+    
+      </ul> 
+
+     <ul class = 'main'  style="background-color: black">
+        <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
+        <li style="float:right"><a href="{%url 'logout'%}">Log out</a></li> 
+
+         <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
+        <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
       </ul>
     </header>
     <form method="POST"> {% csrf_token %}
@@ -147,6 +152,9 @@
     </form>
     
 </body>
-</html>
+</html> 
+
+
+
 
 
