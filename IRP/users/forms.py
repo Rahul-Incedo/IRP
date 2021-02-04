@@ -1,34 +1,49 @@
+from .models import CustomUser
 from django.core import validators
 from django import forms
-from Incedoinc.models import Candidate, Job, TestModel, Employee
+
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
 
-class SignUpForm(forms.ModelForm):
-    employee_id = forms.CharField(max_length=20, required=True)
-    full_name = forms.CharField(max_length=64, required=True)
-    email = forms.EmailField(max_length=254, required =True)
-    password= forms.CharField(widget=forms.PasswordInput())
 
+
+class SignUpForm(UserCreationForm):
+    
+    # name = forms.CharField(max_length=64, required=True)
+    # email = forms.EmailField(max_length=254, required = 'True')
     class Meta:
-        model = Employee
-        fields = ['full_name', 'email', 'employee_id', 'password']
+        model = CustomUser
+        fields = ['employee_id', 'username','name', 'password1','password2']  #username is email
+        list_display = ('employee','name', 'username')
 
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Email already exists")
-        if "@incedoinc.com" not in email:
-            raise forms.ValidationError("Must be an Incedo Email address")
-        return email
-
-    def clean_username(self):
+    def clean_employee_id(self):
+       
+        employee_id = self.cleaned_data['employee_id']
+        if CustomUser.objects.filter(employee_id=employee_id).exists():
+            raise forms.ValidationError("Employee ID already exists")
+        return employee_id 
+    
+    def clean_username(self):       #username means Email
+       
         username = self.cleaned_data['username']
-        if User.objects.filter(username = username).exists():
-            raise forms.ValidationError("Username already exists")
+        if CustomUser.objects.filter(username=username).exists():
+            raise forms.ValidationError("Email already exists")
+        if "@incedoinc.com" not in username:   
+            raise forms.ValidationError("Must be an Incedo Email address")  
         return username
+    
+        
+    
 
-    def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+
+
+
+
+class LoginForm(AuthenticationForm):
+    username = forms.EmailField(max_length=150, required = True)
+    
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'password']   

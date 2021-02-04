@@ -7,13 +7,8 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 
 from datetime import datetime
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import LoginForm, SignUpForm
+
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import User
-
-
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
@@ -24,9 +19,8 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-UserModel = get_user_model()
-from .forms import SignUpForm
 
+# 
 
 
 
@@ -55,10 +49,10 @@ from .forms import TestForm
 ################################################################################
 
 # Create your views here.
-def index(request):
-    if not request.user.is_authenticated:
-        return render(request, "users/login.html")
-    return HttpResponseRedirect(reverse('index'))
+# def index(request):
+#     if not request.user.is_authenticated:
+#         return render(request, "users/login.html")
+#     return HttpResponseRedirect(reverse('index'))
 
 
 def add_candidate_view(request, *args, **kwargs):
@@ -188,63 +182,32 @@ def test_view(request, *args, **kwargs):
     return render(request, 'test.html', context)
 
 
-def login_view(request):
-    if request.method == 'POST':
-
-        form = LoginForm(data=request.POST)
-        if form.is_valid():
-
-            return render(request,'SignUp_Login/dashboard.html')
-    else:
-        form = LoginForm()
-    return render(request, 'Signup_Login/login.html', {'form': form})
 
 
-def signup_view(request):
-
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            current_site = get_current_site(request)
-            mail_subject = 'Activate your account.'
-            message = render_to_string('accounts/acc_active_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': default_token_generator.make_token(user),
-            })
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            email.send()
-            return HttpResponse('Please confirm your email address to complete the registration')
-    else:
-        form = SignUpForm()
-    return render(request, 'SignUp_Login/signup.html', {'form': form})
-
-
-def activate(request, uidb64, token):
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = UserModel._default_manager.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and default_token_generator.check_token(user, token):
-        user.is_active = True
-        user.save()
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
-    else:
-        return HttpResponse('Activation link is invalid!')
+    
 
 
 
-def dashboard(request):
-    return render(request, "SignUp_Login/dashboard.html")
+
+#
+# def login_view(request):
+  #  username = request.POST['username']
+ #   password = request.POST['password']
+  #  print(username)
+
+  #  user = authenticate(request, username=username, password=password)
+  #  if user is not None:
+   #     login(request, user)
+  #      return HttpResponseRedirect(reverse('index'))
+    #else:
+ #       return render(request, "users/login.html", {"message":"Invalid credential"})
+
+
+
+
+
+# def dashboard(request):
+#     return render(request, "SignUp_Login/dashboard.html")
 
 
 def search_candidate(request, *args, **kwargs):
@@ -465,8 +428,17 @@ def edit(request, req_id, email_id, level, edit_level):
         return HttpResponse('No details Found')
 
 
-def test(request):
-    if not request.user.is_authenticated:
-        return render(request, "users/login.html")
+# from django.contrib.auth import get_user_model
+# from django.contrib.auth.models import User
+# from django.contrib.auth.tokens import default_token_generator
+# from django.contrib.sites.shortcuts import get_current_site
+# from django.core.mail import EmailMessage
+# from django.http import HttpResponse
+# from django.shortcuts import render
+# from django.template.loader import render_to_string
+# from django.utils.encoding import force_bytes
+# from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+# import re
 
-    return HttpResponse('inside the test')
+# UserModel = get_user_model()
+# from .forms import SignUpForm
