@@ -10,7 +10,53 @@
           margin-left:auto;
           margin-right:auto;
         }
+        input[type=text] {
+          border: none;
+          color: white;
 
+
+          text-decoration: none;
+          font-size: 16px;
+          margin: 4px 2px;
+          border-radius: 15px;
+
+}
+select
+{
+  border: none;
+
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 15px;
+}
+option
+{
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+
+}
+input[type=submit] {
+  border: none;
+  color: white;
+
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 15px;
+  background-color: #fd511c;
+
+}
 
 
         h1
@@ -45,16 +91,33 @@
         {
             background-color: #588c7e;
             color: yellow;
+            padding: 5px;
+        }
+        td
+        {
+          padding: 5px;
+          border: 1px solid black;
         }
         tr:nth-child(even)
         {
             background-color: #f2f2f2;
-            font-size:20px;
+            padding: 5px;
+
         }
-        button
-        {
-          font-size: 20px;
-        }
+
+        button {
+      border: none;
+      color: white;
+
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 15px;
+      background-color: #fd511c;
+    }
 
         ul {
           list-style-type: none;
@@ -96,10 +159,17 @@
       <tr>
         <form action=""  method="post">{% csrf_token %}
         <th>
-          <input type="text" placeholder="enter candidateEmail" name="search_element">
+
+            <!--<label for = "status">Status: </label><br>-->
+            <select name = "dropdown">
+            <option value = "req_id" selected>Requisition id</option>
+            <option value = "email">Candidate Email</option>
+            </select>
+
+          <input type="text" placeholder="Type Here" name="search_element">
           <input type="submit" value="search">
         </form>
-          <a href="../add-candidate/" style="float:right"><button>add candidate button</button>
+          <a href="../add-candidate/" style="float:right"><button>Add Candidate</button>
         </th>
       </tr>
     </table>
@@ -132,23 +202,32 @@
       <td><a href='{{ value.resume.url }}'><button>download</button></a></td>
         <td>
           {% if value.1 == "pending" %}
-          <a href="feedback/{{value.req_id}}/{{value.email}}1/"><button>fill feedback</button></a>
+          <a href="feedback/{{value.req_id}}/{{value.email}}1/"><button>Fill Feedback</button></a>
+          {% elif value.1 == "pass" %}
+            Selected
+            <button>edit</button>
           {% else %}
-          {{value.1}}
+            {{value.1}}
           {% endif %}
           </td>
           <td>
           {% if value.2 == "pending" %}
-          <a href="feedback/{{value.req_id}}/{{value.email}}2/"><button>fill feedback</button></a>
+          <a href="feedback/{{value.req_id}}/{{value.email}}2/"><button>Fill Feedback</button></a>
+          {% elif value.2 == "pass" %}
+            Selected
+            <button>edit</button>
           {% else %}
-          {{value.2}}
+            {{value.2}}
           {% endif %}
           </td>
           <td>
           {% if value.3 == "pending" %}
-          <a href="feedback/{{value.req_id}}/{{value.email}}3/"><button>fill feedback</button></a>
+          <a href="feedback/{{value.req_id}}/{{value.email}}3/"><button>Fill Feedback</button></a>
+          {% elif value.3 == "pass" %}
+            Selected
+            <button>edit</button>
           {% else %}
-          {{value.3}}
+            {{value.3}}
           {% endif %}
 
         </td>
