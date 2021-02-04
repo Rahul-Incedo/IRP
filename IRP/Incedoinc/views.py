@@ -22,7 +22,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 # 
 
-
+# Vaishnavi changed authentication
 
 #include models
 from .models import Employee, Job, Candidate, Feedback
@@ -57,7 +57,7 @@ def index(request):
 
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('Signup_Login/login.html')
 
     user = Employee.objects.get(email=request.user.username)
     print(user)
@@ -101,7 +101,7 @@ def add_candidate_view(request, *args, **kwargs):
 
 def upload_jd_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('Signup_Login/login.html')
     username = request.user.username
     user = Employee.objects.get(email=username)
     if request.method == 'POST':
@@ -125,7 +125,7 @@ def upload_jd_view(request, *args, **kwargs):
 
 def home_view(request):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('Signup_Login/login.html')
     user_id = 101   # it is currently hardcoded but will be derived from login page itself
     request.session['user_id'] = user_id
     if request.method == 'POST':
@@ -165,7 +165,7 @@ def search_jd_view(request, requisition_id):
 
 def test_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('Signup_Login/login.html')
     if request.method == 'POST':
         # print(request.POST)
         form = TestForm(request.POST, request.FILES)
@@ -213,7 +213,7 @@ def test_view(request, *args, **kwargs):
 
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('Signup_Login/login.html')
 
     if request.method == 'POST' or kwargs:
         if request.method == 'GET' and kwargs:
@@ -282,7 +282,7 @@ def search_candidate(request, *args, **kwargs):
 
 def feedback(request, req_id, email_id, level):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('Signup_Login/login.html')
     if request.method == "POST":
         status = request.POST['status']
         rating_python = request.POST['rating_python']
@@ -398,7 +398,7 @@ def feedback(request, req_id, email_id, level):
 
 def edit(request, req_id, email_id, level, edit_level):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('Signup_Login/login.html')
 
     if request.method == 'POST':
         status=request.POST['status']

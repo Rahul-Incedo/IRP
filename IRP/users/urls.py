@@ -14,6 +14,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name = 'logout'),
     #    url(r"^dashboard/", dashboard, name="dashboard"),
 
+ #youtube.com/watch?v=sFPcd6myZrY&t=728s
+
     path('reset_password/',
         auth_views.PasswordResetView.as_view(template_name="accounts/password_reset.html"),
         name="reset_password"),

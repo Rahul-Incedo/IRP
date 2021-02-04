@@ -137,7 +137,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGOUT_REDIRECT_URL = "dashboard"
+#LOGOUT_REDIRECT_URL = "signup" #changed on 04/02
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
