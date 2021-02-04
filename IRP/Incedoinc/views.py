@@ -20,7 +20,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 
-# 
+#
 
 
 
@@ -185,7 +185,7 @@ def test_view(request, *args, **kwargs):
 
 
 
-    
+
 
 
 
@@ -271,7 +271,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[1]='pass'
                         temp_dict[2]='pass'
                         temp_dict[3]='pass'
-            context[str(x)]=temp_dict
+            context[str(x+1)]=temp_dict
 
 
 
