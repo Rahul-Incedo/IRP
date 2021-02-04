@@ -8,8 +8,8 @@
         margin: 0;
         font-family: Roboto, Arial, sans-serif;
         font-size: 14px;
-        background:#f5f5f5;
-        color: #fd511c;
+        background: #f5f5f5;
+        color: #666;
       }
       .main-block {
         /* display: ; */
@@ -44,7 +44,6 @@
         {
           font-size: 25px;
           margin-left: 0px;
-          background-color: #fd511c;
         }
 
         ul {
@@ -67,33 +66,19 @@
           padding: 14px 16px;
           text-decoration: none;
         }
-        html,body {
-          margin: 0;
-          padding: 0;
-          width: 100%;
-          height: 100%;
-          background:#fff;
-          font-family: 'Montserrat', sans-serif;
-          font-size: 16px;
-        }
 
 
     .button {
-      border-color: #3498db;
-  color: #fff;
-  box-shadow: 0 0 40px 40px #fd511c inset, 0 0 0 0 #3498db;
-  -webkit-transition: all 150ms ease-in-out;
-  transition: all 150ms ease-in-out;
-      margin:0 auto;
-    display:block;
+      border: none;
+      color: white;
       padding: 15px 32px;
-        font-size: 20px; margin-top: 40px;
-  margin-bottom: 40px;
-      
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
     }
-    .button:hover {
-  box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db;
-}
     a{
       text-decoration:none;
       /*color:white;*/
@@ -139,13 +124,46 @@
       </ul>
     </header>
     <form method="POST"> {% csrf_token %}
+      <table>
+        <tr>
+          <th>
+            <input type="text" placeholder="Search Requisition Id" name="requisition_id">
+            <!-- <button type='submit' name='search_requisition_id_button'>Search</button> -->
+            <input type="submit" value="search" name = 'search_requisition_id_button'>
+          </th>
+        </tr>
+      </table>
+      {% if query_set is not None %}
+      <div class="job_results">
+        {% if not query_set|length %}
+          <tr>No Results Found</tr>
+        {% else %}
+          <table>
+            <thead>
+              <th>RequisitionId</th>
+              <th>RaisedBy</th>
+              <th>PositionOwner</th>
+              <th>Job description</th>
+            </thead>
+              {% for obj in query_set %}
+              <tr>
+                <td>{{ obj.requisition_id }}</td>
+                <td>{{ obj.raised_by_employee }}</td>
+                <td>{{ obj.position_owner_id }}</td>
+                <td><a href="{{ obj.jd_file.url }}/" >{{ obj.jd_name}}</a></td>
+              </tr>
+              {% endfor %}
+          </table>
+        {% endif %}
+      </div>
+      {% endif %}
+
       <div class='main-block'>
         <div><input type='submit' class="button button1" value='Upload and Manage Job Description' name='manage_jd_button' /></div>
         <div><input type='submit' class="button button2" value='Raise and Manage Requisition Id' name='manage_job_button' /></div>
         <div><input type='submit' class="button button3" value='Candidate and Feedback' name='manage_candidate_button' /></div>
       </div>
     </form>
-    
 </body>
 </html>
 
