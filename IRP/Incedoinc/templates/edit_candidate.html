@@ -11,7 +11,7 @@
           margin-right:auto;
         }
 
-        input[type=text] , input[type=number], input[type=url]
+        input[type=text] , input[type=number], input[type=url] ,input[type=email] , input[type=date]
         {
           border: none;
           text-decoration: none;
@@ -81,20 +81,23 @@
             text-align: left;
             margin-left: auto;
             margin-right: auto;
+            table-layout : fixed;
         }
         th
         {
             background-color: #f0f8ff;
-            text-align: left;
+            text-align: right;
             padding: 5px;
         }
         td
         {
-            padding: 5px;
+          background-color: #f0f8ff;
+          padding: 5px;
         }
         tr:nth-child(even)
         {
             background-color: #f2f2f2;
+
             padding: 5px;
         }
 
@@ -112,6 +115,20 @@
           cursor: pointer;
           border-radius: 15px;
           background-color: #fd511c;
+        }
+        .heading
+        {
+          border: none;
+          color: white;
+          width:50%;
+          text-align: center;
+
+          text-decoration: none;
+          display: inline-block;
+          font-size: 20px;
+          margin: 10px 8px;
+          border-radius: 15px;
+          background-color: #008B8B;
         }
 
         ul
@@ -150,137 +167,123 @@
       <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
     </ul>
   </header>
-  <center><button >EDIT CANDIDATE DETAILS</button></center>
+  <center><button class="heading">EDIT CANDIDATE DETAILS</button></center>
       <form action=""  method="post">{% csrf_token %}
       <table>
 
       <tr>
-        <th><label for="fn">First Name </label></th>
-        <th><label for="fn">: {{candidate_obj.f_name}}</label></th>
-      </tr><tr><th></th>
-        <th><input type="text" placeholder="Type Here" name="search_element"  size="50"></th>
-      </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-        <th><label for="fn">Middle Name </label></th>
-        <th><label for="fn">: {{candidate_obj.m_name}}</label></th>
-      </tr><tr><th></th>
-        <th><input type="text" placeholder="Type Here" name="search_element"   size="50"></th>
-      </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-        <th><label for="fn">Last Name </label></th>
-        <th><label for="fn">: {{candidate_obj.l_name}}</label></th>
-      </tr><tr><th></th>
-        <th><input type="text" placeholder="Type Here" name="search_element"   size="50"></th>
-      </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-        <th><label for="fn">Registered By </label></th>
-        <th><label for="fn">: {{candidate_obj.registered_by}}</label></th>
-      </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-          <th><label for="fn">Email </label></th>
-          <th><label for="fn">: {{candidate_obj.email}}</label></th>
-      </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-          <th><label for="fn">Gender </label></th>
-          <th><label for="fn">: {{candidate_obj.gender}}</label></th>
-        </tr><tr><th></th>
+        <th><label text-align="left">First Name </label></th>
+        <td><label >: {{candidate_obj.f_name}}</label></td>
 
-          <th><input type="text" placeholder="Type Here" name="search_element"  size="50"></th>
+        <td><input type="text" placeholder="Type Here" name="fname" pattern="[A-Za-z]{0,64}" /></td>
+      </tr>
+
+      <tr>
+        <th><label >Middle Name </label></th>
+        <td><label >: {{candidate_obj.m_name}}</label></td>
+
+        <td><input type="text" placeholder="Type Here" name="mname"  pattern="[A-Za-z]{0,64}" /></td>
+      </tr>
+
+      <tr>
+        <th><label >Last Name </label></th>
+        <td><label >: {{candidate_obj.l_name}}</label></td>
+
+        <td><input type="text" placeholder="Type Here" name="lname"  pattern="[A-Za-z]{0,64}"/ ></td>
+      </tr>
+
+      <tr>
+        <th><label >Registered By </label></th>
+        <td><label >: {{candidate_obj.registered_by}}</label></td>
+        <td></td>
+
 
       </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-          <th><label for="fn">CGPA </label></th>
-          <th><label for="fn">: {{candidate_obj.CGPA}}</label></th>
-        </tr><tr><th></th>
 
-          <th><input type="text" placeholder="Type Here" name="search_element"  size="50"></th>
-
-      </tr>
       <tr>
-        <th></th>
+          <th><label >Email </label></th>
+          <td><label >: {{candidate_obj.email}}</label></td>
+          <td><input type="email" placeholder="Type Here" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" /></td>
       </tr>
-      <tr>
-          <th><label for="fn">College </label></th>
-          <th><label for="fn">: {{candidate_obj.college_name}}</label></th>
-        </tr><tr><th></th>
 
-          <th><input type="text" placeholder="Type Here" name="search_element"  size="50"></th>
-
-      </tr>
       <tr>
-        <th></th>
-      </tr>
-      <tr>
-          <th><label for="fn">Experience </label></th>
-          <th><label for="fn">: {{candidate_obj.experience}}</label></th>
-        </tr><tr><th></th>
-
-          <th><input type="number" placeholder="Type Here" name="search_element"  size="50"></th>
+          <th><label >Gender </label></th>
+          <td><label >: {{candidate_obj.gender}}</label></td>
+          <td>
+            {% if candidate_obj.gender == 'M' %}
+              <select name = "-----">
+                <option value = "M" selected>M</option>
+                <option value = "F">F</option>
+              </select>
+            {% else %}
+            <select name = "-----">
+              <option value = "M" >male</option>
+              <option value = "F" selected>female</option>
+            </select>
+            {% endif %}
+        </td>
 
       </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-          <th><label for="fn">Mobile </label></th>
-          <th><label for="fn">: {{candidate_obj.mobile}}</label></th>
-        </tr><tr><th></th>
 
-          <th><input type="text" placeholder="Type Here" name="search_element"  size="50"></th>
+      <tr>
+          <th><label >CGPA </label></th>
+          <td><label >: {{candidate_obj.CGPA}}</label></td>
+
+          <td><input type="text" placeholder="Type Here" name="CGPA" / ></td>
 
       </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-          <th><label for="fn">DOB </label></th>
-          <th><label for="fn">: {{candidate_obj.DOB}}</label></th>
-        </tr><tr><th></th>
 
-          <th><input type="date" placeholder="Type Here" name="search_element"  size="50"></th>
+      <tr>
+          <th><label >College </label></th>
+          <td><label >: {{candidate_obj.college_name}}</label></td>
+
+
+          <td><input type="text" placeholder="Type Here" name="college" / ></td>
 
       </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-          <th><label for="fn">Projects </label></th>
-          <th><label for="fn">: {{candidate_obj.project_links}}</label></th>
-        </tr><tr><th></th>
 
-          <th><input type="url" placeholder="Type Here" name="search_element"  size="50"></th>
+      <tr>
+          <th><label >Experience </label></th>
+          <td><label>: {{candidate_obj.experience}}</label></td>
+
+
+          <td><input type="number" placeholder="Type Here" name="exeperience"  /></td>
 
       </tr>
-      <tr>
-        <th></th>
-      </tr>
-      <tr>
-          <th><label for="fn">Notice Period </label></th>
-          <th><label for="fn">: {{candidate_obj.noticePeriod}}</label></th>
-        </tr><tr><th></th>
 
-          <th><input type="number" placeholder="Type Here" name="search_element"  size="50"></th>
+      <tr>
+          <th><label >Mobile </label></th>
+          <td><label  >: {{candidate_obj.mobile}}</label></td>
+
+
+          <td><input type="text" placeholder="Type Here" pattern="\d*" name="mobile "maxlength="10" minlength="10"></td>
+
+      </tr>
+
+      <tr>
+          <th><label >DOB </label></th>
+          <td><label >: {{candidate_obj.DOB}}</label></td>
+
+
+          <td><input type="date" placeholder="Type Here" name="DOB" / ></td>
+
+      </tr>
+
+      <tr>
+          <th><label >Projects </label></th>
+          <td><label >: {{candidate_obj.project_links}}</label></td>
+
+
+          <td><input type="url" placeholder="Type Here" name="projects"  /></td>
+
+      </tr>
+
+      <tr>
+          <th><label >Notice Period </label></th>
+          <td><label >: {{candidate_obj.noticePeriod}}</label></td>
+
+
+          <td><input type="number" placeholder="Type Here" name="noticePeriod"  /></td>
 
 
 
