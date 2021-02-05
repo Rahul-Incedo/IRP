@@ -66,7 +66,7 @@ class Feedback(models.Model):
                         ('pending', 'pending'),]
     status = models.CharField(choices = status_choices, max_length=10, blank=True)
     comments = models.TextField(max_length=500, null=True, blank=True)
-    timestamp =     models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.status} {self.level}'
@@ -90,7 +90,7 @@ class Field(models.Model):
                         ('Deep Learning', 'Deep Learning'),
                         ('machine learning', 'machine learning'),
                         ('.NET', '.NET')]
-    field_name = models.CharField(max_length=20, null=True, blank=True, choices = field_choices)
+    field_name = models.CharField(max_length=20, choices=field_choices, primary_key=True, null=False)
     rating = models.IntegerField(null=True, blank=True)
 
     def __str__(self):

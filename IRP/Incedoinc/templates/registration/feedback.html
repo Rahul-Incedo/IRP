@@ -21,13 +21,14 @@ Candidate feedback {{candiate.id}}
     <h4> Level 1 </h4>
     <ul>
       <li> Status : {{level_1.status}} </li>
-      <li style = 'float:right'><a href = 'edit1/'> Edit </a></li><br/>
+      <li style = 'float:right'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
       {% for i, j in level_1.details %}
         <li> {{i}} : {{j}}, &nbsp;&nbsp;</li>
       {% endfor %}
       <br/>
       <li> Comments : {{level_1.comments}}</li><br/>
       <li> Interviwer : {{level_1.interviewer_id}} <li>
+      <li style = 'float:right'> last update at : {{level_1.timestamp}}</li>
     </ul>
   {% endif %}
 
@@ -35,25 +36,27 @@ Candidate feedback {{candiate.id}}
   <h4> Level 1 </h4>
   <ul>
     <li> Status : {{level_1.status}} </li>
-    <li style = 'float:right'><a href = 'edit1/'> Edit </a></li><br/>
+    <li style = 'float:right'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
     {% for i, j in level_1.details %}
       <li> {{i}} : {{j}}, &nbsp;&nbsp; </li>
     {% endfor %}
     <br/>
     <li> Comments : {{level_1.comments}}</li><br/>
     <li> Interviwer : {{level_1.interviewer_id}} <li>
+    <li style = 'float:right'> last update at : {{level_1.timestamp}}</li>
   </ul>
 
   <h4> Level 2 </h4>
   <ul>
     <li> Status : {{level_2.status}} </li>
-    <li style = 'float:right'><a href = 'edit2/'> Edit </a></li><br/>
+    <li style = 'float:right'><a href = 'edit{{level_2.feedback_id}}/'> Edit </a></li><br/>
     {% for i, j in level_2.details %}
       <li> {{i}} : {{j}}, &nbsp;&nbsp;</li>
     {% endfor %}
     <br/>
     <li> Comments : {{level_2.comments}}</li><br/>
     <li> Interviwer : {{level_2.interviewer_id}} <li>
+    <li style = 'float:right'> last update at : {{level_2.timestamp}}</li>
   </ul>
   {% endif %}
 </div>
@@ -70,28 +73,6 @@ Candidate feedback {{candiate.id}}
 <div class = 'field_form' method = "POST">
   <form method = 'POST' action = 'field/{{basic_detail.feedback_id}}/'>
     {% csrf_token %}
-    <datalist id = "choices">
-            <option value = "Python">
-            <option value = "Java">
-            <option value = "C++">
-            <option value = "SQL">
-            <option value = "C">
-            <option value = "C#">
-            <option value = ".NET">
-            <option value = "Machine Learninig">
-            <option value = "Deep Learning">
-            <option value = "Data Science">
-            <option value = "Neural Network">
-            <option value = "HTML">
-            <option value = "CSS">
-            <option value = "JAVA SCRPIT">
-            <option value = "Image Processing">
-            <option value = "Cloud Computing">
-            <option value = "Cotlin">
-            <option value = "PHP">
-            <option value = "AWS">
-    </datalist>
-
     {{form}}<br/>
 
     <button type="submit" onclick='href="../../"' value="Add_Field">Add Field</button><br/><br/>

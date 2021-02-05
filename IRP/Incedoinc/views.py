@@ -12,7 +12,7 @@ from .forms import LoginForm, SignUpForm, FieldForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 
-
+from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
@@ -328,6 +328,8 @@ def feedback(request, req_id, email_id, level):
         feedback_object = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
         feedback_object.status=status
         feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
+        feedback_object.comments = comments
+        feedback_object.datetime = datetime.now()
         feedback_object.save()
 
         candidate_email=email_id
@@ -335,9 +337,9 @@ def feedback(request, req_id, email_id, level):
 
     '''GET part'''
     try:
-        form = FieldForm()
         feedback_object = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
-
+        form = FieldForm(initial={'feedback_id' : feedback_object})
+        form.fields['feedback_id'].widget = forms.HiddenInput()
         feedback_id = feedback_object.pk
         candidate_object = Candidate.objects.get(email=email_id)
         candidate_name = candidate_object.full_name
@@ -374,6 +376,7 @@ def feedback(request, req_id, email_id, level):
             comments = feedback_object_1.comments
             interviewer_id = feedback_object_1.interviewer_id
             feedback_id_1 = feedback_object_1.pk
+            last_update_time = feedback_object_1.timestamp
 
             field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
             field_names = [obj.field_name for obj in field_object_1]
@@ -381,7 +384,9 @@ def feedback(request, req_id, email_id, level):
             level_1 = { 'status': status,
                         'comments' : comments,
                         'interviewer_id': interviewer_id,
-                        'details' : zip(field_names, field_values)
+                        'details' : zip(field_names, field_values),
+                        'timestamp' : last_update_time,
+                        'feedback_id_1': feedback_id_1,
                         }
 
             context = {
@@ -399,6 +404,7 @@ def feedback(request, req_id, email_id, level):
             comments = feedback_object_1.comments
             interviewer_id = feedback_object_1.interviewer_id
             feedback_id_1 = feedback_object_1.pk
+            last_update_time = feedback_object_1.timestamp
 
             field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
             field_names = [obj.field_name for obj in field_object_1]
@@ -409,6 +415,7 @@ def feedback(request, req_id, email_id, level):
             comments_ = feedback_object_2.comments
             interviewer_id_ = feedback_object_2.interviewer_id
             feedback_id_2 = feedback_object_2.pk
+            last_update_time_ = feedback_object_2.timestamp
 
             field_object_2 = Field.objects.all().filter(feedback_id = feedback_id_2)
             field_names_ = [obj.field_name for obj in field_object_2]
@@ -418,12 +425,16 @@ def feedback(request, req_id, email_id, level):
                         'comments' : comments,
                         'interviewer_id' : interviewer_id,
                         'details' : zip(field_names, field_values),
+                        'timestamp' : last_update_time,
+                        'feedback_id': feedback_id_1,
                         }
 
             level_2 = { 'status': status_,
                         'comments' : comments_,
                         'interviewer_id': interviewer_id_,
                         'details' : zip(field_names_, field_values_),
+                        'timestamp': last_update_time_,
+                        'feedback_id' :feedback_id_2,
                         }
 
             context = {
@@ -442,24 +453,16 @@ def feedback(request, req_id, email_id, level):
     return render(request, 'registration/feedback.html', context)
 
 
-def edit(request, req_id, email_id, level, edit_level):
+def edit(request, req_id, email_id, level, feedback_id):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
 
     if request.method == 'POST':
         status=request.POST['status']
-        rating_python=request.POST['rating_python']
-        rating_java=request.POST['rating_java']
-        rating_cpp=request.POST['rating_cpp']
-        rating_sql=request.POST['rating_sql']
         comments=request.POST['comments']
 
-        obj_ = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
+        obj_ = Feedback.objects.get(pk=feedback_id)
         obj_.status = status
-        obj_.rating_python = rating_python
-        obj_.rating_java = rating_java
-        obj_.rating_cpp = rating_cpp
-        obj_.rating_sql = rating_sql
         obj_.comments = comments
         obj_.save()
 
@@ -468,8 +471,20 @@ def edit(request, req_id, email_id, level, edit_level):
 
 
     try:
-        obj= Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
-        Context = vars(obj)
+        obj= Feedback.objects.get(pk = feedback_id)
+        status = obj.status
+        comments = obj.comments
+        field_object = Field.objects.all().filter(feedback_id = obj)
+        field_names= [obj_.field_name for obj_ in field_object]
+        field_values= [obj_.rating for obj_ in field_object]
+        level_ = obj.level
+
+        Context = {
+            'status': status,
+            'comments': comments,
+            'fields': zip(field_names, field_values),
+            'level' : level_,
+        }
         return render(request, 'registration/edit.html', Context)
     except:
         return HttpResponse('No details Found')

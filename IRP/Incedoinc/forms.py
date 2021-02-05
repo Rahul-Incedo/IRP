@@ -70,6 +70,8 @@ class LoginForm(AuthenticationForm):
         fields = ['username', 'email', 'password']
 
 class FieldForm(forms.ModelForm):
+    rating = forms.IntegerField(min_value=1, max_value=5)
+
     class Meta:
         model = Field
         fields = '__all__'
