@@ -33,7 +33,7 @@
       h1 {
         text-align: center;
         padding: 0px;
-        margin: 0px;
+        margin: 25px;
       }
       /* .my_header {
         text-align: center;
@@ -110,8 +110,8 @@
         <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
       </ul>
     </header>
+      <h1>Enter Candidate Details</h1>
       <form method='POST' enctype="multipart/form-data"> {% csrf_token %}
-        <h1>Enter Candidate Details</h1>
           {{ form.as_p }}
         <button type="submit">Add Candidate</button>
       </form>

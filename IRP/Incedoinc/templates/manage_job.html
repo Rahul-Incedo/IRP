@@ -143,9 +143,10 @@
                 <td>{{ obj.requisition_id }}</td>
                 <td>{{ obj.raised_by_employee }}</td>
                 <td>{{ obj.position_owner_id }}</td>
-                <td><a href="{{ obj.jd_file.url }}/" ><input type="button" value='DOWNLOAD'></a></td>
-                <td><a href=""><input type="button" value="Edit"></a></td>
-                <td><a href=""><input type="button" value="Delete"></a></td>
+                <td>{{ obj.jd_name.jd_name }}</td>
+                <!-- <td><a href="{{ obj.jd_name }}/" ><input type="button" value='DOWNLOAD'></a></td> -->
+                <td><a  ><input type="button" value="Edit"></a></td>
+                <td><a  ><input type="button" value="Delete"></a></td>
               </tr>
               {% endfor %}
         </table>
