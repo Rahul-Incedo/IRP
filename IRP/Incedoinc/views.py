@@ -278,14 +278,64 @@ def edit_candidate(request,candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
-        candidate_obj=Candidate.objects.filter(email=candidate_email)
-        print(candidate_obj[0].email)
-        return render(request,'edit_candidate.html',{'candidate_obj':candidate_obj[0]})
-
-
+        candidate_obj=Candidate.objects.get(email=candidate_email)
+        print(candidate_obj)
+        print("----------------------")
+        print(type(request.POST)," : ",request.POST)
+        print("----------------------")
+        print(type(request.POST['fname'])," : ",request.POST['fname'])
+        print(type(request.POST['lname'])," : ",request.POST['lname'])
+        print(type(request.POST['mname'])," : ",request.POST['mname'])
+        print(type(request.POST['gender'])," : ",request.POST['gender'])
+        print(type(request.POST['CGPA'])," : ",request.POST['CGPA'])
+        print(type(request.POST['college'])," : ",request.POST['college'])
+        print(type(request.POST['experience'])," : ",request.POST['experience'])
+        print(type(request.POST['mobile_no'])," : ",request.POST['mobile_no'])
+        print(type(request.POST['DOB'])," : ",request.POST['DOB'])
+        print(type(request.POST['project'])," : ",request.POST['project'])
+        print(type(request.POST['noticePeriod'])," : ",request.POST['noticePeriod'])
+        print(type(request.POST['resume'])," : ",request.POST['resume'])
+        if len(request.POST['fname'])!=0 :
+            candidate_obj.f_name=request.POST['fname']
+        if len(request.POST['mname'])!=0 :
+            candidate_obj.m_name=request.POST['mname']
+        if len(request.POST['lname'])!=0 :
+            candidate_obj.l_name=request.POST['lname']
+        if len(request.POST['gender'])!=0 :
+            candidate_obj.gender=request.POST['gender']
+        if len(request.POST['CGPA'])!=0 :
+            candidate_obj.CGPA=request.POST['CGPA']
+        if len(request.POST['college'])!=0 :
+            candidate_obj.college_name=request.POST['college']
+        if len(request.POST['experience'])!=0 :
+            candidate_obj.experience=request.POST['experience']
+        if len(request.POST['mobile_no'])!=0 :
+            candidate_obj.mobile=request.POST['mobile_no']
+        if len(request.POST['DOB'])!=0 :
+            candidate_obj.DOB=request.POST['DOB']
+        if len(request.POST['project'])!=0 :
+            candidate_obj.projects_link=request.POST['project']
+        if len(request.POST['noticePeriod'])!=0 :
+            candidate_obj.noticePeriod=request.POST['noticePeriod']
+        candidate_obj.save()
+        print(candidate_obj.email)
+        return redirect('../view_candidate/'+str(candidate_email))
     candidate_obj=Candidate.objects.filter(email=candidate_email)
     print(candidate_obj[0].email)
     return render(request,'edit_candidate.html',{'candidate_obj':candidate_obj[0]})
+
+def view_candidate(request,candidate_email):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        candidate_obj=Candidate.objects.filter(email=candidate_email)
+        print(candidate_email)
+
+        print("sdfsdfsdfsd------------------------------")
+        return redirect('../edit_candidate/'+str(candidate_email))
+    candidate_obj=Candidate.objects.filter(email=candidate_email)
+    # print(candidate_obj[0].email)
+    return render(request,'view_candidate.html',{'candidate_obj':candidate_obj[0]})
 
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:

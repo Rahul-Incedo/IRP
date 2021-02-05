@@ -1,6 +1,7 @@
 <html>
 <head>
     <style type="text/css">
+
         body
         {
           margin:0px;
@@ -19,7 +20,7 @@
           margin: 4px 2px;
           border-radius: 15px;
 
-} 
+}
 select
 {
   border: none;
@@ -209,7 +210,8 @@ input[type=submit] {
             </select>
 
           <input type="text" placeholder="Type Here" name="search_element">
-          <input type="submit" value="search">
+          <input type="submit" value="Search">
+          <input type="submit" value="List All">
         </form>
           <a href="../add-candidate/" style="float:right"><button>Add Candidate</button>
         </th>
@@ -238,7 +240,7 @@ input[type=submit] {
     <tr>
       <td>{{key}}</td>
       <td>{{value.req_id}}</td>
-      <td>{{value.email}}<a href="../edit_candidate/{{value.email}}"><button>Edit</button></a></td>
+      <td>{{value.email}}<a href="../view_candidate/{{value.email}}"><button>View</button></a></td>
       <td><a href='{{ value.resume.url }}'><button>download</button></a></td>
         <td>
           {% if value.1 == "pending" %}
