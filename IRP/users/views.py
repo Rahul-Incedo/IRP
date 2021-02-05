@@ -32,8 +32,7 @@ from .forms import SignUpForm
 
  
 
-# def index(request):
-#     return HttpResponse('Vaishnavi here!')
+from Incedoinc.models import Employee
 
 
 
@@ -61,10 +60,17 @@ def signup_view(request):
                 mail_subject, message, to=[to_email]
             )
             email.send()
+
+            ###### creating employee ######
+            Employee.objects.create(
+                full_name = request.POST['name'],
+                email = request.POST['username'],
+                employee_id = request.POST['employee_id'],
+            )
             return HttpResponse('<h2 >Please click the link sent to your email to complete the registration.</h2>')
     else:
         form = SignUpForm()
-    return render(request, 'Signup_Login/signup.html', {'form': form})
+    return render(request, 'SignUp_Login/signup.html', {'form': form})
 
 
 def activate(request, uidb64, token):
@@ -83,18 +89,6 @@ def activate(request, uidb64, token):
 
 
 
-# def login_view(request):
-#     if request.method == 'GET':
-#         return render(request,'Signup_Login/login.html', {'form': LoginForm()})
-#     else:
-#         user = authenticate(request,username= request.POST.get('username'), password= request.POST.get('password'))
-#         if user is None:
-#             return HttpResponse('Haaaaan')
-#             #return render(request,'Signup_Login/login.html',{'form': LoginForm(),'error':'Hmse na ho payega'}  ) 
-#         else:
-#             login(request, user)
-#             # return redirect('home_page')    
-#             return HttpResponse('Login ho gaya bro')   
 
 def login_view(request):
     if request.method == 'POST':
@@ -105,7 +99,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.info(request, f"You are now logged in as {username}")
+               #messages.info(request, f"You are now logged in as {username}")
                 return redirect('home_page')
             else:
                 messages.error(request, "Invalid username or password.")
@@ -113,14 +107,15 @@ def login_view(request):
             messages.error(request, "Invalid username or password.")
     form = LoginForm()
     return render(request = request,
-                    template_name = "Signup_Login/login.html",
+                    template_name = "SignUp_Login/login.html",
                     context={"form":form})
 
 
 def logout_view(request):
-    if request.method == 'POST':
-        logout(request) #edited : added user
-        return render('first_page')
+    
+    logout(request)
+    # form = SignUpForm(request.POST)
+    return redirect('login')
 
 
 
@@ -131,15 +126,15 @@ def logout_view(request):
 
 
 
+# def logout_view(request):
+#     if request.method == 'POST':
+#         #logout(request) #edited : added user
+#         return HttpResponse('Ho gaya Logout')
+#     return HttpResponse('Ho gaya Logout yaaar')
 
-
-
-
-
-
-
-
-
+# def logout_view(request):
+#     logout(request)
+#     return redirect('login')
 # def login_view(request):
 #     if request.method == 'POST':
 #         username = request.POST.get('username')   # Here Username refers to Email
@@ -198,10 +193,6 @@ def logout_view(request):
 		
 
 
-
-def logout_view(request):
-    form = SignUpForm(request.POST)
-    return render(request, 'Signup_Login/signup.html', {'form': form}, {'message':'Successfully loged out'})
 
 
    

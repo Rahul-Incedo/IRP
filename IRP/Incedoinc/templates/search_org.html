@@ -1,0 +1,159 @@
+<html>
+<head>
+    <style type="text/css">
+        body
+        {
+          margin:0px;
+          padding:0px;
+          width:100%;
+          height:100%;
+          /* background-color:#FF9; */
+          margin-left:auto;
+          margin-right:auto;
+        }
+
+
+
+        h1
+        {
+            color:black;
+            text-align:center;
+        }
+        h3
+        {
+            font-size: 20px;
+        }
+        #title h2
+        {
+            text-align:center;
+            color:white;
+        }
+
+
+
+        table
+        {
+            border-collapse: collapse;
+            width: 100%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 25px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        th
+        {
+            background-color: #588c7e;
+            color: yellow;
+        }
+        tr:nth-child(even)
+        {
+            background-color: #f2f2f2;
+            font-size:20px;
+        }
+        button
+        {
+          font-size: 20px;
+        }
+
+        ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #40423f;
+          color: #b6b8b5;
+        }
+
+        li {
+          float: left;
+        }
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+
+
+    </style>
+</head>
+<body>
+  <header>
+    <ul class = 'main'  style="background-color: black">
+      <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
+      <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
+    </ul>
+  </header>
+  <div id="header">
+    <!--  <h1><br>INCEDO RECRUITMENT PORTAL</h1>-->
+  </div><!--closing of header-->
+  <form action=""  method="post">{% csrf_token %}
+    <table>
+      <tr>
+        <th>
+          <input type="text" placeholder="enter candidateEmail" name="search_element">
+          <input type="submit" value="search">
+        </th>
+      </tr>
+    </table>
+  </form>
+
+  {% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+
+  <table>
+    <tr>
+      <th>Req_Id</th>
+      <th>candidate_e-mail</th>
+      <th>Level 1</th>
+      <th>Level 2</th>
+      <th>Level 3</th>
+    </tr>
+
+
+
+    {%for key ,value in context.items%}
+    <br>
+    <tr>
+      <td>{{value.req_id}}</td>
+      <td>
+        {{value.email}}
+        <a href='{{ value.resume.url }}'><button>Resume</button></a>
+      </td>
+
+        <td>
+          {% if value.1 == "pending" %}
+          <a href="feedback/{{value.req_id}}/{{value.email}}1/"><button>fill feedback</button></a>
+          {% else %}
+          {{value.1}}
+          {% endif %}
+          </td>
+          <td>
+          {% if value.2 == "pending" %}
+          <a href="feedback/{{value.req_id}}/{{value.email}}2/"><button>fill feedback</button></a>
+          {% else %}
+          {{value.2}}
+          {% endif %}
+          </td>
+          <td>
+          {% if value.3 == "pending" %}
+          <a href="feedback/{{value.req_id}}/{{value.email}}3/"><button>fill feedback</button></a>
+          {% else %}
+          {{value.3}}
+          {% endif %}
+
+        </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h2><a href="../add-candidate/"><button>add candidate button</button></a></h2>
+</body>
+</html>

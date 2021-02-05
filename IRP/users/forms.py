@@ -33,6 +33,14 @@ class SignUpForm(UserCreationForm):
         if "@incedoinc.com" not in username:   
             raise forms.ValidationError("Must be an Incedo Email address")  
         return username
+
+    def clean_name(self):       #username means Email
+       
+        name = self.cleaned_data['name']
+        if any(char.isdigit() for char in name):
+            raise forms.ValidationError("Name is not valid : Name cannot contain a digit.") #Rishabh 8055
+        
+        return name
     
         
     
