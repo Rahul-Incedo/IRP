@@ -22,7 +22,7 @@ urlpatterns = [
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
 
     #vaishnavi
-    
+
 
     ## rudra
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/', views.feedback, name='feedback'),
@@ -30,6 +30,7 @@ urlpatterns = [
     # path('test/', views.test, name = 'test_name'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/edit<int:edit_level>/', views.edit, name ='edit'),
     path("search_candidate/<str:candidate_email>", views.search_candidate, name = 'search_candidate_email'),
+    path("edit_candidate/<str:candidate_email>", views.edit_candidate, name = 'edit_candidate'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
