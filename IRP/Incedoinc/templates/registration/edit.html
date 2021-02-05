@@ -4,19 +4,22 @@
 Edit candidate information
 {% endblock %}
 
-{% block body %} <br/>
+{% block body %}
+<br/>
 <h4 style="text-align: centre">Edit Form : Level {{level}} </h4><br/>
 <div class='centre_'>
-  <form name='edit_form' id='edit_form' method="POST">{% csrf_token %} <!# action takes us to the name of that url>
-      <datalist id = "choices">
-              <option value = 1>
-              <option value = 2>
-              <option value = 3>
-              <option value = 4>
-              <option value = 5>
-      </datalist>
+  <form name='edit_form' id='edit_form' method="POST">{% csrf_token %}
+    <div>
+      {% for i, j in fields %}
+      <label for = "{{i}}"> {{i}} : </label>
+      <input type = number name = "{{i}}" value="{{j}}" min = "1" max ="5">
+      <a style="font-size: smaller" href = '../{{i}}{{level}}/'>delete</a>
+      <br/>
+      {% endfor %}
+    </div>
 
       <div>
+        <br/>
         <label for = "status">Status: </label><br/>
         <input name = "status" id = "status" list = "status_choices" placeholder = "status" value = {{status}}>
           <datalist id = "status_choices">

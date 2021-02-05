@@ -470,24 +470,24 @@ def edit(request, req_id, email_id, level, feedback_id):
         return redirect('../../../../../search_candidate/'+str(candidate_email))
 
 
-    try:
-        obj= Feedback.objects.get(pk = feedback_id)
-        status = obj.status
-        comments = obj.comments
-        field_object = Field.objects.all().filter(feedback_id = obj)
-        field_names= [obj_.field_name for obj_ in field_object]
-        field_values= [obj_.rating for obj_ in field_object]
-        level_ = obj.level
+    # try:
+    obj= Feedback.objects.get(pk = feedback_id)
+    status = obj.status
+    comments = obj.comments
+    field_object = Field.objects.all().filter(feedback_id = obj)
+    field_names= [obj_.field_name for obj_ in field_object]
+    field_values= [obj_.rating for obj_ in field_object]
+    level_ = obj.level
 
-        Context = {
-            'status': status,
-            'comments': comments,
-            'fields': zip(field_names, field_values),
-            'level' : level_,
-        }
-        return render(request, 'registration/edit.html', Context)
-    except:
-        return HttpResponse('No details Found')
+    Context = {
+        'status': status,
+        'comments': comments,
+        'fields': zip(field_names, field_values),
+        'level' : level_,
+    }
+    return render(request, 'registration/edit.html', Context)
+    # except:
+    #     return HttpResponse('No details Found')
 
 def field_view(request, req_id, email_id, level, feedback_id):
     if not request.user.is_authenticated:
@@ -499,10 +499,13 @@ def field_view(request, req_id, email_id, level, feedback_id):
             form.save()
         return redirect('../../')
 
-def delete_field(request, req_id, email_id, level, field_name):
-    obj = Field.objects.get(feedback_id = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level =level).pk, field_name = field_name)
+def delete_field(request, req_id, email_id, level, field_name, del_level):
+    feedback_id = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level =del_level).pk
+    obj = Field.objects.get(feedback_id = feedback_id, field_name = field_name)
     obj.delete()
-    return redirect('../')
+    if(level == del_level):
+        return redirect('../')
+    return redirect(f'../edit{feedback_id}')
 
 def test(request):
     if not request.user.is_authenticated:

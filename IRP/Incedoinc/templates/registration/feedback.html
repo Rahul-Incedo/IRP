@@ -69,7 +69,7 @@ Candidate feedback {{candiate.id}}
 <label for="interviewer_code"><h4>Interviewer : {{basic_detail.interviewer_id}}</h4></label><br/>
 
 {% for i, j in current_field %}
-  <h4>{{i}} : {{j}} <a style="font-size: smaller" href = '{{i}}'>delete</a></h4>
+  <h4>{{i}} : {{j}} <a style="font-size: smaller" href = '{{i}}{{level}}'>delete</a></h4>
 {% endfor %}
 
 <div class = 'field_form' method = "POST">

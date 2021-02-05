@@ -47,7 +47,7 @@ urlpatterns = [
     path('test/', views.test, name = 'test_name'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/edit<str:feedback_id>/', views.edit, name ='edit'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/field/<str:feedback_id>/', views.field_view, name = 'field'),
-    path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/<str:field_name>/', views.delete_field, name = 'delete_field'),
+    path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/<str:field_name><int:del_level>/', views.delete_field, name = 'delete_field'),
     path("search_candidate/<str:candidate_email>", views.search_candidate, name = 'search_candidate_email'),
 ]
 
