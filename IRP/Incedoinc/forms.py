@@ -60,7 +60,3 @@ class TestForm(forms.ModelForm):
     class Meta:
         model = TestModel
         fields = ['field1', 'field2']
-
-
-
- 

@@ -5,8 +5,8 @@ class Employee(models.Model):
     full_name = models.CharField(max_length=64)
     email = models.EmailField(max_length=254, null=True)
     employee_id = models.CharField(max_length=64, primary_key=True, default=None)
-    password = models.CharField(max_length=64)
-    temp_password = models.CharField(max_length=64, null=True, blank=True)
+    # password = models.CharField(max_length=64)
+    # temp_password = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
         return f'{self.full_name}'
