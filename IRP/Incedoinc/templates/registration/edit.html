@@ -8,16 +8,26 @@ Edit candidate information
 <br/>
 <h4 style="text-align: centre">Edit Form : Level {{level}} </h4><br/>
 <div class='centre_'>
-  <form name='edit_form' id='edit_form' method="POST">{% csrf_token %}
+  <form action = "../field/{{feedback_id}}/" method = "POST">{% csrf_token %}
     <div>
       {% for i, j in fields %}
-      <label for = "{{i}}"> {{i}} : </label>
+      <label for = "{{i}}"> {{i}} : </label><br/>
       <input type = number name = "{{i}}" value="{{j}}" min = "1" max ="5">
       <a style="font-size: smaller" href = '../{{i}}{{level}}/'>delete</a>
       <br/>
       {% endfor %}
     </div>
 
+    <div>
+      {{form}}
+      <button type="submit" class = "addBtn" value="Submit">Add Fields</button>
+    </div>
+  </form>
+
+
+
+
+  <form name='edit_form' id='edit_form' method="POST">{% csrf_token %}
       <div>
         <br/>
         <label for = "status">Status: </label><br/>

@@ -38,22 +38,6 @@ from .models import TestModel
 from .forms import CandidateForm, UploadJdForm
 from .forms import TestForm
 
-#for downloading file
-# import os
-# from django.conf import settings
-# from django.http import HttpResponse, Http404
-# def download_view(request, path):
-#     print('path: ', path)
-#     file_path = os.path.join(settings.MEDIA_ROOT, path)
-#     print('file_path: ', file_path)
-#     if os.path.exists(file_path):
-#         with open(file_path, 'rb') as fh:
-#             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
-#             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
-#             return response
-#     raise Http404
-################################################################################
-
 # Create your views here.
 def index(request):
     if not request.user.is_authenticated:
@@ -113,12 +97,12 @@ def upload_jd_view(request, *args, **kwargs):
         #if someone forcefully entered raised_by_field using tampering of form
         if 'raised_by_employee' in request.POST:
             raise ValidationError('FORM IS TAMPERED')
-        # print(request.POST)
+
         form = UploadJdForm(request.POST, request.FILES, initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
         if form.is_valid():
-            # print(form.cleaned_data)
             obj = form.save()
+
             return redirect('home_page')
     else:
         form = UploadJdForm(initial={'raised_by_employee':user})
@@ -134,14 +118,12 @@ def home_view(request):
     user_id = 101   # it is currently hardcoded but will be derived from login page itself
     request.session['user_id'] = user_id
     if request.method == 'POST':
-        # print(request.POST)
         if 'search_requisition_id_button' in request.POST:
             requisition_id = request.POST.get('requisition_id')
             if len(requisition_id) >= 3:
                 query_set = Job.objects.filter(requisition_id__contains=requisition_id)
             else:
                 query_set = Job.objects.filter(requisition_id=requisition_id)
-            # print(query_set)
             context = {
                 'requisition_id' : requisition_id,
                 'query_set': query_set
@@ -262,9 +244,6 @@ def search_candidate(request, *args, **kwargs):
         req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
         if len(req_id)==0 :
             return render(request, 'search.html',{'error_message':'There are no results for this input'})
-
-        print(type(req_id))
-        print(req_id)
 
         context = {}
         for x in range(len(req_id)):
@@ -469,35 +448,44 @@ def edit(request, req_id, email_id, level, feedback_id):
         candidate_email=email_id
         return redirect('../../../../../search_candidate/'+str(candidate_email))
 
+    '''GET METHOD'''
+    try:
+        obj= Feedback.objects.get(pk = feedback_id)
+        form = FieldForm(initial={'feedback_id' : obj})
+        form.fields['feedback_id'].widget = forms.HiddenInput()
 
-    # try:
-    obj= Feedback.objects.get(pk = feedback_id)
-    status = obj.status
-    comments = obj.comments
-    field_object = Field.objects.all().filter(feedback_id = obj)
-    field_names= [obj_.field_name for obj_ in field_object]
-    field_values= [obj_.rating for obj_ in field_object]
-    level_ = obj.level
+        status = obj.status
+        comments = obj.comments
+        field_object = Field.objects.all().filter(feedback_id = obj)
+        field_names= [obj_.field_name for obj_ in field_object]
+        field_values= [obj_.rating for obj_ in field_object]
+        level_ = obj.level
 
-    Context = {
-        'status': status,
-        'comments': comments,
-        'fields': zip(field_names, field_values),
-        'level' : level_,
-    }
-    return render(request, 'registration/edit.html', Context)
-    # except:
-    #     return HttpResponse('No details Found')
+        Context = {
+            'status': status,
+            'comments': comments,
+            'fields': zip(field_names, field_values),
+            'level' : level_,
+            'feedback_id': feedback_id,
+            'form': form
+        }
+        return render(request, 'registration/edit.html', Context)
+    except:
+        return HttpResponse('No details Found')
 
 def field_view(request, req_id, email_id, level, feedback_id):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
 
+    level_ = Feedback.objects.get(feedback_id=feedback_id).level
     if request.method == 'POST':
         form = FieldForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect('../../')
+
+        if(level == level_):
+            return redirect('../../')
+        return redirect(f'../../edit{feedback_id}/')
 
 def delete_field(request, req_id, email_id, level, field_name, del_level):
     feedback_id = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level =del_level).pk
