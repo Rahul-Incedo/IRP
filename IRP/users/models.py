@@ -11,9 +11,9 @@ from django.contrib.auth import get_user_model
  
 class CustomUser(AbstractUser):
 
-    employee_id = models.CharField(('Employee ID'), max_length= 50, unique = True)
-    username = models.EmailField(('Enter Email'), max_length=150, unique=True)
-    name = models.CharField(('Name'), max_length=150, blank=True, )
+    employee_id = models.CharField(('Employee ID'), max_length= 64, unique = True)
+    username = models.EmailField(('Enter Email'), max_length=254, unique=True)
+    name = models.CharField(('Name'), max_length=64, blank=True, )
     #email = models.EmailField(('Email Address'), blank=False, unique = True)
 
 

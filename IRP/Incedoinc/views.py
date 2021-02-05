@@ -372,7 +372,7 @@ def feedback(request, req_id, email_id, level):
         candidate_name = Candidate.objects.get(email=email_id).full_name
         candidate_cgpa = Candidate.objects.get(email=email_id).CGPA
         candidate_college_name =  Candidate.objects.get(email=email_id).college_name
-        interviewer_id = Employee.objects.get(email=request.user._wrapped.username).employee_id
+        interviewer_id = Employee.objects.get(email=request.user._wrapped.username)
         basic_detail={'Name' :candidate_name,
                     'Email':email_id,
                     'Graduation_CGPA':candidate_cgpa,

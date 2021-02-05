@@ -32,7 +32,7 @@ from .forms import SignUpForm
 
  
 
-
+from Incedoinc.models import Employee
 
 
 
@@ -60,6 +60,13 @@ def signup_view(request):
                 mail_subject, message, to=[to_email]
             )
             email.send()
+
+            ###### creating employee ######
+            Employee.objects.create(
+                full_name = request.POST['name'],
+                email = request.POST['username'],
+                employee_id = request.POST['employee_id'],
+            )
             return HttpResponse('<h2 >Please click the link sent to your email to complete the registration.</h2>')
     else:
         form = SignUpForm()
