@@ -125,7 +125,7 @@ def upload_jd_view(request, *args, **kwargs):
         if form.is_valid():
             # print(form.cleaned_data)
             obj = form.save()
-            return redirect('home_page')
+            return redirect('manage_jd_page')
     else:
         form = UploadJdForm(initial={'uploaded_by_employee':user})
         form.fields['uploaded_by_employee'].disabled = True
