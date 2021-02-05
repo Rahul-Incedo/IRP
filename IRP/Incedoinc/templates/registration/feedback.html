@@ -61,13 +61,15 @@ Candidate feedback {{candiate.id}}
   {% endif %}
 </div>
 
+
+
 <hr>
 <h4> Level {{level}} </h4><br>
 
 <label for="interviewer_code"><h4>Interviewer : {{basic_detail.interviewer_id}}</h4></label><br/>
 
 {% for i, j in current_field %}
-  <h4>{{i}} : {{j}}</h4>
+  <h4>{{i}} : {{j}} <a style="font-size: smaller" href = '{{i}}'>delete</a></h4>
 {% endfor %}
 
 <div class = 'field_form' method = "POST">
@@ -97,6 +99,7 @@ Candidate feedback {{candiate.id}}
       </textarea><br/>
 
       <button type="submit" class = "addBtn" value="Submit">Submit</button>
+      <a href = '../../../'> Cancel </a>
     </form>
 <div>
 

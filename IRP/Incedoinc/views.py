@@ -499,6 +499,10 @@ def field_view(request, req_id, email_id, level, feedback_id):
             form.save()
         return redirect('../../')
 
+def delete_field(request, req_id, email_id, level, field_name):
+    obj = Field.objects.get(feedback_id = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level =level).pk, field_name = field_name)
+    obj.delete()
+    return redirect('../')
 
 def test(request):
     if not request.user.is_authenticated:
