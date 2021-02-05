@@ -64,16 +64,37 @@ class Feedback(models.Model):
     status_choices = [('pass', 'pass'),
                         ('fail', 'fail'),
                         ('pending', 'pending'),]
-    status = models.CharField(choices = status_choices, max_length=10)
-    rating_python = models.IntegerField(null=True, blank=True)
-    rating_java = models.IntegerField(null=True, blank=True)
-    rating_cpp = models.IntegerField(null=True, blank=True)
-    rating_sql = models.IntegerField(null=True, blank=True)
+    status = models.CharField(choices = status_choices, max_length=10, blank=True)
     comments = models.TextField(max_length=500, null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp =     models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.status}'
+        return f'{self.status} {self.level}'
+
+class Field(models.Model):
+    feedback_id = models.ForeignKey(Feedback, null=True, on_delete=models.CASCADE)
+    field_choices = [('python', 'python'),
+                        ('java', 'java'),
+                        ('c++', 'c++'),
+                        ('sql', 'sql'),
+                        ('JAVA script', 'java script'),
+                        ('cloud computing', 'cloud computing'),
+                        ('Linux', 'Linux'),
+                        ('image Processing', 'image processing'),
+                        ('C#', 'C#'),
+                        ('HTML', 'HTML'),
+                        ('CSS', 'CSS'),
+                        ('Cotlin', 'Cotlin'),
+                        ('AWS', 'AWS'),
+                        ('Neural Networks', 'Neural Networks'),
+                        ('Deep Learning', 'Deep Learning'),
+                        ('machine learning', 'machine learning'),
+                        ('.NET', '.NET')]
+    field_name = models.CharField(max_length=20, null=True, blank=True, choices = field_choices)
+    rating = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.field_name}'
 
 
 class TestModel(models.Model):

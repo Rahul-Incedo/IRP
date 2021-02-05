@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from datetime import datetime
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, FieldForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 
@@ -31,7 +31,7 @@ from .forms import SignUpForm
 
 
 #include models
-from .models import Employee, Job, Candidate, Feedback
+from .models import Employee, Job, Candidate, Feedback, Field
 from .models import TestModel
 
 #include forms
@@ -319,23 +319,14 @@ def search_candidate(request, *args, **kwargs):
 def feedback(request, req_id, email_id, level):
     if not request.user.is_authenticated:
         return render(request, "users/login.html")
+
     if request.method == "POST":
         status = request.POST['status']
-        rating_python = request.POST['rating_python']
-        rating_java = request.POST['rating_java']
-        rating_cpp = request.POST['rating_cpp']
-        rating_sql = request.POST['rating_sql']
         comments = request.POST['comments']
         interviewer_id = Employee.objects.get(email=request.user._wrapped.username).employee_id
 
-        feedback_object = Feedback.objects.get(candidate_email=Candidate.objects.get(email=email_id), requisition_id=Job.objects.get(requisition_id = req_id), level=level, status='pending')
-        # feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_code)
+        feedback_object = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
         feedback_object.status=status
-        feedback_object.rating_python=rating_python
-        feedback_object.rating_java=rating_java
-        feedback_object.rating_cpp=rating_cpp
-        feedback_object.rating_sql=rating_sql
-        feedback_object.comments=comments
         feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
         feedback_object.save()
 
@@ -344,80 +335,95 @@ def feedback(request, req_id, email_id, level):
 
     '''GET part'''
     try:
-        candidate_name = Candidate.objects.get(email=email_id).full_name
-        candidate_cgpa = Candidate.objects.get(email=email_id).CGPA
-        candidate_college_name =  Candidate.objects.get(email=email_id).college_name
-        interviewer_id = Employee.objects.get(email=request.user._wrapped.username).employee_id
-        basic_detail={'Name' :candidate_name,
+        form = FieldForm()
+        feedback_object = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
+
+        feedback_id = feedback_object.pk
+        candidate_object = Candidate.objects.get(email=email_id)
+        candidate_name = candidate_object.full_name
+        candidate_cgpa = candidate_object.CGPA
+        candidate_college_name =  candidate_object.college_name
+        interviewer_id = Employee.objects.get(email=request.user._wrapped.username)
+
+        current_field_object = Field.objects.all().filter(feedback_id = feedback_id)
+        current_field_names = [obj.field_name for obj in current_field_object]
+        current_field_values = [obj.rating for obj in current_field_object]
+        current_field = zip(current_field_names, current_field_values)
+
+        basic_detail={
+                    'Name' :candidate_name,
                     'Email':email_id,
                     'Graduation_CGPA':candidate_cgpa,
                     'University_name':candidate_college_name,
                     'interviewer_id':interviewer_id,
+                    'feedback_id' : feedback_id,
                     }
 
         if(level == 1):
              context = {
                  'basic_detail':basic_detail,
-                 'level':level
+                 'level':level,
+                 'form' : form,
+                 'req_id' :req_id,
+                 'current_field' : current_field,
              }
 
         if(level == 2):
-            status = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).status
-            python_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_python
-            java_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_java
-            cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
-            sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
-            comments = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
-            interviewer_id = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).interviewer_id
+            feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id)
+            status = feedback_object_1.status
+            comments = feedback_object_1.comments
+            interviewer_id = feedback_object_1.interviewer_id
+            feedback_id_1 = feedback_object_1.pk
 
+            field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
+            field_names = [obj.field_name for obj in field_object_1]
+            field_values = [obj.rating for obj in field_object_1]
             level_1 = { 'status': status,
-                        'python_rating': python_rating,
-                        'java_rating': java_rating,
-                        'cpp_rating': cpp_rating,
-                        'sql_rating': sql_rating,
                         'comments' : comments,
                         'interviewer_id': interviewer_id,
+                        'details' : zip(field_names, field_values)
                         }
 
             context = {
                 'basic_detail':basic_detail,
                 'level_1': level_1,
-                'level':level
+                'level':level,
+                'form' :form,
+                'req_id' :req_id,
+                'current_field' : current_field,
             }
 
         if(level == 3):
-            status = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).status
-            python_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_python
-            java_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_java
-            cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_cpp
-            sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_sql
-            comments = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).comments
-            interviewer_id = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).interviewer_id
+            feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id)
+            status = feedback_object_1.status
+            comments = feedback_object_1.comments
+            interviewer_id = feedback_object_1.interviewer_id
+            feedback_id_1 = feedback_object_1.pk
 
-            status_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).status
-            python_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_python
-            java_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_java
-            cpp_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
-            sql_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
-            comments_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
-            interviewer_id_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).interviewer_id
+            field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
+            field_names = [obj.field_name for obj in field_object_1]
+            field_values = [obj.rating for obj in field_object_1]
+
+            feedback_object_2 = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id)
+            status_ = feedback_object_2.status
+            comments_ = feedback_object_2.comments
+            interviewer_id_ = feedback_object_2.interviewer_id
+            feedback_id_2 = feedback_object_2.pk
+
+            field_object_2 = Field.objects.all().filter(feedback_id = feedback_id_2)
+            field_names_ = [obj.field_name for obj in field_object_2]
+            field_values_ = [obj.rating for obj in field_object_2]
 
             level_1 = { 'status': status,
-                        'python_rating': python_rating,
-                        'java_rating': java_rating,
-                        'cpp_rating': cpp_rating,
-                        'sql_rating': sql_rating,
                         'comments' : comments,
                         'interviewer_id' : interviewer_id,
+                        'details' : zip(field_names, field_values),
                         }
 
             level_2 = { 'status': status_,
-                        'python_rating': python_rating_,
-                        'java_rating': java_rating_,
-                        'cpp_rating': cpp_rating_,
-                        'sql_rating': sql_rating_,
                         'comments' : comments_,
                         'interviewer_id': interviewer_id_,
+                        'details' : zip(field_names_, field_values_),
                         }
 
             context = {
@@ -425,12 +431,16 @@ def feedback(request, req_id, email_id, level):
                 'level_1': level_1,
                 'level_2': level_2,
                 'level': level,
+                'form' :form,
+                'req_id' :req_id,
+                'current_field' : current_field,
             }
 
     except Feedback.DoesNotExist:
         raise Http404('Feedback does not exist')
 
     return render(request, 'registration/feedback.html', context)
+
 
 def edit(request, req_id, email_id, level, edit_level):
     if not request.user.is_authenticated:
@@ -463,6 +473,16 @@ def edit(request, req_id, email_id, level, edit_level):
         return render(request, 'registration/edit.html', Context)
     except:
         return HttpResponse('No details Found')
+
+def field_view(request, req_id, email_id, level, feedback_id):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
+
+    if request.method == 'POST':
+        form = FieldForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect('../../')
 
 
 def test(request):
