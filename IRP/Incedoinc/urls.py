@@ -8,7 +8,6 @@ from django.contrib.auth import views as auth_views
 #download-file
 from django.conf import settings
 from django.conf.urls.static import static
-# url(r'^delete/(?P<person_pk>.*)$', 'person.views.delete' name='delete-person'),
 urlpatterns = [
     #pulkit-kartikeyan
     #path("", views.index, name='home'),
@@ -17,19 +16,10 @@ urlpatterns = [
     path("upload-job/", views.upload_job_view, name='upload_job_page'),
     path('manage-jd/', views.manage_jd_view, name='manage_jd_page'),
     path('manage-job/', views.manage_job_view, name='manage_job_page'),
-    # path("search-jd/<str:requisition_id>/", views.search_jd_view, name='search_jd_page'),
-    # path('media/<str:path>/', views.download_view),
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
-
-    # path(r'^delete/jd/<jd_pk>.*)$', views.delete_jd_view, name='delete_jd'),
-
-
-
-    re_path(r'^delete/jd/(?P<jd_pk>.*)$', views.delete_jd_view, name='delete_jd'),
-    re_path(r'^delete/job/(?P<job_pk>.*)$', views.delete_jd_view, name='delete_job'),
-    
-    #vaishnavi
-
+    #delete objects
+    url(r'^jd/(?P<jd_pk>.*)/delete/$', views.delete_jd_view, name='delete_jd'),
+    url(r'^job/(?P<job_pk>.*)/delete/$', views.delete_job_view, name='delete_job'),
 
     ## rudra
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/', views.feedback, name='feedback'),

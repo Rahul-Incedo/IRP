@@ -49,11 +49,24 @@ from .forms import TestForm
 ################################################################################
 
 # Create your views here.
+
+
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
     return HttpResponseRedirect(reverse('first_page'))
 
+def delete_jd_view(request, jd_pk):
+    query = JD.objects.get(pk=jd_pk)
+    query.jd_file.delete()
+    query.delete()
+    return redirect('manage_jd_page')
+
+def delete_job_view(request, job_pk):
+    query = Job.objects.get(pk=job_pk)
+    query.delete()
+    return redirect('manage_job_page')
+    
 def manage_jd_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -83,17 +96,7 @@ def manage_jd_view(request, *args, **kwargs):
 
     return HttpResponse('<h1>this is managejd</h1>')
 
-def delete_jd_view(request, jd_pk):
-    query = JD.objects.get(pk=jd_pk)
-    query.delete()
-    return redirect('manage_jd_page')
-    return HttpResponse("Deleted!")
 
-def delete_job_view(request, job_pk):
-    query = Job.objects.get(pk=job_pk)
-    query.delete()
-    return redirect('manage_job_page')
-    
 def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
@@ -114,8 +117,6 @@ def manage_job_view(request, *args, **kwargs):
             return render(request, 'manage_job.html', context)
         elif 'raise_requisition_button' in request.POST:
             return redirect('upload_job_page')
-        elif 'delete_job_button' in request.POST:
-            return HttpResponse('<h1>delete job</h1>')
 
     return render(request, 'manage_job.html/', {})
 
@@ -174,8 +175,9 @@ def upload_job_view(request, *args, **kwargs):
 def home_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
+    print(request.GET)
+    print(request.POST)
     if request.method == 'POST':
-        # print(request.POST)
         if 'search_requisition_id_button' in request.POST:
             requisition_id = request.POST.get('requisition_id')
             if len(requisition_id) >= 3:
@@ -198,17 +200,6 @@ def home_view(request):
             return Http404('Page Not Exist')
     return render(request,'home.html')
 
-# def search_jd_view(request, requisition_id):
-#     if not request.user.is_authenticated:
-#         return redirect('login')
-#     obj = Job.objects.get(requisition_id=requisition_id)
-#     if obj is not None:
-#         context = {
-#             'obj': obj
-#         }
-#         return render(request, 'jd_results.html', context)
-#     else:
-#         raise Http404("JD is not exist")
 
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
@@ -244,7 +235,8 @@ def add_candidate_view(request, *args, **kwargs):
                 requisition_id=job_obj,
                 status='pending',
             )
-            return redirect('../'+'search_candidate'+'/'+str(candidate_email))
+            # return redirect('../search_candidate/', )
+            return redirect('../'+'search_candidate'+'/?candidate_email='+str(candidate_email))
     else:
         form = CandidateForm(initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
@@ -301,7 +293,6 @@ def edit_candidate(request,candidate_email):
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
-
     if request.method == 'POST' or kwargs:
         if request.method == 'GET' and kwargs:
             if not kwargs['candidate_email']:

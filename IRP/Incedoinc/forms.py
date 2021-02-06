@@ -3,17 +3,22 @@ from django import forms
 from .models import Candidate, Job, TestModel, Employee, JD
 
 class CandidateForm(forms.ModelForm):
-    CGPA = forms.DecimalField(max_digits=5, decimal_places=3,
+    CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
                             validators=[
                                 validators.MinValueValidator(0),
                                 validators.MaxValueValidator(10.0),
                             ]
     )
     pdf_validator = validators.FileExtensionValidator(
-        allowed_extensions=['pdf']
+        allowed_extensions=['pdf', 'doc', 'docx']
     )
-    resume = forms.FileField(label='*Upload Resume', validators = [pdf_validator])
-    requisition_id = forms.ModelChoiceField(Job.objects.all(), required=True)
+    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    requisition_id = forms.ModelChoiceField(Job.objects.all(), label='*Requisition ID')
+    notice_period = forms.IntegerField(label='*Notice Period',
+                                        widget = forms.TextInput(
+                                            attrs={'placeholder':'enter in months'},
+                                        )
+                    )
     class Meta:
         model = Candidate
         fields = '__all__'
@@ -23,37 +28,36 @@ class CandidateForm(forms.ModelForm):
             'l_name': '*Last Name',
             'email': '*Email',
             'gender': '*Gender',
-            'CGPA': '*CGPA(out of 10)',
-            'college_name': '*College Name',
+            'college_name': 'College Name',
+            'CGPA': 'CGPA(out of 10)',
             'experience': '*Experience',
             'mobile': '*10-digit Mobile No.',
-            'DOB': '*Date of Birth',
-            'resume': '*Upload Resume',
+            'DOB': 'Date of Birth',
+            'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
             'noticePeriod': '*Notice Period',
         }
     
 class UploadJdForm(forms.ModelForm):
     pdf_validator = validators.FileExtensionValidator(
-        allowed_extensions=['pdf']
+        allowed_extensions=['pdf', 'doc', 'docx']
     )
-    jd_file = forms.FileField(label='*Upload File (pdf format is supported)', validators = [pdf_validator])
+    jd_file = forms.FileField(label='*Upload File (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    jd_name = forms.CharField(label='*Name of Job Description')
+
     class Meta:
         model = JD
         fields = ['uploaded_by_employee',  'jd_name', 'jd_file']
         label = {
-            'uploaded_by_employee': 'Uploaded By',
-            'jd_name': 'Job Description Name',
         }
 
-
 class UploadJobForm(forms.ModelForm):
+    jd = forms.ModelChoiceField(JD.objects.all(), label='*Select Job Description')
     class Meta:
         model = Job
-        fields = ['raised_by_employee', 'position_owner_id', 'requisition_id', 'jd_name']
+        fields = ['raised_by_employee', 'position_owner_id', 'requisition_id', 'jd']
         label = {
             'position_owner_id': '*Position Owner',
             'requisition_id': '*Requisition ID',
-            'jd_name': '*Job Description',
         }
 
 class TestForm(forms.ModelForm):
