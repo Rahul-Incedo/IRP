@@ -443,12 +443,13 @@ def edit(request, req_id, email_id, level, feedback_id):
         status=request.POST['status']
         comments=request.POST['comments']
         #
-        # obj = Feedback.objects.get(feedback_id = feedback_id)
-        # field_objects = Field.objects.all().filter(feedback_id = obj)
-        #
-        # for field_obj in field_objects:
-        #     field_obj.rating = request.POST[f'{field_obj.field_name}']
-        #     field_obj.save()
+        obj = Feedback.objects.get(feedback_id = feedback_id)
+        field_objects = Field.objects.all().filter(feedback_id = obj)
+
+        for field_obj in field_objects:
+            field_obj.rating = request.POST[f'rating{field_obj.field_name}{field_obj.pk}']
+            field_obj.comments = request.POST[f'comments{field_obj.field_name}{field_obj.pk}']
+            field_obj.save()
 
         obj_ = Feedback.objects.get(pk=feedback_id)
         obj_.status = status
@@ -469,12 +470,14 @@ def edit(request, req_id, email_id, level, feedback_id):
         field_object = Field.objects.all().filter(feedback_id = obj)
         field_names= [obj_.field_name for obj_ in field_object]
         field_values= [obj_.rating for obj_ in field_object]
+        field_comments = [obj_.comments for obj_ in field_object]
+        field_id = [obj_.field_id for obj_ in field_object]
         level_ = obj.level
 
         Context = {
             'status': status,
             'comments': comments,
-            'fields': zip(field_names, field_values),
+            'fields': zip(field_names, field_values, field_comments, field_id),
             'level' : level_,
             'feedback_id': feedback_id,
             'form': form

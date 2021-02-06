@@ -4,6 +4,7 @@ from .models import Candidate, Job, TestModel, Employee, Feedback, Field
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 # from .models.Feedback import Field
 
 class CandidateForm(forms.ModelForm):
@@ -83,11 +84,11 @@ class FieldForm(forms.ModelForm):
                         ('Image Processing', 'Image processing'),
                         ('HTML', 'HTML'),
                         ('CSS', 'CSS'),
-                        ('Cotlin', 'Cotlin'),
+                        ('Kotlin', 'Kotlin'),
                         ('AWS', 'AWS'),
                         ('Neural Networks', 'Neural Networks'),
                         ('Deep Learning', 'Deep Learning'),
-                        ('machine learning', 'machine learning'),
+                        ('Machine learning', 'Machine learning'),
                         ('.NET', '.NET')]
     field_name = forms.CharField(max_length = 20, widget=forms.Select(choices=field_choices),)
     rating = forms.IntegerField(min_value=1, max_value=5)
@@ -104,18 +105,5 @@ class FieldForm(forms.ModelForm):
         field_names = [obj.field_name for obj in field_objects]
 
         if field_name in field_names :
-            raise forms.ValidationError("You have already reviewed this field, please choose the different field")
+            raise forms.ValidationError("You have already reviewed this field")
         return field_name
-
-        # class ContactForm(forms.Form):
-        #     # Everything as before.
-        #     ...
-        #
-        #     def clean_recipients(self):
-        #         data = self.cleaned_data['recipients']
-        #         if "fred@example.com" not in data:
-        #             raise ValidationError("You have forgotten about Fred!")
-        #
-        #         # Always return a value to use as the new cleaned data, even if
-        #         # this method didn't change it.
-        #         return data

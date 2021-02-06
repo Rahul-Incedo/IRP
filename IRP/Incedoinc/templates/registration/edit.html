@@ -8,29 +8,31 @@ Edit candidate information
 <br/>
 <h4 style="text-align: centre">Edit Form : Level {{level}} </h4><br/>
 <div class='centre_'>
-  <form action = "../field/{{feedback_id}}/" method = "POST">{% csrf_token %}
-    <div>
-      {% for i, j in fields %}
-      <label style="font-size: smaller" for = "{{i}}"> {{i}} : </label><br/>
-      <input type = number name = "{{i}}" value="{{j}}" min = "1" max ="5">
-      <a style="font-size: smaller" href = '../{{i}}{{level}}/'>delete</a>
-      <br/>
-      {% endfor %}
-    </div>
-
-    <div>
-      {{form}}<br/>
+  <form name = field_form action = "../field/{{feedback_id}}/" method = "POST">{% csrf_token %}
+    <div class = 'new_'>
+      {{form.as_p}}<br/>
       <button type="submit" class = "addBtn" value="Submit">Add Fields</button>
     </div>
   </form>
 
 
-
-
   <form name='edit_form' id='edit_form' method="POST">{% csrf_token %}
+    <div style = "margin-left:200px; margin-right:200px">
+      {% for i, j, k, id in fields %}
+      <label for = "{{i}}"> {{i}} : </label><br/>
+      <a style="float:right;" href = '../{{i}}{{level}}/'>delete</a>
+      <input type = number id = "{{id}}" value="{{j}}" name = "rating{{i}}{{id}}" value="{{j}}" min = "1" max ="5">
+      <label for =comments{{id}}"> Feedback :</label>
+      <textarea rows = "2" cols = "40" id = "comment{{id}}" name = "comments{{i}}{{id}}" >{{k}}
+      </textarea>
+      <hr>
+      <br/>
+      {% endfor %}
+    </div>
+
       <div>
         <br/>
-        <label style="font-size: smaller" for = "status">Status: </label><br/>
+        <label for = "status">Status: </label><br/>
         <input name = "status" id = "status" list = "status_choices" placeholder = "status" value = {{status}}>
           <datalist id = "status_choices">
                   <option value = "pass">
@@ -40,12 +42,12 @@ Edit candidate information
       </div>
 
       <br/>
-      <lebel style="font-size: smaller" for = 'comments'> Enter your overall feedback here:<lebel> <br/>
+      <lebel for = 'comments'> Enter your overall feedback here:<lebel> <br/>
       <textarea rows = "5" cols = "60" name = "comments" value = {{comments}}>{{comments}}
       </textarea><br/>
       <button type="submit" class = "addBtn" value="Submit">Submit</button>
       <a href= '../'>Cancel</a>
     </form>
-<div>
+</div>
 
 {% endblock %}

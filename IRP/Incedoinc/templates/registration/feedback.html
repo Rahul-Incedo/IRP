@@ -4,59 +4,61 @@ Candidate feedback {{candiate.id}}
 {% endblock %}
 
 {% block body %}
-
-
-
-<h3 style="background-color: rgb(201, 76, 76)">Candidate feedback</h3>
-<div class='margin'>
-  <h4> Basic Details </h4>
-  <ul class='details'>
-    <li> Candidate Name : {{basic_detail.Name}}</li><br/>
-    <li> Email Id : {{basic_detail.Email}}</li><br/>
-    <li> Graduation CGPA : {{basic_detail.Graduation_CGPA}}</li><br/>
+<h3 style="background-color:#ee2020; text-align:centre; margin-left:15px; margin-right:15px; color=white;">Candidate feedback</h3>
+<h4> Basic Details </h4>
+<div class='basic_details'>
+  <ul>
+    <li> Candidate Name : {{basic_detail.Name}}</li><br>
+    <li> Email Id : {{basic_detail.Email}}</li><br>
+    <li> Graduation CGPA : {{basic_detail.Graduation_CGPA}}</li><br>
     <li> University Name : {{basic_detail.University_name}}</li>
+    <li style="float:right;font-size:12px"><a href = "">See More</a></li>
   </ul>
+</div>
 
+<div class = 'level2'>
   {% if level == 2 %}
     <h4> Level 1 </h4>
     <ul>
       <li> Status : {{level_1.status}} </li>
-      <li style = 'float:right'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
+      <li style = 'float:right;font-size:12px'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
       {% for i, j, k in level_1.details %}
-        <li> {{i}} : {{j}}, &nbsp;&nbsp;</li>
+        <li> {{i}} : {{j}}, &nbsp;&nbsp; Comments : {{k}}</li>
       {% endfor %}
       <br/>
-      <li> Comments : {{level_1.comments}}</li><br/>
+      <li> Overall Comments : {{level_1.comments}}</li><br/>
       <li> Interviwer : {{level_1.interviewer_id}} <li>
-      <li style = 'float:right'> last update at : {{level_1.timestamp}}</li>
+      <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
     </ul>
   {% endif %}
+</div>
 
+<div class='level3'>
   {% if level == 3 %}
   <h4> Level 1 </h4>
   <ul>
     <li> Status : {{level_1.status}} </li>
-    <li style = 'float:right'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
+    <li style = 'float:right;font-size:12px'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
     {% for i, j, k in level_1.details %}
-      <li> {{i}} : {{j}}, &nbsp;&nbsp; </li>
+      <li> {{i}} : {{j}}, &nbsp;&nbsp; Comments : {{k}}</li>
     {% endfor %}
     <br/>
-    <li> Comments : {{level_1.comments}}</li><br/>
+    <li> Overall Comments : {{level_1.comments}}</li><br/>
     <li> Interviwer : {{level_1.interviewer_id}} <li>
-    <li style = 'float:right'> last update at : {{level_1.timestamp}}</li>
+    <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
   </ul>
+  <hr>
 
   <h4> Level 2 </h4>
   <ul>
     <li> Status : {{level_2.status}} </li>
-    <li style = 'float:right'><a href = 'edit{{level_2.feedback_id}}/'> Edit </a></li><br/>
+    <li style = 'float:right;font-size:12px'><a href = 'edit{{level_2.feedback_id}}/'> Edit </a></li><br/>
     {% for i, j, k in level_2.details %}
-      <li> {{i}} : {{j}}, &nbsp;&nbsp;</li>
+      <li> {{i}} : {{j}}, &nbsp;&nbsp; comments : {{k}}</li><br>
     {% endfor %}
-    <br/>
-    <li> Comments : {{level_2.comments}}</li><br/>
+    <li> Overall Comments : {{level_2.comments}}</li><br/>
     <li> Interviwer : {{level_2.interviewer_id}} <li>
-    <li style = 'float:right'> last update at : {{level_2.timestamp}}</li>
+    <li style = 'float:right;color:#ff3300'> Last updated at : {{level_2.timestamp}}</li>
   </ul>
   {% endif %}
 </div>
@@ -64,19 +66,19 @@ Candidate feedback {{candiate.id}}
 
 
 <hr>
-<h4> Level {{level}} </h4><br>
+<h4> Level {{level}} </h4>
 
-<label for="interviewer_code"><h4>Interviewer : {{basic_detail.interviewer_id}}</h4></label><br/>
+<label for="interviewer_code"><h4>Interviewer : {{basic_detail.interviewer_id}}</h4></label>
 
 {% for i, j in current_field %}
   <h4>{{i}} : {{j}} <a style="font-size: smaller" href = '{{i}}{{level}}'>delete</a></h4>
 {% endfor %}
 
-<div class = 'field_form' method = "POST">
+<div class = 'new_' method = "POST">
   <form method = 'POST' action = 'field/{{basic_detail.feedback_id}}/'>
     {% csrf_token %}
-    {{form}}<br/>
-
+    {{form.as_p}}<br/>
+    {{form.errors}}
     <button type="submit" onclick='href="../../"' value="Add_Field">Add Field</button><br/><br/>
   </form>
 </div>
@@ -97,14 +99,12 @@ Candidate feedback {{candiate.id}}
 
 
       <label for="comments">Enter your overall feedback here</label><br>
-      <textarea rows = "5" cols = "60" name = "comments">
+      <textarea rows = "3" cols = "10" name = "comments">
       </textarea><br/>
 
       <button type="submit" class = "addBtn" value="Submit">Submit</button>
       <a href = '../../../'> Cancel </a>
     </form>
 <div>
-
-
 
 {% endblock %}
