@@ -294,7 +294,7 @@ def edit_candidate(request,candidate_email):
         print(type(request.POST['DOB'])," : ",request.POST['DOB'])
         print(type(request.POST['project'])," : ",request.POST['project'])
         print(type(request.POST['noticePeriod'])," : ",request.POST['noticePeriod'])
-        print(type(request.POST['resume'])," : ",request.POST['resume'])
+        # print(type(request.POST['resume'])," : ",request.POST['resume'])
         if len(request.POST['fname'])!=0 :
             candidate_obj.f_name=request.POST['fname']
         if len(request.POST['mname'])!=0 :
