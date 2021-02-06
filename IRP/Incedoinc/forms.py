@@ -70,8 +70,52 @@ class LoginForm(AuthenticationForm):
         fields = ['username', 'email', 'password']
 
 class FieldForm(forms.ModelForm):
+    field_choices = [   ('', '------'),
+                        ('Python', 'Python'),
+                        ('Java', 'Java'),
+                        ('C++', 'C++'),
+                        ('C', 'C'),
+                        ('PHP', 'PHP'),
+                        ('SQL', 'SQL'),
+                        ('JAVA script', 'JAVA script'),
+                        ('Cloud Computing', 'Cloud Computing'),
+                        ('Linux', 'Linux'),
+                        ('Image Processing', 'Image processing'),
+                        ('HTML', 'HTML'),
+                        ('CSS', 'CSS'),
+                        ('Cotlin', 'Cotlin'),
+                        ('AWS', 'AWS'),
+                        ('Neural Networks', 'Neural Networks'),
+                        ('Deep Learning', 'Deep Learning'),
+                        ('machine learning', 'machine learning'),
+                        ('.NET', '.NET')]
+    field_name = forms.CharField(max_length = 20, widget=forms.Select(choices=field_choices),)
     rating = forms.IntegerField(min_value=1, max_value=5)
 
     class Meta:
         model = Field
         fields = '__all__'
+
+    def clean_field_name(self):
+        field_name = self.cleaned_data['field_name']
+        f = self.cleaned_data['feedback_id']
+        # f_obj = Feedback.objects.get(feedback_id=f)
+        field_objects = Field.objects.all().filter(feedback_id=f)
+        field_names = [obj.field_name for obj in field_objects]
+
+        if field_name in field_names :
+            raise forms.ValidationError("You have already reviewed this field, please choose the different field")
+        return field_name
+
+        # class ContactForm(forms.Form):
+        #     # Everything as before.
+        #     ...
+        #
+        #     def clean_recipients(self):
+        #         data = self.cleaned_data['recipients']
+        #         if "fred@example.com" not in data:
+        #             raise ValidationError("You have forgotten about Fred!")
+        #
+        #         # Always return a value to use as the new cleaned data, even if
+        #         # this method didn't change it.
+        #         return data

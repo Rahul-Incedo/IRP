@@ -72,26 +72,11 @@ class Feedback(models.Model):
         return f'{self.status} {self.level}'
 
 class Field(models.Model):
+    field_id = models.AutoField(primary_key=True)
     feedback_id = models.ForeignKey(Feedback, null=True, on_delete=models.CASCADE)
-    field_choices = [('python', 'python'),
-                        ('java', 'java'),
-                        ('c++', 'c++'),
-                        ('sql', 'sql'),
-                        ('JAVA script', 'java script'),
-                        ('cloud computing', 'cloud computing'),
-                        ('Linux', 'Linux'),
-                        ('image Processing', 'image processing'),
-                        ('C#', 'C#'),
-                        ('HTML', 'HTML'),
-                        ('CSS', 'CSS'),
-                        ('Cotlin', 'Cotlin'),
-                        ('AWS', 'AWS'),
-                        ('Neural Networks', 'Neural Networks'),
-                        ('Deep Learning', 'Deep Learning'),
-                        ('machine learning', 'machine learning'),
-                        ('.NET', '.NET')]
-    field_name = models.CharField(max_length=20, choices=field_choices, primary_key=True, null=False)
+    field_name = models.CharField(max_length=20, null=False)
     rating = models.IntegerField(null=True, blank=True)
+    comments = models.TextField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f'{self.field_name}'

@@ -22,7 +22,7 @@ Candidate feedback {{candiate.id}}
     <ul>
       <li> Status : {{level_1.status}} </li>
       <li style = 'float:right'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
-      {% for i, j in level_1.details %}
+      {% for i, j, k in level_1.details %}
         <li> {{i}} : {{j}}, &nbsp;&nbsp;</li>
       {% endfor %}
       <br/>
@@ -37,7 +37,7 @@ Candidate feedback {{candiate.id}}
   <ul>
     <li> Status : {{level_1.status}} </li>
     <li style = 'float:right'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
-    {% for i, j in level_1.details %}
+    {% for i, j, k in level_1.details %}
       <li> {{i}} : {{j}}, &nbsp;&nbsp; </li>
     {% endfor %}
     <br/>
@@ -50,7 +50,7 @@ Candidate feedback {{candiate.id}}
   <ul>
     <li> Status : {{level_2.status}} </li>
     <li style = 'float:right'><a href = 'edit{{level_2.feedback_id}}/'> Edit </a></li><br/>
-    {% for i, j in level_2.details %}
+    {% for i, j, k in level_2.details %}
       <li> {{i}} : {{j}}, &nbsp;&nbsp;</li>
     {% endfor %}
     <br/>
@@ -95,6 +95,8 @@ Candidate feedback {{candiate.id}}
         </datalist>
       </div><br/>
 
+
+      <label for="comments">Enter your overall feedback here</label><br>
       <textarea rows = "5" cols = "60" name = "comments">
       </textarea><br/>
 

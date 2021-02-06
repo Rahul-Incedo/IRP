@@ -360,12 +360,13 @@ def feedback(request, req_id, email_id, level):
             field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
             field_names = [obj.field_name for obj in field_object_1]
             field_values = [obj.rating for obj in field_object_1]
+            fields_comments = [obj.comments for obj in field_object_1]
             level_1 = { 'status': status,
                         'comments' : comments,
                         'interviewer_id': interviewer_id,
-                        'details' : zip(field_names, field_values),
+                        'details' : zip(field_names, field_values, fields_comments),
                         'timestamp' : last_update_time,
-                        'feedback_id_1': feedback_id_1,
+                        'feedback_id': feedback_id_1,
                         }
 
             context = {
@@ -388,6 +389,7 @@ def feedback(request, req_id, email_id, level):
             field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
             field_names = [obj.field_name for obj in field_object_1]
             field_values = [obj.rating for obj in field_object_1]
+            fields_comments = [obj.comments for obj in field_object_1]
 
             feedback_object_2 = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id)
             status_ = feedback_object_2.status
@@ -399,11 +401,12 @@ def feedback(request, req_id, email_id, level):
             field_object_2 = Field.objects.all().filter(feedback_id = feedback_id_2)
             field_names_ = [obj.field_name for obj in field_object_2]
             field_values_ = [obj.rating for obj in field_object_2]
+            fields_comments_ = [obj.comments for obj in field_object_2]
 
             level_1 = { 'status': status,
                         'comments' : comments,
                         'interviewer_id' : interviewer_id,
-                        'details' : zip(field_names, field_values),
+                        'details' : zip(field_names, field_values, fields_comments),
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
                         }
@@ -411,7 +414,7 @@ def feedback(request, req_id, email_id, level):
             level_2 = { 'status': status_,
                         'comments' : comments_,
                         'interviewer_id': interviewer_id_,
-                        'details' : zip(field_names_, field_values_),
+                        'details' : zip(field_names_, field_values_, fields_comments_),
                         'timestamp': last_update_time_,
                         'feedback_id' :feedback_id_2,
                         }
@@ -439,6 +442,13 @@ def edit(request, req_id, email_id, level, feedback_id):
     if request.method == 'POST':
         status=request.POST['status']
         comments=request.POST['comments']
+        #
+        # obj = Feedback.objects.get(feedback_id = feedback_id)
+        # field_objects = Field.objects.all().filter(feedback_id = obj)
+        #
+        # for field_obj in field_objects:
+        #     field_obj.rating = request.POST[f'{field_obj.field_name}']
+        #     field_obj.save()
 
         obj_ = Feedback.objects.get(pk=feedback_id)
         obj_.status = status
@@ -481,6 +491,8 @@ def field_view(request, req_id, email_id, level, feedback_id):
     if request.method == 'POST':
         form = FieldForm(request.POST)
         if form.is_valid():
+            field_name = form.cleaned_data['field_name']
+            print(field_name)
             form.save()
 
         if(level == level_):
