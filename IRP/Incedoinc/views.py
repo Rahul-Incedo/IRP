@@ -83,6 +83,17 @@ def manage_jd_view(request, *args, **kwargs):
 
     return HttpResponse('<h1>this is managejd</h1>')
 
+def delete_jd_view(request, jd_pk):
+    query = JD.objects.get(pk=jd_pk)
+    query.delete()
+    return redirect('manage_jd_page')
+    return HttpResponse("Deleted!")
+
+def delete_job_view(request, job_pk):
+    query = Job.objects.get(pk=job_pk)
+    query.delete()
+    return redirect('manage_job_page')
+    
 def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')

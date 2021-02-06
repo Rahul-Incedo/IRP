@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 from django.conf.urls import url
 from  . import views as core_views
@@ -8,7 +8,7 @@ from django.contrib.auth import views as auth_views
 #download-file
 from django.conf import settings
 from django.conf.urls.static import static
-
+# url(r'^delete/(?P<person_pk>.*)$', 'person.views.delete' name='delete-person'),
 urlpatterns = [
     #pulkit-kartikeyan
     #path("", views.index, name='home'),
@@ -21,6 +21,13 @@ urlpatterns = [
     # path('media/<str:path>/', views.download_view),
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
 
+    # path(r'^delete/jd/<jd_pk>.*)$', views.delete_jd_view, name='delete_jd'),
+
+
+
+    re_path(r'^delete/jd/(?P<jd_pk>.*)$', views.delete_jd_view, name='delete_jd'),
+    re_path(r'^delete/job/(?P<job_pk>.*)$', views.delete_jd_view, name='delete_job'),
+    
     #vaishnavi
 
 
@@ -32,6 +39,5 @@ urlpatterns = [
     path("search_candidate/<str:candidate_email>", views.search_candidate, name = 'search_candidate_email'),
     path("edit_candidate/<str:candidate_email>", views.edit_candidate, name = 'edit_candidate'),
 ]
-
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

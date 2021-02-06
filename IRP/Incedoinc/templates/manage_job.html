@@ -146,7 +146,8 @@
                 <td>{{ obj.jd_name.jd_name }}</td>
                 <!-- <td><a href="{{ obj.jd_name }}/" ><input type="button" value='DOWNLOAD'></a></td> -->
                 <td><a  ><input type="button" value="Edit"></a></td>
-                <td><a  ><input type="button" value="Delete"></a></td>
+                <!-- <td><a  ><input type="button" value="Delete"></a></td> -->
+                <td><a href="/delete/job/{{ obj.pk }}">Delete</a></td>
               </tr>
               {% endfor %}
         </table>
