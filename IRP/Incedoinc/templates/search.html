@@ -125,7 +125,7 @@ input[type=submit] {
             width: 100%;
             color: #588c7e;
             font-family: monospace;
-            font-size: 25px;
+            font-size: 20px;
             text-align: left;
             margin-left: auto;
             margin-right: auto;
@@ -210,8 +210,8 @@ input[type=submit] {
             </select>
 
           <input type="text" placeholder="Type Here" name="search_element">
-          <input type="submit" value="Search">
-          <input type="submit" value="List All">
+          <input type="submit" value="Search" name="search">
+          <input type="submit" value="List All" name="listall">
         </form>
           <a href="../add-candidate/" style="float:right"><button>Add Candidate</button>
         </th>
@@ -231,6 +231,7 @@ input[type=submit] {
       <th>Level 1</th>
       <th>Level 2</th>
       <th>Level 3</th>
+      <th>Report</th>
     </tr>
 
 
@@ -273,6 +274,7 @@ input[type=submit] {
           {% endif %}
 
         </td>
+        <td><button>View Report</button></td>
     </tr>
     {% endfor %}
   </table>

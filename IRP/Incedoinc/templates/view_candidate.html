@@ -253,7 +253,7 @@
       <tr>
           <th><label >Resume </label></th>
 
-          <td>: <label >{{candidate_obj.resume}}</label></td>
+          <td>: <a href='{{ candidate_obj.resume.url }}'><label >{{candidate_obj.resume.name}}</label></a></td>
       </tr>
   </table>
   <center><input type="submit" value="Edit Details"></center>
