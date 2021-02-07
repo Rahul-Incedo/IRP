@@ -1,7 +1,8 @@
-<!DOCTYPE html>
-<html>
+<<!DOCTYPE html>
+<html lang="en" dir="ltr">
   <head>
-    <title>Incedo Recruitment Portal</title>
+    <meta charset="utf-8">
+    <title></title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <style>
@@ -21,12 +22,13 @@
       p {
         margin: 0 0 5px;
       }
-      .title, form {
+      .my_class, form {
         justify-content: center;
         padding: 25px;
         margin: 25px;
         margin-left: 200px;
         margin-right: 200px;
+        box-shadow: 0 2px 5px #f5f5f5;
         background: #f5f5f5;
       }
       h1 {
@@ -56,7 +58,7 @@
         width: 100%;
         padding: 10px;
         border: none;
-        background: #1c87c9; 
+        background: #1c87c9;
         font-size: 16px;
         font-weight: 400;
         color: #fff;
@@ -98,24 +100,64 @@
       li a:hover:not(.active) {
         background-color: #111;
       }
-
+      .my_class {
+        justify-content: center;
+        padding: 25px;
+        margin: 25px;
+        margin-left: 200px;
+        margin-right: 200px;
+        box-shadow: 0 2px 5px #f5f5f5;
+        background: #f5f5f5;
+      }
+      input.right{
+        float:right;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #1c87c9;
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff;
+      }
+      input.rightinside{
+        float:right;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #1c87c9;
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff;
+      }
     </style>
   </head>
   <body>
     <header>
       <ul class = 'main'  style="background-color: black">
-        <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
+        <li><a href='{% url "home" %}'>Incedo Recruitment Portal</a></li>
         <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
         <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
         <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
       </ul>
     </header>
-        <div class='title'>
-            <h1>Upload JD</h1>
-        </div>
-        <form method='POST' enctype="multipart/form-data"> {% csrf_token %}
-            {{ form.as_p }}
-        <button type="submit">Upload Job</button>
-      </form>
+
+    <form method="post"> {{csrf_token}}
+    <input type="text" placeholder="search query" name="search query">
+    <input type="button" value="search">
+    <input type="button" value="UPLOAD NEW JD" class="right">
+    </form>
+    <div class="my_class">
+    <table>
+      <thead>
+        <th>Sr.no</th>
+        <th>Name</th>
+        <th>Uploadedby</th>
+      </thead>
+      <tr>
+        <td>a</td>
+        <td>b</td>
+        <td>c</td><input type="button" value="Delete" class="rightinside">
+      </tr>
+   </div>
   </body>
 </html>

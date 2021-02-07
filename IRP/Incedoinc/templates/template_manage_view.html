@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <style>
+
+      /* .my_header {
+        text-align: center;
+        justify-content: center;
+        padding: 25px;
+        margin: 25px;
+        box-shadow: 0 2px 5px #f5f5f5;
+        background: #f5f5f5;
+      } */
+
+      button {
+        width: 20%;
+        padding: 10px;
+        border: none;
+        background: #1c87c9;
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff;
+      }
+
+
+      table
+        {
+            border-collapse: collapse;
+            width: 100%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 20px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+        }
+      .my_class {
+        justify-content: center;
+        padding: 25px;
+        margin: 25px;
+        margin-left: 200px;
+        margin-right: 200px;
+        box-shadow: 0 2px 5px #f5f5f5;
+        background: #f5f5f5;
+      }
+      .right{
+        float:right;
+
+      }
+      .rightinside{
+        float:right;
+        color:Green;
+      }
+    </style>
+  </head>
+  <body>
+<form method="post"> {{csrf_token}}
+    <input type="text" placeholder="search query" name="search query">
+    <button type="button" name="search">search</button>
+    <button type="button" class=right>upload new jd</button>
+    </form>
+    <div class="my_class">
+    <table>
+      <thead>
+        <th>Sr.no</th>
+        <th>Name</th>
+        <th>Uploadedby</th>
+      </thead>
+      <tr>
+        <td>1.</td>
+        <td>JD_name</td>
+        <td>Uploadedby<input type="button" value="Delete" class="rightinside"></td>
+      </tr>
+   </div>
+  </body>
+</html>

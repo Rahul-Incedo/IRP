@@ -1,22 +1,33 @@
 from django.db import models
+import os
 
 # Create your models here.
 class Employee(models.Model):
     full_name = models.CharField(max_length=64)
     email = models.EmailField(max_length=254, null=True)
     employee_id = models.CharField(max_length=64, primary_key=True, default=None)
-    password = models.CharField(max_length=64)
-    temp_password = models.CharField(max_length=64, null=True, blank=True)
+    # password = models.CharField(max_length=64)
+    # temp_password = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
         return f'{self.full_name}'
 
 
+class JD(models.Model):
+    jd_name = models.CharField(max_length=64, primary_key=True)
+    jd_file = models.FileField(upload_to='JD/')
+    uploaded_by_employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.jd_name}'
+
+#different requisition_id are mapped to one job_description
 class Job(models.Model):
     requisition_id = models.CharField(max_length=64, primary_key=True)
-    raised_by_employee = models.ForeignKey(Employee, null = True, related_name='raisedByEmployee', on_delete=models.CASCADE)
-    position_owner_id = models.ForeignKey(Employee, null = True, related_name='positionOwner', on_delete=models.CASCADE)
-    job_description = models.FileField(upload_to='JD/')
+    raised_by_employee = models.ForeignKey(Employee, related_name='raised_by_employee', null = True, on_delete=models.CASCADE)
+    position_owner_id = models.ForeignKey(Employee, related_name='position_owner', null = True, on_delete=models.CASCADE)
+    jd = models.ForeignKey(JD, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -24,24 +35,24 @@ class Job(models.Model):
 
 
 class Candidate(models.Model):
+    registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE )
     f_name = models.CharField(max_length=64)
     m_name = models.CharField(max_length=64, null=True, blank=True)
     l_name = models.CharField(max_length=64)
-    registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE )
     email = models.EmailField(max_length=254, primary_key=True)
     gender_choice = [('M', 'Male'),
                     ('F', 'Female')]
     gender = models.CharField(max_length=1,
                             choices= gender_choice)
 
+    college_name = models.CharField(max_length = 254, null=True, blank=True)
     CGPA = models.DecimalField(null=True, max_digits=5, decimal_places=3)
-    college_name = models.CharField(max_length = 254)
-    experience = models.IntegerField(null=True)
+    experience = models.IntegerField()
     mobile = models.CharField(max_length=10)
-    DOB = models.DateField(auto_now = True)
+    DOB = models.DateField(null=True, blank=True)
     projects_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to='Resume/')
-    noticePeriod = models.IntegerField(null=True)
+    notice_period = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     @property

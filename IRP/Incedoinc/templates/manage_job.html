@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>IRS</title>
+
+    <style>
+
+      /* .my_header {
+        text-align: center;
+        justify-content: center;
+        padding: 25px;
+        margin: 25px;
+        box-shadow: 0 2px 5px #f5f5f5;
+        background: #f5f5f5;
+      } */
+      body
+        {
+          margin:0px;
+          padding:0px;
+          width:100%;
+          height:100%;
+          margin-left:auto;
+          margin-right:auto;
+        }
+      form {
+        margin: 25px;
+        /* background-color: #588c7e; */
+        /* padding: 10px 25px 10px 25px; */
+        
+      }
+      button {
+        width: 10%;
+        padding: 5px;
+        border: none;
+        background: #fd511c;
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff;
+        border-radius: 15px;
+      }
+      .button-2 {
+        float: right;
+        width: 20%;
+        padding: 10px;
+      }
+
+      table
+        {
+            border-collapse: collapse;
+            width: 100%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 20px;
+            text-align: left;
+            /* margin-left: auto;
+            margin-right: auto; */
+        }
+        th
+        {
+            background-color:#588c7e;
+            color: #fff;
+            padding: 5px;
+            border: 1px solid black;
+        }
+        td
+        {
+          padding: 5px;
+          border: 1px solid black;
+        }
+      .my_class {
+        justify-content: center;
+        padding: 25px;
+        margin: 25px;
+        margin-left: 0px;
+        margin-right: 0px;
+        /* box-shadow: 0 2px 5px #f5f5f5; */
+        /* background: #f5f5f5; */
+      }
+      .right{
+        float:right;
+
+      }
+      .rightinside{
+        float:right;
+        color:Green;
+      }
+
+      ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #40423f;
+          color: #b6b8b5;
+        }
+
+        li {
+          float: left;
+        }
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+    </style>
+  </head>
+  <body>
+    <header>
+      <ul class = 'main'  style="background-color: black">
+        <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
+        <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
+        <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
+        <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
+      </ul>
+    </header>
+    <div class='my_inputs'>
+      <form method="post"> {% csrf_token %}
+          <input type="text" placeholder="Search Requisition" name='search_query'>
+          <button type="submit" name="search_button">Search</button>
+          <button type="submit" name="list_all_button">List All</button>
+          <button type="submit"  class='button-2' name="raise_requisition_button">Raise Requisition</button>
+      </form>
+    </div>
+    {% if query_set is not None %}
+      <div class="my_class">
+        <table>
+          <thead>
+            <th>Sr.</th>
+            <th>Requisition ID</th>
+            <th>Raised By</th>
+            <th>Position Owner</th>
+            <th>Job Description</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </thead>
+              {% for obj in query_set %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ obj.requisition_id }}</td>
+                <td>{{ obj.raised_by_employee }}</td>
+                <td>{{ obj.position_owner_id }}</td>
+                <td>{{ obj.jd.jd_name }}</td>
+                <td><a  ><input type="button" value="Edit"></a></td>
+                <td><a href="{% url 'delete_job' obj.pk %}"><input type="button" value="Delete"></a></td>
+              </tr>
+              {% endfor %}
+        </table>
+      </div>
+    {% endif %}
+  </body>
+</html>

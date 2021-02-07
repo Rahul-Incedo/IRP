@@ -39,17 +39,19 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'users.apps.UsersConfig',
-    'Incedoinc.apps.IncedoincConfig',
+   
+   
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+     'users.apps.UsersConfig',
     #vaishnavi
     'django_email_verification',
+
+     'Incedoinc.apps.IncedoincConfig',
 ]
 
 MIDDLEWARE = [
@@ -135,7 +137,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGOUT_REDIRECT_URL = "dashboard"
+#LOGOUT_REDIRECT_URL = "signup" #changed on 04/02
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -144,3 +146,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'incedo.verify.yourmail@gmail.com'
 EMAIL_HOST_PASSWORD = 'qwerty741852963*'
+
+
+AUTH_USER_MODEL = 'users.CustomUser'
