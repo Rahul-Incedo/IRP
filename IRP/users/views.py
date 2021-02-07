@@ -3,15 +3,16 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from django.urls.base import reverse_lazy
 from .forms import SignUpForm
 
 from django.contrib.auth.models import User
 
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from .forms import LoginForm, SignUpForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-
+from django.contrib.auth.views import PasswordChangeDoneView, PasswordChangeView
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
@@ -74,6 +75,8 @@ def signup_view(request):
 
 
 def activate(request, uidb64, token):
+    if not request.user.is_authenticated:
+        return redirect('login')
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = UserModel._default_manager.get(pk=uid) #Giving Error
@@ -113,11 +116,26 @@ def login_view(request):
 
 
 def logout_view(request):
-    
+    if not request.user.is_authenticated:
+        return redirect('login')
     logout(request)
     # form = SignUpForm(request.POST)
     return redirect('login')
+    
+class change_password_view(PasswordChangeView):
+    
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('password_success')
 
+def password_success(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'accounts/password_change_done.html', {})
+
+
+# def change_password_view(request):
+#     if(request.method == 'GET'):
+#         return render(request, 'accounts/change_password_page.html') 
 
 
 
