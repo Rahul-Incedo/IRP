@@ -26,8 +26,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 UserModel = get_user_model()
 from .forms import SignUpForm
-
-
+import os
 
 
 #include models
@@ -457,7 +456,8 @@ def edit(request, req_id, email_id, level, feedback_id):
         obj_.save()
 
         candidate_email=email_id
-        return redirect('../../../../../search_candidate/'+str(candidate_email))
+        return redirect('../')
+        # return redirect('../../../../../search_candidate/'+str(candidate_email))
 
     '''GET METHOD'''
     try:
@@ -509,6 +509,12 @@ def delete_field(request, req_id, email_id, level, field_name, del_level):
     if(level == del_level):
         return redirect('../')
     return redirect(f'../edit{feedback_id}')
+
+#
+# def download_report(request, req_id, email_id, level, feedback_id):
+#     os.chdir('../../')
+#     pass
+
 
 def test(request):
     if not request.user.is_authenticated:

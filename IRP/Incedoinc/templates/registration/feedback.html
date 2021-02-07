@@ -4,7 +4,9 @@ Candidate feedback {{candiate.id}}
 {% endblock %}
 
 {% block body %}
-<h3 style="background-color:#ee2020; text-align:centre; margin-left:15px; margin-right:15px; color=white;">Candidate feedback</h3>
+<h3 style="background-color:#ee2020; color=#66ccff; text-align:center; margin-left:15px; margin-right:15px; color=white;">Candidate feedback</h3><nobr>
+<h3 style="margin-right:20px"><a style="float:right" href="">Download feedback </a></h3>
+<h3 style="margin-left:20px"><a style="float:left;" href="#fill"> Fill feedback </a><br></h3>
 <h4> Basic Details </h4>
 <div class='basic_details'>
   <ul>
@@ -73,15 +75,17 @@ Candidate feedback {{candiate.id}}
 {% for i, j in current_field %}
   <h4>{{i}} : {{j}} <a style="font-size: smaller" href = '{{i}}{{level}}'>delete</a></h4>
 {% endfor %}
-
-<div class = 'new_' method = "POST">
-  <form method = 'POST' action = 'field/{{basic_detail.feedback_id}}/'>
-    {% csrf_token %}
-    {{form.as_p}}<br/>
-    {{form.errors}}
-    <button type="submit" onclick='href="../../"' value="Add_Field">Add Field</button><br/><br/>
-  </form>
+<div id="fill">
+  <div class = 'new_'>
+    <form method = 'POST' action = 'field/{{basic_detail.feedback_id}}/'>
+      {% csrf_token %}
+      {{form.as_p}}<br/>
+      {{form.errors}}
+      <button type="submit" onclick='href="../../"' value="Add_Field">Add Field</button><br/><br/>
+    </form>
+  </div>
 </div>
+
 
 <div class='centre_'>
   <form name='feedback_form' id='feedback_form' method="POST">

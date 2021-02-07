@@ -201,14 +201,14 @@
       ul {
         list-style-type: none;
         margin: 0%;
-        padding: 5px;
+        padding: 2px;
         overflow: hidden;
-        margin-left: 20px;
-        margin-right: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
         background-color: #d7d7c1 ;
         color: #b6b8b5;
       }
-
+/*
       .level1{
         margin-left: 100px;
         margin-right: 100px;
@@ -217,6 +217,11 @@
         margin-left: 100px;
         margin-right: 100px;
       }
+
+      .level3{
+        margin-left: 100px;
+        margin-right: 100px;
+      } */
 
       li {
         color : black;
@@ -234,7 +239,7 @@
       }
 
       li a:hover:not(.active) {
-        background-color: #111;
+        background-color: #b8b894;
       }
 
     </style>
@@ -248,7 +253,7 @@
   <body>
     <div class = "main">
       <header>
-        <ul class = 'main'  style="background-color: black">
+        <ul class = 'main'  style="background-color: #b8b894">
           <li style="float:left; font-size:15px;"><a href='{% url "home" %}'>Incedo Recruitment Portal</a></li>
           <li style="float:right;font-size:15px;"><a href="{% url 'logout' %}">Log out</a></li>
           <li style="float:right;font-size:15px;"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
