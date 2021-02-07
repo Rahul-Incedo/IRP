@@ -834,8 +834,8 @@ def delete_field(request, req_id, email_id, level, field_name, del_level):
 
 def download_report(request, req_id, email_id, level):
     # print(os.getcwd())
-    # pdfkit.from_file('Incedoinc/templates/registration/report.html', 'micro.pdf')
-    return redirect('../')
+    pdfkit.from_file('Incedoinc/templates/registration/report.html', f'media/feedbacks/{req_id}{email_id}.pdf')
+    return redirect('../report/')
 
 
 def test(request):
