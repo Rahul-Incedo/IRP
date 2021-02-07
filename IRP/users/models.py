@@ -19,12 +19,14 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
-   # EMAIL_FIELD = 'email'
+    EMAIL_FIELD = 'username'
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['name','employee_id']
 
 
     def __str__(self):
-        return self.email
+        return self.username
+    
+    
 
        

@@ -48,7 +48,7 @@ def signup_view(request):
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
-            mail_subject = 'Activate your account.'
+            mail_subject = 'Activate your IRP account.'
             message = render_to_string('accounts/acc_active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -83,7 +83,8 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         form = LoginForm(data=request.POST)
-        return render(request, 'Signup_Login/login.html', {'form': form})
+        # return render(request, 'Signup_Login/login.html', {'form': form})
+        return redirect('login')
     else:
         return HttpResponse('<h1>Activation link is invalid!</h1>')
 
@@ -126,67 +127,6 @@ def logout_view(request):
 
 
 
-# def logout_view(request):
-#     if request.method == 'POST':
-#         #logout(request) #edited : added user
-#         return HttpResponse('Ho gaya Logout')
-#     return HttpResponse('Ho gaya Logout yaaar')
-
-# def logout_view(request):
-#     logout(request)
-#     return redirect('login')
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')   # Here Username refers to Email
-#         password =request.POST.get('password')
-#         form = LoginForm(data=request.POST)
-#         if form.is_valid():
-#             return HttpResponse('Form valid hai') 
-# #        return HttpResponse('Form valid nahi hai')
-#             # return render(request,'templates/home.html')  #homepage
-#     else:
-#         form = LoginForm()
-#         return render(request, 'Signup_Login/login.html', {'form': form})
-
-
-
-
-# def login_view(request):
-# 	if request.user.is_authenticated:
-# 		return redirect('home')
-# 	else:
-# 		if request.method == 'POST':
-# 			username = request.POST.get('username')   # Here Username refers to Email
-# 			password =request.POST.get('password')
-
-# 			user = authenticate(request, username = username, password=password)   # Here Username refers to Email
-
-# 			if user is not None:
-# 				login(request, user)
-# 				return redirect('home')
-# 			else:
-# 				messages.info(request,'Email OR password is incorrect')
-
-# 		context = {}
-# 		return render(request, 'SignUp_Login/login.html', context)
-
-
-
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')   # Here Username refers to Email
-#         password =request.POST.get('password')
-#         user = authenticate(request, username = username, password=password)   # Here Username refers to Email
-#         if user is not None:
-#             login(request,user)
-#             return redirect('home_page')
-#         else:
-#             messages.info(request,'Email OR password is incorrect')
-#     context = {}
-#     return render(request, 'SignUp_Login/login.html', context)
-		
-
-			
 
 			
 
