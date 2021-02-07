@@ -1,0 +1,192 @@
+<html>
+<head>
+    <style type="text/css">
+        body
+        {
+          margin:0px;
+          padding:0px;
+          width:100%;
+          height:100%;
+          margin-left:auto;
+          margin-right:auto;
+        }
+
+        input[type=text] , input[type=number], input[type=url] ,input[type=email] , input[type=date]
+        {
+          border: none;
+          text-decoration: none;
+          font-size: 16px;
+          margin: 4px 2px;
+          border-radius: 15px;
+          size :50%;
+
+          background-color:white;
+        }
+        select
+        {
+          border: none;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+        }
+        option
+        {
+          border: none;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+
+        }
+        input[type=submit] {
+          border: none;
+          color: white;
+
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+          background-color: #fd511c;
+
+        }
+        h1
+        {
+            color:black;
+            text-align:center;
+        }
+        h3
+        {
+            font-size: 20px;
+        }
+        #title h2
+        {
+            text-align:center;
+            color:white;
+        }
+        table
+        {
+            border-collapse: collapse;
+            width : 100%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 16px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+            table-layout : fixed;
+        }
+        th
+        {
+            background-color: #f0f8ff;
+            text-align: right;
+            padding: 5px;
+        }
+        td
+        {
+          background-color: #f0f8ff;
+          padding: 5px;
+          color:black;
+        }
+
+
+        button
+        {
+          border: none;
+          color: white;
+          width:50%;
+          text-align: center;
+
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+          background-color: #fd511c;
+        }
+        .heading
+        {
+          border: none;
+          color: white;
+          width:50%;
+          text-align: center;
+
+          text-decoration: none;
+          display: inline-block;
+          font-size: 20px;
+          margin: 10px 8px;
+          border-radius: 15px;
+          background-color: #008B8B;
+        }
+
+        ul
+        {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #40423f;
+          color: #b6b8b5;
+        }
+
+        li
+        {
+          float: left;
+        }
+
+        li a
+        {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+
+  <header>
+    <ul class = 'main'  style="background-color: black">
+      <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
+      <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
+    </ul>
+  </header>
+<center><span class="heading">VIEW JOB DESCRIPTION</span></center>
+      <form action=""  method="post">{% csrf_token %}
+    <table>
+        <tr>
+            <th><label>Job Description Name</label></th>
+            <td><label>{{obj.jd_name}}</label></td>
+        </tr>
+        <tr>
+            <th><label>File Name</label></th>
+            <td><label>{{obj.jd_file.name}}</label></td>
+        </tr>
+        <tr>
+            <th><label>Uploaded By</label></th>
+            <td><label>{{obj.uploaded_by_employee}}</label></td>
+        </tr>
+    </table>
+  <center><input type="submit" value="Edit Details"></center>
+        </form>
+      </br>
+    </br>
+  </br>
+</br>
+
+
+
+</body>
+</html>

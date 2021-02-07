@@ -39,6 +39,19 @@
         color: #fff;
         border-radius: 15px;
       }
+    .button-table {
+      border: none;
+      color: white;
+      width: fit-content;
+      padding :2px 10px 2px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 15px;
+      background-color: #fd511c;
+      cursor: pointer;
+    }
       .button-2 {
         float: right;
         width: 20%;
@@ -140,7 +153,9 @@
               {% for obj in query_set %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ obj.requisition_id }}</td>
+                
+                <!-- <td>{{ obj.requisition_id }}</td> -->
+                <td><a href="{% url 'view_job' obj.pk %}"><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a></td>
                 <td>{{ obj.raised_by_employee }}</td>
                 <td>{{ obj.position_owner_id }}</td>
                 <td>{{ obj.jd.jd_name }}</td>

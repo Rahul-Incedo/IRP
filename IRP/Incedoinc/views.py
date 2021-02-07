@@ -65,13 +65,38 @@ def delete_job_view(request, job_pk):
     query = Job.objects.get(pk=job_pk)
     query.delete()
     return redirect('manage_job_page')
-    
+
+def view_jd_view(request, jd_pk):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        pass
+    context = {
+        'obj' : JD.objects.get(pk=jd_pk)
+    }
+    return render(request, 'view_jd.html', context)
+
+def view_job_view(request, job_pk):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        pass
+    context = {
+        'obj' : Job.objects.get(pk=job_pk)
+    }
+    return render(request, 'view_job.html', context)
+
 def manage_jd_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
-
     user = Employee.objects.get(email=request.user.username)
-    print(user)
+    if request.method == 'GET' and 'jd_name' in request.GET:
+        search_query = request.GET['jd_name']
+        query_set = JD.objects.filter(jd_name = search_query)
+        context = {
+            'query_set' : query_set
+        }
+        return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
         if 'search_button' in request.POST:
             search_query = request.POST['search_query']
@@ -99,8 +124,16 @@ def manage_jd_view(request, *args, **kwargs):
 def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
-
+    if request.method == 'GET' and 'requisition_id' in request.GET:
+        print(request.GET)
+        search_query = request.GET['requisition_id']
+        query_set = Job.objects.filter(requisition_id = search_query)
+        context = {
+            'query_set' : query_set
+        }
+        return render(request, 'manage_job.html', context)
     if request.method == 'POST':
+        print(request.POST)
         if 'search_button' in request.POST:
             search_query = request.POST['search_query']
             query_set = Job.objects.filter(requisition_id__contains=search_query)
@@ -136,7 +169,9 @@ def upload_jd_view(request, *args, **kwargs):
         if form.is_valid():
             # print(form.cleaned_data)
             obj = form.save()
-            return redirect('manage_jd_page')
+            response = redirect('/manage-jd/?jd_name='+obj.jd_name)
+            return response
+            # return custom_redirect('manage_jd_page', arg1='dfo')
     else:
         form = UploadJdForm(initial={'uploaded_by_employee':user})
         form.fields['uploaded_by_employee'].disabled = True
@@ -161,6 +196,7 @@ def upload_job_view(request, *args, **kwargs):
         if form.is_valid():
             # print(form.cleaned_data)
             obj = form.save()
+            return redirect('/manage-job/?requisition_id='+obj.requisition_id)
             return redirect('manage_job_page')
     else:
         form = UploadJobForm(initial={'raised_by_employee':user})
