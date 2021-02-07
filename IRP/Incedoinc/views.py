@@ -282,21 +282,21 @@ def edit_candidate(request,candidate_email):
         return redirect('login')
     if request.method == 'POST':
         candidate_obj=Candidate.objects.get(email=candidate_email)
-        print(candidate_obj)
-        print("----------------------")
-        print(type(request.POST)," : ",request.POST)
-        print("----------------------")
-        print(type(request.POST['fname'])," : ",request.POST['fname'])
-        print(type(request.POST['lname'])," : ",request.POST['lname'])
-        print(type(request.POST['mname'])," : ",request.POST['mname'])
-        print(type(request.POST['gender'])," : ",request.POST['gender'])
-        print(type(request.POST['CGPA'])," : ",request.POST['CGPA'])
-        print(type(request.POST['college'])," : ",request.POST['college'])
-        print(type(request.POST['experience'])," : ",request.POST['experience'])
-        print(type(request.POST['mobile_no'])," : ",request.POST['mobile_no'])
-        print(type(request.POST['DOB'])," : ",request.POST['DOB'])
-        print(type(request.POST['project'])," : ",request.POST['project'])
-        print(type(request.POST['noticePeriod'])," : ",request.POST['noticePeriod'])
+        # print(candidate_obj)
+        # print("----------------------")
+        # print(type(request.POST)," : ",request.POST)
+        # print("----------------------")
+        # print(type(request.POST['fname'])," : ",request.POST['fname'])
+        # print(type(request.POST['lname'])," : ",request.POST['lname'])
+        # print(type(request.POST['mname'])," : ",request.POST['mname'])
+        # print(type(request.POST['gender'])," : ",request.POST['gender'])
+        # print(type(request.POST['CGPA'])," : ",request.POST['CGPA'])
+        # print(type(request.POST['college'])," : ",request.POST['college'])
+        # print(type(request.POST['experience'])," : ",request.POST['experience'])
+        # print(type(request.POST['mobile_no'])," : ",request.POST['mobile_no'])
+        # print(type(request.POST['DOB'])," : ",request.POST['DOB'])
+        # print(type(request.POST['project'])," : ",request.POST['project'])
+        # print(type(request.POST['noticePeriod'])," : ",request.POST['noticePeriod'])
         # print(type(request.POST['resume'])," : ",request.POST['resume'])
         if len(request.POST['fname'])!=0 :
             candidate_obj.f_name=request.POST['fname']
@@ -318,8 +318,8 @@ def edit_candidate(request,candidate_email):
             candidate_obj.DOB=request.POST['DOB']
         if len(request.POST['project'])!=0 :
             candidate_obj.projects_link=request.POST['project']
-        if len(request.POST['noticePeriod'])!=0 :
-            candidate_obj.noticePeriod=request.POST['noticePeriod']
+        if len(request.POST['notice_period'])!=0 :
+            candidate_obj.notice_period=request.POST['notice_period']
         candidate_obj.save()
         print(candidate_obj.email)
         return redirect('../../view_candidate/'+str(candidate_email))
