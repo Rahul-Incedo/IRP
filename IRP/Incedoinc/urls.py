@@ -9,6 +9,7 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
+    path("test/", views.test_view, name='test_page'),
     #pulkit-kartikeyan
     #path("", views.index, name='home'),
     path("home/",views.home_view, name='home_page'),

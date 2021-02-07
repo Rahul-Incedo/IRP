@@ -49,7 +49,9 @@ from .forms import TestForm
 ################################################################################
 
 # Create your views here.
-
+def test_view(request, **kwargs):
+    return render(request, 'test.html', {})
+    return HttpResponse('<h1> test page </h>')
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')

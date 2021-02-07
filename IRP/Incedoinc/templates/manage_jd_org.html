@@ -29,7 +29,7 @@
         /* padding: 10px 25px 10px 25px; */
         
       }
-    button {
+      button {
         width: 10%;
         padding: 5px;
         border: none;
@@ -124,36 +124,8 @@
         }
 
     </style>
-    <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script data-require="bootstrap@*" data-semver="3.1.1" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js"></script>
   </head>
   <body>
-    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
-                </div>
-            
-                <div class="modal-body">
-                    <p>You are about to delete this Job Description.</p>
-                    <p>This will delete all the requisition created on this jd.</p>
-                    <p>Do you want to proceed?</p>
-                    <p class="debug-url"></p>
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-danger btn-ok">Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
     <header>
       <ul class = 'main'  style="background-color: black">
         <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
@@ -191,20 +163,12 @@
                 <!-- <td>{{obj.jd_name}}<a href={% url 'view_jd' obj.pk %}><button type='submit'>View</button></a></td> -->
                 <td><a href="{% url 'view_jd' obj.pk %}"><button type='submit' class='button-table'>{{obj.jd_name}}</button></a></td>
                 <td>{{ obj.uploaded_by_employee }}</td>
-                <td><a href="{{ obj.jd_file.url }}/" ><input type="button" value='Download'></a></td>
-                <!-- <td><a href="{% url 'delete_jd' obj.pk %}" ><input type="button" value="Delete"></a></td> -->
-                <td><a href="#" data-href="{% url 'delete_jd' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td>
+                <td><a href="{{ obj.jd_file.url }}/" ><input type="button" value='DOWNLOAD'></a></td>
+                <td><a href="{% url 'delete_jd' obj.pk %}" ><input type="button" value="Delete"></a></td>
               </tr>
               {% endfor %}
         </table>
       </div>
     {% endif %}
-    <script>
-        $('#confirm-delete').on('show.bs.modal', function(e) {
-            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-            
-            $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
-        });
-    </script>
   </body>
 </html>
