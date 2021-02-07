@@ -228,16 +228,16 @@
       }
 
       li a {
+        color:white;
         display: block;
         /* font-size: 12px; */
-        /* color: blue; */
         text-align: center;
         padding: 10px 10px;
         text-decoration: none;
       }
 
       li a:hover:not(.active) {
-        background-color: #b8b894;
+        /* background-color: #b8b894; */
       }
 
     </style>
@@ -251,7 +251,7 @@
   <body>
     <div class = "main">
       <header>
-        <ul class = 'main'  style="background-color: #b8b894">
+        <ul class = 'main'  style="background-color:black;">
           <li style="float:left; font-size:15px;"><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
           <li style="float:right;font-size:15px;"><a href="{% url 'logout' %}">Log out</a></li>
           <li style="float:right;font-size:15px;"><a href="https://www.incedoinc.com/contact/">Contact</a></li>

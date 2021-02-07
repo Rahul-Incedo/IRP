@@ -370,10 +370,12 @@ def search_candidate(request, *args, **kwargs):
                 temp_dict['req_id']=result[x][0];
                 temp_dict['email']=result[x][1];
                 temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
+                level_ = 0
                 if l1=='pending':
                     temp_dict[1]='pending'
                     temp_dict[2]='-'
                     temp_dict[3]='-'
+                    level_ = 1
                 elif l1=='fail':
                     temp_dict[1]='fail'
                     temp_dict[2]='NA'
@@ -384,6 +386,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[1]='pass'
                         temp_dict[2]='pending'
                         temp_dict[3]='-'
+                        level_ = 2
                     elif l1=='fail':
                         temp_dict[1]='pass'
                         temp_dict[2]='fail'
@@ -394,6 +397,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
                             temp_dict[3]='pending'
+                            level_ = 3
                         elif l3=='fail':
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
@@ -403,7 +407,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[2]='pass'
                             temp_dict[3]='pass'
                 context[str(x+1)]=temp_dict
-            return render(request, 'search.html',{'context':context})
+            return render(request, 'search.html',{'context':context, 'level_':level_})
     elif request.method == 'POST':
         print(request.POST)
         if 'listall' in request.POST:
@@ -432,10 +436,12 @@ def search_candidate(request, *args, **kwargs):
                 temp_dict['req_id']=result[x][0];
                 temp_dict['email']=result[x][1];
                 temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
+                level_=0
                 if l1=='pending':
                     temp_dict[1]='pending'
                     temp_dict[2]='-'
                     temp_dict[3]='-'
+                    level_=1
                 elif l1=='fail':
                     temp_dict[1]='fail'
                     temp_dict[2]='NA'
@@ -446,6 +452,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[1]='pass'
                         temp_dict[2]='pending'
                         temp_dict[3]='-'
+                        level_=2
                     elif l1=='fail':
                         temp_dict[1]='pass'
                         temp_dict[2]='fail'
@@ -456,6 +463,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
                             temp_dict[3]='pending'
+                            level_=3
                         elif l3=='fail':
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
@@ -465,7 +473,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[2]='pass'
                             temp_dict[3]='pass'
                 context[str(x+1)]=temp_dict
-            return render(request, 'search.html',{'context':context})
+            return render(request, 'search.html',{'context':context , 'level_':level_})
         if request.POST['dropdown'] == 'req_id':
             requisition_id=request.POST['search_element']
             if len(requisition_id)==0:
@@ -495,10 +503,12 @@ def search_candidate(request, *args, **kwargs):
                 temp_dict['req_id']=result[x][0];
                 temp_dict['email']=result[x][1];
                 temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
+                level_ = 0
                 if l1=='pending':
                     temp_dict[1]='pending'
                     temp_dict[2]='-'
                     temp_dict[3]='-'
+                    level_ = 1
                 elif l1=='fail':
                     temp_dict[1]='fail'
                     temp_dict[2]='NA'
@@ -509,6 +519,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[1]='pass'
                         temp_dict[2]='pending'
                         temp_dict[3]='-'
+                        level_=2
                     elif l1=='fail':
                         temp_dict[1]='pass'
                         temp_dict[2]='fail'
@@ -519,6 +530,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
                             temp_dict[3]='pending'
+                            level_=3
                         elif l3=='fail':
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
@@ -531,7 +543,7 @@ def search_candidate(request, *args, **kwargs):
                 # print("candidate:list",candidate_list)
             print(request.POST['dropdown'])
                 # print(requisition_id)
-            return render(request, 'search.html',{'context':context})
+            return render(request, 'search.html',{'context':context , 'level_':level_})
         else :
             candidate_email= request.POST['search_element']
             if len(candidate_email)==0:
@@ -560,10 +572,12 @@ def search_candidate(request, *args, **kwargs):
                 temp_dict['req_id']=result[x][0];
                 temp_dict['email']=result[x][1];
                 temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
+                level_=0
                 if l1=='pending':
                     temp_dict[1]='pending'
                     temp_dict[2]='-'
                     temp_dict[3]='-'
+                    level_=1
                 elif l1=='fail':
                     temp_dict[1]='fail'
                     temp_dict[2]='NA'
@@ -574,6 +588,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[1]='pass'
                         temp_dict[2]='pending'
                         temp_dict[3]='-'
+                        level_=2
                     elif l1=='fail':
                         temp_dict[1]='pass'
                         temp_dict[2]='fail'
@@ -584,6 +599,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
                             temp_dict[3]='pending'
+                            level_=3
                         elif l3=='fail':
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
@@ -593,7 +609,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[2]='pass'
                             temp_dict[3]='pass'
                 context[str(x+1)]=temp_dict
-        return render(request, 'search.html',{'context':context})
+        return render(request, 'search.html',{'context':context , 'level_':level_})
     else:
         print('else part')
         return render(request, 'search.html')
@@ -615,7 +631,7 @@ def feedback(request, req_id, email_id, level):
         feedback_object.save()
 
         candidate_email=email_id
-        return redirect('../../../../search_candidate/'+str(candidate_email))
+        return redirect('../../../../search_candidate/?candidate_email='+str(candidate_email))
 
     '''GET part'''
     try:
@@ -760,7 +776,7 @@ def edit(request, req_id, email_id, level, feedback_id):
         obj_.save()
 
         candidate_email=email_id
-        return redirect('../')
+        return redirect('../../../../../search_candidate/?candidate_email='+str(candidate_email))
         # return redirect('../../../../../search_candidate/'+str(candidate_email))
 
     '''GET METHOD'''
