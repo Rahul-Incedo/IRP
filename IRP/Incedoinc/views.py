@@ -319,7 +319,7 @@ def edit_candidate(request,candidate_email):
             candidate_obj.noticePeriod=request.POST['noticePeriod']
         candidate_obj.save()
         print(candidate_obj.email)
-        return redirect('../view_candidate/'+str(candidate_email))
+        return redirect('../../view_candidate/'+str(candidate_email))
     candidate_obj=Candidate.objects.filter(email=candidate_email)
     print(candidate_obj[0].email)
     return render(request,'edit_candidate.html',{'candidate_obj':candidate_obj[0]})
@@ -332,7 +332,7 @@ def view_candidate(request,candidate_email):
         print(candidate_email)
 
         print("sdfsdfsdfsd------------------------------")
-        return redirect('../edit_candidate/'+str(candidate_email))
+        return redirect('../../edit_candidate/'+str(candidate_email))
     candidate_obj=Candidate.objects.filter(email=candidate_email)
     # print(candidate_obj[0].email)
     return render(request,'view_candidate.html',{'candidate_obj':candidate_obj[0]})
