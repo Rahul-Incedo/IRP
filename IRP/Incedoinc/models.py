@@ -41,7 +41,8 @@ class Candidate(models.Model):
     l_name = models.CharField(max_length=64)
     email = models.EmailField(max_length=254, primary_key=True)
     gender_choice = [('M', 'Male'),
-                    ('F', 'Female')]
+                    ('F', 'Female'),
+                    ('O', 'Other')]
     gender = models.CharField(max_length=1,
                             choices= gender_choice)
 
