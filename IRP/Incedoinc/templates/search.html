@@ -274,7 +274,7 @@ input[type=submit] {
           {% endif %}
 
         </td>
-        <td><button>View Report</button></td>
+        <td><a href = "feedback/{{value.req_id}}/{{value.email}}{{level_}}/report"><button>View Report</button></a></td>
     </tr>
     {% endfor %}
   </table>

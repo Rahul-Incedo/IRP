@@ -19,9 +19,20 @@ view report
   <h4> Level 1 </h4>
   <ul>
     <li> Status : {{level_1.status}} </li><br>
-    {% for i, j, k in level_1.details %}
-      <li> {{i}} : {{j}}, &nbsp;&nbsp; Comments : {{k}}</li>
-    {% endfor %}
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_1.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table>
     <br/>
     <li> Overall Comments : {{level_1.comments}}</li><br/>
     <li> Interviwer : {{level_1.interviewer_id}} <li>
@@ -33,9 +44,20 @@ view report
   <h4> Level 2 </h4>
   <ul>
     <li> Status : {{level_2.status}} </li><br>
-    {% for i, j, k in level_2.details %}
-      <li> {{i}} : {{j}}, &nbsp;&nbsp; comments : {{k}}</li><br>
-    {% endfor %}
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_2.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table>
     <li> Overall Comments : {{level_2.comments}}</li><br/>
     <li> Interviwer : {{level_2.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_2.timestamp}}</li>
@@ -46,14 +68,26 @@ view report
   <h4> Level 3 </h4>
   <ul>
     <li> Status : {{level_3.status}} </li><br>
-    {% for i, j, k in level_3.details %}
-      <li> {{i}} : {{j}}, &nbsp;&nbsp; comments : {{k}}</li><br>
-    {% endfor %}
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_3.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table><br>
     <li> Overall Comments : {{level_3.comments}}</li><br/>
     <li> Interviwer : {{level_3.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_3.timestamp}}</li>
   </ul>
 </div>
 
-<a href = "../../../../../search_candidate/?candidate_email={{basic_detail.candidate_email}}"><button type="button" name="button">Go Back</button></a><br/>
+<a style="padding:10px;" href = "../../../../../search_candidate/?candidate_email={{basic_detail.candidate_email}}"><button type="button" name="button">Go Back</button></a><br/>
+<br/>
 {% endblock %}

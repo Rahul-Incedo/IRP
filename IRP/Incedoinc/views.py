@@ -27,6 +27,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 UserModel = get_user_model()
 from .forms import SignUpForm
 import os
+import pdfkit
 
 # Vaishnavi changed authentication
 
@@ -830,10 +831,11 @@ def delete_field(request, req_id, email_id, level, field_name, del_level):
         return redirect('../')
     return redirect(f'../edit{feedback_id}')
 
-#
-# def download_report(request, req_id, email_id, level, feedback_id):
-#     os.chdir('../../')
-#     pass
+
+def download_report(request, req_id, email_id, level):
+    # print(os.getcwd())
+    # pdfkit.from_file('Incedoinc/templates/registration/report.html', 'micro.pdf')
+    return redirect('../')
 
 
 def test(request):

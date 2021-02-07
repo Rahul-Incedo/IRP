@@ -23,11 +23,24 @@ Candidate feedback {{candiate.id}}
   {% if level == 2 %}
     <h4> Level 1 </h4>
     <ul>
-      <li> Status : {{level_1.status}} </li>
-      <li style = 'float:right;font-size:12px'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
-      {% for i, j, k in level_1.details %}
-        <li> {{i}} : {{j}}, &nbsp;&nbsp; Comments : {{k}}</li>
-      {% endfor %}
+      <li> Status : {{level_1.status}} </li><nobr>
+      <li style = 'float:right;font-size:12px'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li>
+
+      <table>
+        <tr>
+          <th>Field Name</th>
+          <th>Rating </th>
+          <th>Comments </th>
+        </tr>
+        {% for i, j, k in level_1.details %}
+          <tr>
+            <td>{{i}}</td>
+            <td>{{j}}</td>
+            <td>{{k}}</td>
+          </tr>
+        {% endfor %}
+      </table>
+
       <br/>
       <li> Overall Comments : {{level_1.comments}}</li><br/>
       <li> Interviwer : {{level_1.interviewer_id}} <li>
@@ -42,9 +55,20 @@ Candidate feedback {{candiate.id}}
   <ul>
     <li> Status : {{level_1.status}} </li>
     <li style = 'float:right;font-size:12px'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
-    {% for i, j, k in level_1.details %}
-      <li> {{i}} : {{j}}, &nbsp;&nbsp; Comments : {{k}}</li>
-    {% endfor %}
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_1.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table>
     <br/>
     <li> Overall Comments : {{level_1.comments}}</li><br/>
     <li> Interviwer : {{level_1.interviewer_id}} <li>
@@ -56,9 +80,20 @@ Candidate feedback {{candiate.id}}
   <ul>
     <li> Status : {{level_2.status}} </li>
     <li style = 'float:right;font-size:12px'><a href = 'edit{{level_2.feedback_id}}/'> Edit </a></li><br/>
-    {% for i, j, k in level_2.details %}
-      <li> {{i}} : {{j}}, &nbsp;&nbsp; comments : {{k}}</li><br>
-    {% endfor %}
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_2.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table><br/>
     <li> Overall Comments : {{level_2.comments}}</li><br/>
     <li> Interviwer : {{level_2.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_2.timestamp}}</li>
@@ -108,7 +143,7 @@ Candidate feedback {{candiate.id}}
       </textarea><br/>
 
       <button type="submit" class = "addBtn" value="Submit">Submit</button>
-      <a href = '../../../'> Cancel </a>
+      <a href = '../../../'> <button>Cancel</button></a>
     </form>
 <div>
 

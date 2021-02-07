@@ -4,7 +4,7 @@ from django.conf.urls import url
 from  . import views as core_views
 from .views import dashboard, manage_jd_view, manage_job_view, upload_jd_view, upload_job_view
 from django.contrib.auth import views as auth_views
-
+from django_pdfkit import PDFView
 #download-file
 from django.conf import settings
 from django.conf.urls.static import static
@@ -28,6 +28,7 @@ urlpatterns = [
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/edit<str:feedback_id>/', views.edit, name ='edit'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/field/<str:feedback_id>/', views.field_view, name = 'field'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/<str:field_name><int:del_level>/', views.delete_field, name = 'delete_field'),
+    path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/Download/', views.download_report, name = "download_report"),
     path("search_candidate/<str:candidate_email>", views.search_candidate, name = 'search_candidate_email'),
     path("edit_candidate/<str:candidate_email>/", views.edit_candidate, name = 'edit_candidate'),
     path("view_candidate/<str:candidate_email>/", views.view_candidate, name = 'view_candidate'),
