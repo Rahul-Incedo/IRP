@@ -31,7 +31,7 @@ import os
 # Vaishnavi changed authentication
 
 #include models
-from .models import Employee, Job, Candidate, Feedback, Field
+from .models import Employee, Job, Candidate, Feedback, Field, JD
 from .models import TestModel
 
 #include forms
