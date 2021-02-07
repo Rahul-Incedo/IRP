@@ -93,13 +93,9 @@
         {
           background-color: #f0f8ff;
           padding: 5px;
+          color:black;
         }
-        tr:nth-child(even)
-        {
-            background-color: #f2f2f2;
 
-            padding: 5px;
-        }
 
         button
         {
@@ -167,24 +163,24 @@
       <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
     </ul>
   </header>
-  <center><button class="heading">EDIT CANDIDATE DETAILS</button></center>
-      <form action=""  method="post" enctype="multipart/form-data">{% csrf_token %}
+  <center><button class="heading">VIEW CANDIDATE DETAILS</button></center>
+      <form action=""  method="post">{% csrf_token %}
       <table>
 
       <tr>
         <th><label text-align="left">First Name </label></th>
-
-        <td>: <input type="text" placeholder={{candidate_obj.f_name}} value={{candidate_obj.f_name}} name="fname" pattern="[A-Za-z]{0,64}" /></td>
+        <td>: <label >{{candidate_obj.f_name}}</label></td>
       </tr>
 
       <tr>
         <th><label >Middle Name </label></th>
-        <td>: <input type="text" placeholder={{candidate_obj.m_name}} name="mname"  pattern="[A-Za-z]{0,64}" /></td>
+
+        <td>: <label >{{candidate_obj.m_name}}</label></td>
       </tr>
 
       <tr>
         <th><label >Last Name </label></th>
-        <td>: <input type="text" placeholder={{candidate_obj.l_name}} name="lname"  pattern="[A-Za-z]{0,64}"/ ></td>
+        <td>: <label >{{candidate_obj.l_name}}</label></td>
       </tr>
 
       <tr>
@@ -201,55 +197,43 @@
 
       <tr>
           <th><label >Gender </label></th>
-          <td>:
-            {% if candidate_obj.gender == 'M' %}
-              <select name = "gender">
-                <option value = "M" selected>M</option>
-                <option value = "F">F</option>
-              </select>
-            {% else %}
-            <select name = "gender">
-              <option value = "M" >male</option>
-              <option value = "F" selected>female</option>
-            </select>
-            {% endif %}
-        </td>
+          <td><label >: {{candidate_obj.gender}}</label></td>
+
       </tr>
 
       <tr>
           <th><label >CGPA </label></th>
-          <td>: <input type="text" placeholder={{candidate_obj.CGPA}} name="CGPA" / ></td>
+          <td>: <label >{{candidate_obj.CGPA}}</label></td>
 
       </tr>
 
       <tr>
           <th><label >College </label></th>
+          <td>: <label >{{candidate_obj.college_name}}</label></td>
 
 
-          <td>: <input type="text" placeholder={{candidate_obj.college_name}} name="college" / ></td>
 
       </tr>
 
       <tr>
           <th><label >Experience </label></th>
+          <td>: <label >{{candidate_obj.experience}}</label></td>
 
-          <td>: <input type="number" placeholder={{candidate_obj.experience}} name="experience"  /></td>
 
       </tr>
 
       <tr>
           <th><label >Mobile </label></th>
+          <td>: <label >{{candidate_obj.mobile}}</label></td>
 
 
-          <td>: <input type="text" placeholder={{candidate_obj.mobile}} pattern="\d*" name="mobile_no" maxlength="10" minlength="10"></td>
 
       </tr>
 
       <tr>
           <th><label >DOB </label></th>
 
-
-          <td>: <input type="date" placeholder={{candidate_obj.DOB}} name="DOB" / ></td>
+          <td>: <label >{{candidate_obj.DOB}}</label></td>
 
       </tr>
 
@@ -257,22 +241,22 @@
           <th><label >Projects </label></th>
 
 
-          <td>: <input type="url" placeholder={{candidate_obj.projects_link}} name="project" / ></td>
+          <td>: <label >{{candidate_obj.projects_link}}</label></td>
 
       </tr>
 
       <tr>
           <th><label >Notice Period </label></th>
 
-          <td>: <input type="number" placeholder={{candidate_obj.noticePeriod}} name="noticePeriod"  /></td>
+          <td>: <label >{{candidate_obj.noticePeriod}}</label></td>
       </tr>
-      <!-- <tr>
+      <tr>
           <th><label >Resume </label></th>
 
-          <td>: <input type="file" placeholder={{candidate_obj.resume}} name="resume"  /></td>
-      </tr> -->
+          <td>: <a href='{{ candidate_obj.resume.url }}'><label >{{candidate_obj.resume.name}}</label></a></td>
+      </tr>
   </table>
-  <center><input type="submit" value="Save Details"></center>
+  <center><input type="submit" value="Edit Details"></center>
         </form>
       </br>
     </br>
