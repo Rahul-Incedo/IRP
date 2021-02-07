@@ -50,7 +50,6 @@ from .forms import TestForm
 
 # Create your views here.
 
-
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -236,7 +235,7 @@ def add_candidate_view(request, *args, **kwargs):
                 status='pending',
             )
             # return redirect('../search_candidate/', )
-            return redirect('../'+'search_candidate'+'/?candidate_email='+str(candidate_email))
+            return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
     else:
         form = CandidateForm(initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
@@ -346,10 +345,21 @@ def search_candidate(request, *args, **kwargs):
     # if request.method == 'POST' or kwargs:
     #     if request.method == 'GET' and kwargs:
 
-    if request.method == 'GET' and kwargs:
-            if not kwargs['candidate_email']:
-                raise ValidationError('Get request has arguments type which are not supported')
-            candidate_email = kwargs['candidate_email']
+    if request.GET and request.GET is not {}:
+            print('request.GET is not none')
+            print(request.GET)
+            candidate_email = ''
+            if kwargs:
+                if 'candidate_email' not in kwargs:
+                    raise ValidationError('Get request has arguments type which are not supported')
+                else:
+                    candidate_email = kwargs['candidate_email']
+            if 'candidate_email' in request.GET:
+                candidate_email = request.GET['candidate_email']
+                print('request.GET',candidate_email)
+            else:
+                return HttpResponse('<h1>error</h1>')
+            
             if len(candidate_email)==0:
                 return render(request, 'search.html',{'error_message':'Please enter something'})
             candidate_list = list(Candidate.objects.filter(email__contains=candidate_email))
@@ -597,6 +607,7 @@ def search_candidate(request, *args, **kwargs):
                 context[str(x+1)]=temp_dict
         return render(request, 'search.html',{'context':context})
     else:
+        print('else part')
         return render(request, 'search.html')
 
 
