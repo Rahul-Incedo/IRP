@@ -27,6 +27,22 @@ class CandidateForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = '__all__'
+        labels = {
+            'f_name': '*First Name',
+            'm_name': 'Middle Name',
+            'l_name': '*Last Name',
+            'email': '*Email',
+            'gender': '*Gender',
+            'college_name': 'College Name',
+            'CGPA': 'CGPA(out of 10)',
+            'experience': '*Experience',
+            'mobile': '*10-digit Mobile No.',
+            'DOB': 'Date of Birth',
+            'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
+            'noticePeriod': '*Notice Period',
+        }
+    
+
 
 class UploadJdForm(forms.ModelForm):
     pdf_validator = validators.FileExtensionValidator(

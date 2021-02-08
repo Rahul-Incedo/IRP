@@ -75,8 +75,6 @@ def signup_view(request):
 
 
 def activate(request, uidb64, token):
-    if not request.user.is_authenticated:
-        return redirect('login')
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = UserModel._default_manager.get(pk=uid) #Giving Error

@@ -40,7 +40,9 @@ from .forms import CandidateForm, UploadJdForm, UploadJobForm
 from .forms import TestForm
 
 # Create your views here.
-
+def test_view(request, **kwargs):
+    return render(request, 'test.html', {})
+    return HttpResponse('<h1> test page </h>')
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -57,14 +59,41 @@ def delete_job_view(request, job_pk):
     query.delete()
     return redirect('manage_job_page')
 
+def view_jd_view(request, jd_pk):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        pass
+    context = {
+        'obj' : JD.objects.get(pk=jd_pk)
+    }
+    return render(request, 'view_jd.html', context)
+
+def view_job_view(request, job_pk):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        pass
+    context = {
+        'obj' : Job.objects.get(pk=job_pk)
+    }
+    return render(request, 'view_job.html', context)
+
 def manage_jd_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
-
     user = Employee.objects.get(email=request.user.username)
-    print(user)
+    if request.method == 'GET' and 'jd_name' in request.GET:
+        search_query = request.GET['jd_name']
+        query_set = JD.objects.filter(jd_name = search_query)
+        context = {
+            'query_set' : query_set
+        }
+        return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
-        if 'search_button' in request.POST:
+        if 'home_button' in request.POST:
+            return redirect('home_page')
+        elif 'search_button' in request.POST:
             search_query = request.POST['search_query']
             query_set = JD.objects.filter(jd_name__contains=search_query)
             context = {
@@ -90,8 +119,18 @@ def manage_jd_view(request, *args, **kwargs):
 def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
-
+    if 'home_button' in request.POST:
+        return redirect('home_page')
+    elif request.method == 'GET' and 'requisition_id' in request.GET:
+        print(request.GET)
+        search_query = request.GET['requisition_id']
+        query_set = Job.objects.filter(requisition_id = search_query)
+        context = {
+            'query_set' : query_set
+        }
+        return render(request, 'manage_job.html', context)
     if request.method == 'POST':
+        print(request.POST)
         if 'search_button' in request.POST:
             search_query = request.POST['search_query']
             query_set = Job.objects.filter(requisition_id__contains=search_query)
@@ -127,7 +166,9 @@ def upload_jd_view(request, *args, **kwargs):
         if form.is_valid():
             # print(form.cleaned_data)
             obj = form.save()
-            return redirect('manage_jd_page')
+            response = redirect('/manage-jd/?jd_name='+obj.jd_name)
+            return response
+            # return custom_redirect('manage_jd_page', arg1='dfo')
     else:
         form = UploadJdForm(initial={'uploaded_by_employee':user})
         form.fields['uploaded_by_employee'].disabled = True
@@ -151,6 +192,7 @@ def upload_job_view(request, *args, **kwargs):
         form.fields['raised_by_employee'].disabled = True
         if form.is_valid():
             obj = form.save()
+            return redirect('/manage-job/?requisition_id='+obj.requisition_id)
             return redirect('manage_job_page')
     else:
         form = UploadJobForm(initial={'raised_by_employee':user})
@@ -270,22 +312,6 @@ def edit_candidate(request,candidate_email):
         return redirect('login')
     if request.method == 'POST':
         candidate_obj=Candidate.objects.get(email=candidate_email)
-        # print(candidate_obj)
-        # print("----------------------")
-        # print(type(request.POST)," : ",request.POST)
-        # print("----------------------")
-        # print(type(request.POST['fname'])," : ",request.POST['fname'])
-        # print(type(request.POST['lname'])," : ",request.POST['lname'])
-        # print(type(request.POST['mname'])," : ",request.POST['mname'])
-        # print(type(request.POST['gender'])," : ",request.POST['gender'])
-        # print(type(request.POST['CGPA'])," : ",request.POST['CGPA'])
-        # print(type(request.POST['college'])," : ",request.POST['college'])
-        # print(type(request.POST['experience'])," : ",request.POST['experience'])
-        # print(type(request.POST['mobile_no'])," : ",request.POST['mobile_no'])
-        # print(type(request.POST['DOB'])," : ",request.POST['DOB'])
-        # print(type(request.POST['project'])," : ",request.POST['project'])
-        # print(type(request.POST['noticePeriod'])," : ",request.POST['noticePeriod'])
-        # print(type(request.POST['resume'])," : ",request.POST['resume'])
         if len(request.POST['fname'])!=0 :
             candidate_obj.f_name=request.POST['fname']
         if len(request.POST['mname'])!=0 :
@@ -331,30 +357,91 @@ def view_candidate(request,candidate_email):
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
-    # if request.method == 'POST' or kwargs:
-    #     if request.method == 'GET' and kwargs:
+    if (request.GET and request.GET is not {}) or request.method == 'POST':
+        context={}
+        result=[]
+        if request.method == 'POST':
+            print(request.POST)
+            if 'listall' in request.POST:
+                temp_candidate_list_tuple = list(set((Feedback.objects.all().values_list('candidate_email'))))
+                temp_candidate_list=[x[0] for x in temp_candidate_list_tuple]
+                temp_candidate_list.sort()
+                if len(temp_candidate_list)==0:
+                    return render(request, 'search.html',{'error_message':'Oops :(   No Candidate Yet'})
+                print(temp_candidate_list,"--------------")
+                # result=[]
+                for candidate in temp_candidate_list:
+                    temp_req_id_list_tuple = list(set(Feedback.objects.filter(candidate_email=candidate).values_list('requisition_id')))
+                    temp_req_id_list=[x[0] for x in temp_req_id_list_tuple]
+                    temp_req_id_list.sort(reverse=True)
+                    print(candidate,"  :  ",temp_req_id_list)
+                    for r in temp_req_id_list:
+                         result.append([r,candidate])
+                print (result)
+                if len(result)==0 :
+                    return render(request, 'search.html',{'error_message':'No Results'})
+            elif 'dropdown' in request.POST:
+                if request.POST['dropdown'] == 'req_id':
+                    requisition_id=request.POST['search_element']
+                    if len(requisition_id)==0:
+                        return render(request, 'search.html',{'error_message':'Please enter something'})
+                    temp_req_id_list=list(Job.objects.filter(requisition_id__contains=requisition_id))
+                    if len(temp_req_id_list)==0 :
+                         return render(request, 'search.html',{'error_message':'No matching Requition Id for \''+str(requisition_id)+'\''})
 
-    if request.GET and request.GET is not {}:
+                    req_id_list=[x.requisition_id for x in temp_req_id_list]
+                    req_id_list.sort()
+                    # result=[]
+                    print(req_id_list,"------------------------------")
+                    for r in req_id_list:
+                        temp_candidate_list_tuple = list(set(Feedback.objects.filter(requisition_id=r).values_list('candidate_email').order_by('-candidate_email')))
+                        temp_candidate_list=[x[0] for x in temp_candidate_list_tuple]
+                        temp_candidate_list.sort()
+                        for c in temp_candidate_list:
+                            result.append([r,c])
+                        print(result)
+                    if len(result)==0 :
+                        return render(request, 'search.html',{'error_message':'No candidate(s) applied for Requition Id matching \''+str(requisition_id+'\'')})
+                elif request.POST['dropdown'] == 'email':
+                    candidate_email= request.POST['search_element']
+                    if len(candidate_email)==0:
+                        return render(request, 'search.html',{'error_message':'Please enter something'})
+                    temp_candidate_list = list(Candidate.objects.filter(email__contains=candidate_email))
+                    if len(temp_candidate_list)==0 :
+                        return render(request, 'search.html',{'error_message':'No matching Candidate for \''+str(candidate_email)+'\''})
+                    candidate_list=[x.email for x in temp_candidate_list]
+                    candidate_list.sort()
+                    # result=[]
+                    for c in candidate_list:
+                        print(c)
+                        temp_req_id_list_tuple = list(set(Feedback.objects.filter(candidate_email=c).values_list('requisition_id').order_by('-requisition_id')))
+                        temp_req_id_list=[x[0] for x in temp_req_id_list_tuple]
+                        temp_req_id_list.sort()
+                        for r in temp_req_id_list:
+                            result.append([r,c])
+                    print (result)
+                    if len(result)==0 :
+                        return render(request, 'search.html',{'error_message':'No results'})
+        elif request.GET and request.GET is not {} :
             print('request.GET is not none')
             print(request.GET)
             candidate_email = ''
-            if kwargs:
-                if 'candidate_email' not in kwargs:
-                    raise ValidationError('Get request has arguments type which are not supported')
-                else:
-                    candidate_email = kwargs['candidate_email']
+            # if kwargs:
+            #     if 'candidate_email' not in kwargs:
+            #         raise ValidationError('Get request has arguments type which are not supported')
+            #     else:
+            #         candidate_email = kwargs['candidate_email']
             if 'candidate_email' in request.GET:
                 candidate_email = request.GET['candidate_email']
                 print('request.GET',candidate_email)
             else:
-                return HttpResponse('<h1>error</h1>')
+                return render(request, 'search.html',{'error_message':'No Results'})
 
             if len(candidate_email)==0:
                 return render(request, 'search.html',{'error_message':'Please enter something'})
             candidate_list = list(Candidate.objects.filter(email__contains=candidate_email))
             if len(candidate_list)==0 :
                 return render(request, 'search.html',{'error_message':'No matching Candidate for \''+str(candidate_email)+'\''})
-            result=[]
             for c in candidate_list:
                 print(c.email)
                 temp_req_id_list = list(set(Feedback.objects.filter(candidate_email=c).values_list('requisition_id').order_by('-requisition_id')))
@@ -362,259 +449,57 @@ def search_candidate(request, *args, **kwargs):
                     result.append([r[0],c.email])
             print (result)
             if len(result)==0 :
-                return render(request, 'search.html',{'error_message':'No matching results'})
-            context = {}
-            for x in range(len(result)):
-                temp_dict={}
-                # print(type(candidate_list[x][0]))
-                l1=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 1).status
-                temp_dict['req_id']=result[x][0];
-                temp_dict['email']=result[x][1];
-                temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
-                level_ = 0
-                if l1=='pending':
-                    temp_dict[1]='pending'
-                    temp_dict[2]='-'
-                    temp_dict[3]='-'
-                    level_ = 1
-                elif l1=='fail':
-                    temp_dict[1]='fail'
-                    temp_dict[2]='NA'
-                    temp_dict[3]='NA'
-                else :
-                    l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
-                    if l2=='pending':
-                        temp_dict[1]='pass'
-                        temp_dict[2]='pending'
-                        temp_dict[3]='-'
-                        level_ = 2
-                    elif l1=='fail':
-                        temp_dict[1]='pass'
-                        temp_dict[2]='fail'
-                        temp_dict[3]='NA'
-                    else :
-                        l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
-                        if l3=='pending':
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='pending'
-                            level_ = 3
-                        elif l3=='fail':
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='fail'
-                        else:
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='pass'
-                context[str(x+1)]=temp_dict
-            return render(request, 'search.html',{'context':context, 'level_':level_})
-    elif request.method == 'POST':
-        print(request.POST)
-        if 'listall' in request.POST:
-            # print("sdssdsddddddddddddddddddddddddddddddddddddddddddddddddddd")
-            temp_candidate_list_tuple = list(set((Feedback.objects.all().values_list('candidate_email'))))
-            temp_candidate_list=[x[0] for x in temp_candidate_list_tuple]
-            temp_candidate_list.sort()
-            if len(temp_candidate_list)==0:
-                return render(request, 'search.html',{'error_message':'Oops :(   No Candidate Yet'})
-            print(temp_candidate_list,"--------------")
-            result=[]
-            for candidate in temp_candidate_list:
-                temp_req_id_list_tuple = list(set(Feedback.objects.filter(candidate_email=candidate).values_list('requisition_id')))
-                temp_req_id_list=[x[0] for x in temp_req_id_list_tuple]
-                temp_req_id_list.sort(reverse=True)
-                print(candidate,"  :  ",temp_req_id_list)
-                for r in temp_req_id_list:
-                     result.append([r,candidate])
-            print (result)
-            if len(result)==0 :
-                return render(request, 'search.html',{'error_message':'No matching results'})
-            context = {}
-            for x in range(len(result)):
-                temp_dict={}
-                l1=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 1).status
-                temp_dict['req_id']=result[x][0];
-                temp_dict['email']=result[x][1];
-                temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
-                level_=0
-                if l1=='pending':
-                    temp_dict[1]='pending'
-                    temp_dict[2]='-'
-                    temp_dict[3]='-'
-                    level_=1
-                elif l1=='fail':
-                    temp_dict[1]='fail'
-                    temp_dict[2]='NA'
-                    temp_dict[3]='NA'
-                else :
-                    l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
-                    if l2=='pending':
-                        temp_dict[1]='pass'
-                        temp_dict[2]='pending'
-                        temp_dict[3]='-'
-                        level_=2
-                    elif l1=='fail':
-                        temp_dict[1]='pass'
-                        temp_dict[2]='fail'
-                        temp_dict[3]='NA'
-                    else :
-                        l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
-                        if l3=='pending':
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='pending'
-                            level_=3
-                        elif l3=='fail':
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='fail'
-                        else:
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='pass'
-                context[str(x+1)]=temp_dict
-            return render(request, 'search.html',{'context':context , 'level_':level_})
-        if request.POST['dropdown'] == 'req_id':
-            requisition_id=request.POST['search_element']
-            if len(requisition_id)==0:
-                return render(request, 'search.html',{'error_message':'Please enter something'})
-            temp_req_id_list=list(Job.objects.filter(requisition_id__contains=requisition_id))
-            if len(temp_req_id_list)==0 :
-                 return render(request, 'search.html',{'error_message':'No matching Requition Id for \''+str(requisition_id)+'\''})
-
-            req_id_list=[x.requisition_id for x in temp_req_id_list]
-            req_id_list.sort()
-            result=[]
-            print(req_id_list,"------------------------------")
-            for r in req_id_list:
-                temp_candidate_list_tuple = list(set(Feedback.objects.filter(requisition_id=r).values_list('candidate_email').order_by('-candidate_email')))
-                temp_candidate_list=[x[0] for x in temp_candidate_list_tuple]
-                temp_candidate_list.sort()
-                for c in temp_candidate_list:
-                    result.append([r,c])
-                print(result)
-            if len(result)==0 :
-                return render(request, 'search.html',{'error_message':'No candidate(s) applied for Requitio Id matching \''+str(requisition_id+'\'')})
-            context = {}
-            for x in range(len(result)):
-                temp_dict={}
-                # print(type(candidate_list[x][0]))
-                l1=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 1).status
-                temp_dict['req_id']=result[x][0];
-                temp_dict['email']=result[x][1];
-                temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
-                level_ = 0
-                if l1=='pending':
-                    temp_dict[1]='pending'
-                    temp_dict[2]='-'
-                    temp_dict[3]='-'
-                    level_ = 1
-                elif l1=='fail':
-                    temp_dict[1]='fail'
-                    temp_dict[2]='NA'
-                    temp_dict[3]='NA'
-                else :
-                    l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
-                    if l2=='pending':
-                        temp_dict[1]='pass'
-                        temp_dict[2]='pending'
-                        temp_dict[3]='-'
-                        level_=2
-                    elif l1=='fail':
-                        temp_dict[1]='pass'
-                        temp_dict[2]='fail'
-                        temp_dict[3]='NA'
-                    else :
-                        l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
-                        if l3=='pending':
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='pending'
-                            level_=3
-                        elif l3=='fail':
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='fail'
-                        else:
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='pass'
-                context[str(x+1)]=temp_dict
-                # print("candidate:list",candidate_list)
-            print(request.POST['dropdown'])
-                # print(requisition_id)
-            return render(request, 'search.html',{'context':context , 'level_':level_})
-        else :
-            candidate_email= request.POST['search_element']
-            if len(candidate_email)==0:
-                return render(request, 'search.html',{'error_message':'Please enter something'})
-            temp_candidate_list = list(Candidate.objects.filter(email__contains=candidate_email))
-            if len(temp_candidate_list)==0 :
                 return render(request, 'search.html',{'error_message':'No matching Candidate for \''+str(candidate_email)+'\''})
-            candidate_list=[x.email for x in temp_candidate_list]
-            candidate_list.sort()
-            result=[]
-            for c in candidate_list:
-                print(c)
-                temp_req_id_list_tuple = list(set(Feedback.objects.filter(candidate_email=c).values_list('requisition_id').order_by('-requisition_id')))
-                temp_req_id_list=[x[0] for x in temp_req_id_list_tuple]
-                temp_req_id_list.sort()
-                for r in temp_req_id_list:
-                    result.append([r,c])
-            print (result)
-            if len(result)==0 :
-                return render(request, 'search.html',{'error_message':'No matching results'})
-            context = {}
-            for x in range(len(result)):
-                temp_dict={}
-                # print(type(candidate_list[x][0]))
-                l1=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 1).status
-                temp_dict['req_id']=result[x][0];
-                temp_dict['email']=result[x][1];
-                temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
-                level_=0
-                if l1=='pending':
-                    temp_dict[1]='pending'
-                    temp_dict[2]='-'
+        if len(result)==0 :
+            return render(request, 'search.html',{'error_message':'No Results'})
+        for x in range(len(result)):
+            temp_dict={}
+            # print(type(candidate_list[x][0]))
+            l1=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 1).status
+            temp_dict['req_id']=result[x][0];
+            temp_dict['email']=result[x][1];
+            temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
+            level_=0
+            if l1=='pending':
+                temp_dict[1]='pending'
+                temp_dict[2]='-'
+                temp_dict[3]='-'
+                level_=1
+            elif l1=='fail':
+                temp_dict[1]='fail'
+                temp_dict[2]='NA'
+                temp_dict[3]='NA'
+            else :
+                l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
+                if l2=='pending':
+                    temp_dict[1]='pass'
+                    temp_dict[2]='pending'
                     temp_dict[3]='-'
-                    level_=1
+                    level_=2
                 elif l1=='fail':
-                    temp_dict[1]='fail'
-                    temp_dict[2]='NA'
+                    temp_dict[1]='pass'
+                    temp_dict[2]='fail'
                     temp_dict[3]='NA'
                 else :
-                    l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
-                    if l2=='pending':
+                    l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
+                    if l3=='pending':
                         temp_dict[1]='pass'
-                        temp_dict[2]='pending'
-                        temp_dict[3]='-'
-                        level_=2
-                    elif l1=='fail':
+                        temp_dict[2]='pass'
+                        temp_dict[3]='pending'
+                        level_=3
+                    elif l3=='fail':
                         temp_dict[1]='pass'
-                        temp_dict[2]='fail'
-                        temp_dict[3]='NA'
-                    else :
-                        l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
-                        if l3=='pending':
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='pending'
-                            level_=3
-                        elif l3=='fail':
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='fail'
-                        else:
-                            temp_dict[1]='pass'
-                            temp_dict[2]='pass'
-                            temp_dict[3]='pass'
-                context[str(x+1)]=temp_dict
+                        temp_dict[2]='pass'
+                        temp_dict[3]='fail'
+                    else:
+                        temp_dict[1]='pass'
+                        temp_dict[2]='pass'
+                        temp_dict[3]='pass'
+            context[str(x+1)]=temp_dict
         return render(request, 'search.html',{'context':context , 'level_':level_})
     else:
         print('else part')
         return render(request, 'search.html')
-
 
 def feedback(request, req_id, email_id, level):
     if not request.user.is_authenticated:

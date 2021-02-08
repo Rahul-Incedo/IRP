@@ -101,6 +101,7 @@
         {
           border: none;
           color: white;
+          width:50%;
           text-align: center;
 
           text-decoration: none;
@@ -124,10 +125,6 @@
           margin: 10px 8px;
           border-radius: 15px;
           background-color: #008B8B;
-        }
-        .goback
-        {
-
         }
 
         ul
@@ -162,108 +159,32 @@
     <ul class = 'main'  style="background-color: black">
       <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
       <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
-      <li style="float:right"><a href="{%url 'change_password_page'%}">Change Password</a></li>
       <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
       <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
     </ul>
   </header>
-  <center><button class="heading">VIEW CANDIDATE DETAILS</button></center>
+<center><span class="heading">VIEW REQUISITION</span></center>
       <form action=""  method="post">{% csrf_token %}
-      <table>
-
-      <tr>
-        <th><label text-align="left">First Name </label></th>
-        <td>: <label >{{candidate_obj.f_name}}</label></td>
-      </tr>
-
-      <tr>
-        <th><label >Middle Name </label></th>
-
-        <td>: <label >{{candidate_obj.m_name}}</label></td>
-      </tr>
-
-      <tr>
-        <th><label >Last Name </label></th>
-        <td>: <label >{{candidate_obj.l_name}}</label></td>
-      </tr>
-
-      <tr>
-        <th><label >Registered By </label></th>
-        <td>: <label >{{candidate_obj.registered_by}}</label></td>
-
-
-      </tr>
-
-      <tr>
-          <th><label >Email </label></th>
-          <td>: <label >{{candidate_obj.email}}</label></td>
-      </tr>
-
-      <tr>
-          <th><label >Gender </label></th>
-          <td><label >: {{candidate_obj.gender}}</label></td>
-
-      </tr>
-
-      <tr>
-          <th><label >CGPA </label></th>
-          <td>: <label >{{candidate_obj.CGPA}}</label></td>
-
-      </tr>
-
-      <tr>
-          <th><label >College </label></th>
-          <td>: <label >{{candidate_obj.college_name}}</label></td>
-
-
-
-      </tr>
-
-      <tr>
-          <th><label >Experience </label></th>
-          <td>: <label >{{candidate_obj.experience}}</label></td>
-
-
-      </tr>
-
-      <tr>
-          <th><label >Mobile </label></th>
-          <td>: <label >{{candidate_obj.mobile}}</label></td>
-
-
-
-      </tr>
-
-      <tr>
-          <th><label >DOB </label></th>
-
-          <td>: <label >{{candidate_obj.DOB}}</label></td>
-
-      </tr>
-
-      <tr>
-          <th><label >Projects </label></th>
-
-
-          <td>: <label >{{candidate_obj.projects_link}}</label></td>
-
-      </tr>
-
-      <tr>
-          <th><label >Notice Period </label></th>
-
-          <td>: <label >{{candidate_obj.notice_period}}</label></td>
-      </tr>
-      <tr>
-          <th><label >Resume </label></th>
-
-          <td>: <a href='{{ candidate_obj.resume.url }}'><label >{{candidate_obj.resume.name}}</label></a></td>
-      </tr>
-  </table>
-  <br>
-  <center><input type="submit" value="Edit Details"></center>
-        </form>
-        <center><a href= "../../search_candidate/?candidate_email={{candidate_obj.email}}"><button class="goback">Go Back</button></a></center>
+    <table>
+        <tr>
+            <th><label>Reuisition ID</label></th>
+            <td><label>{{obj.requisition_id}}</label></td>
+        </tr>
+        <tr>
+            <th><label>Raised By</label></th>
+            <td><label>{{obj.raised_by_employee}}</label></td>
+        </tr>
+        <tr>
+            <th><label>Position Owner</label></th>
+            <td><label>{{obj.position_owner_id}}</label></td>
+        </tr>
+        <tr>
+            <th><label>Job Description</label></th>
+            <td><label>{{obj.jd.jd_name}}</label></td>
+        </tr>
+    </table>
+  </form>
+  <center><a href="{% url 'manage_job_page' %}" ><input type="submit" value="Close"></a></center>
       </br>
     </br>
   </br>
