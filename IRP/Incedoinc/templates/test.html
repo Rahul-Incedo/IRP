@@ -5,100 +5,62 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <style>
-      html, body {
-        min-height: 100%;
-        padding: 0;
-        margin: 0;
-        font-family: Roboto, Arial, sans-serif;
-        font-size: 14px;
-        color: #666;
-      }
-      h1 {
-        margin: 0 0 20px;
-        font-weight: 400;
-        color: #1c87c9;
-      }
-      p {
-        margin: 0 0 5px;
-      }
-      .main-block {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background: #1c87c9;
-      }
-      form {
-        justify-content: center;
-        padding: 25px;
-        margin: 25px;
-        box-shadow: 0 2px 5px #f5f5f5;
-        background: #f5f5f5;
-      }
-      .fas {
-        margin: 25px 10px 0;
-        font-size: 72px;
-        color: #fff;
-      }
-      input, textarea {
-        width: calc(100% - 18px);
-        padding: 8px;
-        margin-bottom: 20px;
-        border: 1px solid #1c87c9;
-        outline: none;
-      }
-      input::placeholder {
-        color: #666;
-      }
-      button {
-        width: 100%;
-        padding: 10px;
-        border: none;
-        background: #1c87c9; 
-        font-size: 16px;
-        font-weight: 400;
-        color: #fff;
-      }
-      button:hover {
-        background: #2371a0;
-      }    
-      @media (min-width: 568px) {
-        .main-block {
-          flex-direction: row;
-        }
-        .left-part, form {
-          width: 50%;
-        }
-        .fa-envelope {
-          margin-top: 0;
-          margin-left: 20%;
-        }
-        .fa-at {
-          margin-top: -10%;
-          margin-left: 65%;
-        }
-        .fa-mail-bulk {
-          margin-top: 2%;
-          margin-left: 28%;
-        }
-      }
-      .my_class {
-        justify-content: center;
-        padding: 25px;
-        margin: 25px;
-        box-shadow: 0 2px 5px #f5f5f5;
-        background: #f5f5f5;
-      }
     </style>
+    <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script data-require="bootstrap@*" data-semver="3.1.1" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
-        <div class='my_class'>
-            <h1>TEST PAGE</h1>
-        </div>
-        <form method='POST'> {% csrf_token %}
-            {{ form.as_p }}
-        <button type="submit">Submit</button>
-      </form>
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+          
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+              </div>
+          
+              <div class="modal-body">
+                  <p>You are about to delete this Job Description.</p>
+                  <p>This will delete all the requisition created on this jd.</p>
+                  <p>Do you want to proceed?</p>
+                  <!-- <p class="debug-url"></p> -->
+              </div>
+              
+              <div class="modal-footer">
+                <center>
+                  <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
+                  <a class="btn btn-danger btn-ok">Confirm Delete</a>
+                </center> 
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="confirm-message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <center>DELETED </center> 
+      </div>
+    </div>
+    <center><a href="#" data-href="test/?del_button=true" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></center>
+    {% if delete_signal %}
+      <a href="#" data-href="google.com/" data-toggle="modal" data-target="#confirm-message">click to see</a>
+    {% endif %}
+    <script>
+      $('#confirm-delete').on('show.bs.modal', function(e) {
+          $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+          
+          $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
+      });
+
+      $('#confirm-message').on('show.bs.modal', function(e) {
+        $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+          
+        $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
+      };
+    </script>
   </body>
 </html>
