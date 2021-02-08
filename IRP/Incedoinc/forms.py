@@ -19,11 +19,16 @@ class CandidateForm(forms.ModelForm):
     )
     resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
     requisition_id = forms.ModelChoiceField(Job.objects.all(), label='*Requisition ID')
-    notice_period = forms.IntegerField(label='*Notice Period',
-                                        widget = forms.TextInput(
-                                            attrs={'placeholder':'enter in months'},
-                                        )
-                    )
+    # notice_period = forms.DecimalField(label='*Notice Period',
+    #                                     widget = forms.TextInput(
+    #                                         attrs={'placeholder':'enter in months.days'},
+    #                                     )
+    #                 )
+    # experience = forms.DecimalField(label='*Experience',
+    #                     widget = forms.TextInput(
+    #                                         attrs={'placeholder':'enter in months.days'},
+    #                     )
+    #             )
     class Meta:
         model = Candidate
         fields = '__all__'
@@ -35,11 +40,11 @@ class CandidateForm(forms.ModelForm):
             'gender': '*Gender',
             'college_name': 'College Name',
             'CGPA': 'CGPA(out of 10)',
-            'experience': '*Experience',
+            'experience': '*Experience (in months)',
             'mobile': '*10-digit Mobile No.',
             'DOB': 'Date of Birth',
             'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
-            'noticePeriod': '*Notice Period',
+            'notice_period': '*Notice Period (in months)',
         }
 
 
