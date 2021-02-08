@@ -41,6 +41,8 @@ from .forms import TestForm
 
 # Create your views here.
 def test_view(request, **kwargs):
+    if 'delete_button' in request.GET:
+        return render(request, 'test.html', {'del_signal': 'true'})
     return render(request, 'test.html', {})
     return HttpResponse('<h1> test page </h>')
 def index(request):
