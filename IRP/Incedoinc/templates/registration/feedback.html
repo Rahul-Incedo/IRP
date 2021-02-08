@@ -4,123 +4,147 @@ Candidate feedback {{candiate.id}}
 {% endblock %}
 
 {% block body %}
-
-
-
-<h3 style="background-color: rgb(201, 76, 76)">Candidate feedback</h3>
-<div class='margin'>
-  <h4> Basic Details </h4>
-  <ul class='details'>
-    <li> Candidate Name : {{basic_detail.Name}}</li><br/>
-    <li> Email Id : {{basic_detail.Email}}</li><br/>
-    <li> Graduation CGPA : {{basic_detail.Graduation_CGPA}}</li><br/>
+<h3 style="background-color:#ee2020; color=#66ccff; text-align:center; margin-left:15px; margin-right:15px; color=white;">Candidate feedback</h3><nobr>
+<!-- <h3 style="margin-right:20px"><a style="float:right" href="Download/">Download </a></h3> -->
+<h3 style="margin-right:20px"><a style="float:right" href="report/">View Report </a></h3>
+<h3 style="margin-left:20px"><a style="float:left;" href="#fill"> Fill feedback </a><br></h3>
+<h4> Basic Details </h4>
+<div class='basic_details'>
+  <ul>
+    <li> Candidate Name : {{basic_detail.Name}}</li><br>
+    <li> Email Id : {{basic_detail.Email}}</li><br>
+    <li> Graduation CGPA : {{basic_detail.Graduation_CGPA}}</li><br>
     <li> University Name : {{basic_detail.University_name}}</li>
+    <li style="float:right;font-size:12px"><a href = "../../../../../view_candidate/{{basic_detail.Email}}">See More</a></li>
   </ul>
+</div>
 
+<div class = 'level2'>
   {% if level == 2 %}
     <h4> Level 1 </h4>
     <ul>
-      <li> Status : {{level_1.status}} </li>
-      <li> &emsp; Python Rating : {{level_1.python_rating}} </li>
-      <li> &emsp; Java Rating : {{level_1.java_rating}} </li>
-      <li> &emsp; Cpp Rating : {{level_1.cpp_rating}}</li>
-      <li> &emsp; SQL Rating : {{level_1.cpp_rating}}</li>
-      <li style = 'float:right'><a href = 'edit1/'> Edit </a></li><br/>
-      <li> Comments : {{level_1.comments}}</li><br/>
+      <li> Status : {{level_1.status}} </li><nobr>
+      <li style = 'float:right;font-size:12px'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li>
+
+      <table>
+        <tr>
+          <th>Field Name</th>
+          <th>Rating </th>
+          <th>Comments </th>
+        </tr>
+        {% for i, j, k in level_1.details %}
+          <tr>
+            <td>{{i}}</td>
+            <td>{{j}}</td>
+            <td>{{k}}</td>
+          </tr>
+        {% endfor %}
+      </table>
+
+      <br/>
+      <li> Overall Comments : {{level_1.comments}}</li><br/>
       <li> Interviwer : {{level_1.interviewer_id}} <li>
+      <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
     </ul>
   {% endif %}
+</div>
 
+<div class='level3'>
   {% if level == 3 %}
   <h4> Level 1 </h4>
   <ul>
     <li> Status : {{level_1.status}} </li>
-    <li> &emsp; Python Rating : {{level_1.python_rating}} </li>
-    <li> &emsp; Java Rating : {{level_1.java_rating}} </li>
-    <li> &emsp; Cpp Rating : {{level_1.cpp_rating}}</li>
-    <li> &emsp; SQL Rating : {{level_1.cpp_rating}}</li>
-    <li style = 'float:right'><a href = 'edit1/'> Edit </a></li><br/>
-    <li> Comments : {{level_1.comments}}</li><br/>
+    <li style = 'float:right;font-size:12px'><a href = 'edit{{level_1.feedback_id}}/'> Edit </a></li><br/>
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_1.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <br/>
+    <li> Overall Comments : {{level_1.comments}}</li><br/>
     <li> Interviwer : {{level_1.interviewer_id}} <li>
+    <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
   </ul>
+  <hr>
 
   <h4> Level 2 </h4>
   <ul>
     <li> Status : {{level_2.status}} </li>
-    <li> &emsp; Python Rating : {{level_2.python_rating}} </li>
-    <li> &emsp; Java Rating : {{level_2.java_rating}} </li>
-    <li> &emsp; Cpp Rating : {{level_2.cpp_rating}}</li>
-    <li> &emsp; SQL Rating : {{level_2.cpp_rating}}</li>
-    <li style = 'float:right'><a href = 'edit2/'> Edit </a></li><br/>
-    <li> Comments : {{level_2.comments}}</li><br/>
+    <li style = 'float:right;font-size:12px'><a href = 'edit{{level_2.feedback_id}}/'> Edit </a></li><br/>
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_2.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table><br/>
+    <li> Overall Comments : {{level_2.comments}}</li><br/>
     <li> Interviwer : {{level_2.interviewer_id}} <li>
+    <li style = 'float:right;color:#ff3300'> Last updated at : {{level_2.timestamp}}</li>
   </ul>
   {% endif %}
 </div>
 
+
+
 <hr>
 <h4> Level {{level}} </h4>
+
+<label for="interviewer_code"><h4>Interviewer : {{basic_detail.interviewer_id}}</h4></label>
+
+{% for i, j in current_field %}
+  <h4>{{i}} : {{j}} <a style="font-size: smaller" href = '{{i}}{{level}}'>delete</a></h4>
+{% endfor %}
+<div id="fill">
+  <div class = 'new_'>
+    <form method = 'POST' action = 'field/{{basic_detail.feedback_id}}/'>
+      {% csrf_token %}
+      {{form.as_p}}<br/>
+      {{form.errors}}
+      <button type="submit" onclick='href="../../"' value="Add_Field">Add Field</button><br/><br/>
+    </form>
+  </div>
+</div>
+
+
 <div class='centre_'>
-  <form name='feedback_form' id='feedback_form' method="POST">{% csrf_token %} <!# action takes us to the name of that url>
-      <!--<label for="candidate_email">Candidate Email*: </label><br/>
-      <input type="text" id="candidate_email" name="candidate_email"><br/>
-      -->
-
-      <label for="interviewer_code"><h4>Interviewer : {{basic_detail.interviewer_id}}</h4></label>
-      <!-- <input type="text" id="interviewer_code" name="interviewer_code" placeholder="Enter your Employee id here"><br> -->
-
-      <!--<label for="level_">Level: </label><br/>
-      <input type="number" id="level" name=level"><br>
-      -->
-      <datalist id = "choices">
-              <option value = 1>
-              <option value = 2>
-              <option value = 3>
-              <option value = 4>
-              <option value = 5>
-      </datalist>
-
+  <form name='feedback_form' id='feedback_form' method="POST">
+    {% csrf_token %}
+      <br/>
       <div>
         <!--<label for = "status">Status: </label><br>-->
         <input name = "status" id = "status" list = "status_choices" placeholder = "status">
-          <datalist id = "status_choices">
-                  <option value = "pass">
-                  <option value = "Fail">
-                  <option value = "pending">
-          </datalist>
-      </div>
+        <datalist id = "status_choices">
+          <option value = "pass">
+          <option value = "Fail">
+          <option value = "pending">
+        </datalist>
+      </div><br/>
 
-      <label for = "rating_python">Python rating out of 5: </label><br>
-      <input name = "rating_python" type =number id = "rating_python" list = "choices" placeholder = "Python rating out of 5" min = "1" max = "5"><br/>
 
-      <!--<label for="rating_python">Python Rating Out of 5: </label><br/>
-      <input type="number" id="rating_python" name="rating_python"><br> -->
-
-      <label for = "rating_java">Java rating out of 5: </label><br>
-      <input name = "rating_java" type =number id = "rating_java" list = "choices" placeholder = "java rating out of 5" min = "1" max = "5" ><br/>
-
-      <!--<label for="rating_java">JAVA Rating Out of 5: </label><br/>
-      <input type="number" id="rating_java" name="rating_java"><br> -->
-
-      <label for = "rating_cpp">C++ rating out of 5: </label><br>
-      <input name = "rating_cpp" type =number id = "rating_cpp" list = "choices" placeholder = "C++ rating out of 5" min = "1" max = "5"><br/>
-
-      <!--<label for="rating_cpp">CPP Rating Out of 5:</label><br/>
-      <input type="number" id="rating_cpp" name="rating_cpp"><br>-->
-
-      <label for = "rating_sql">SQL rating out of 5: </label><br>
-      <input name = "rating_sql" type =number id = "rating_sql" list = "choices" placeholder = "SQL rating out of 5" min = "1" max = "5"><br/>
-
-      <!--<label for="rating_sql">SQL Rating Out of 5: </label><br/>
-      <input type="number" id="rating_sql" name="rating_sql"><br><br/>-->
-
-      <br/>Enter your feedback here: <br/>
-      <textarea rows = "5" cols = "60" name = "comments">
+      <label for="comments">Enter your overall feedback here</label><br>
+      <textarea rows = "3" cols = "10" name = "comments">
       </textarea><br/>
+
       <button type="submit" class = "addBtn" value="Submit">Submit</button>
+      <a href = '../../../'> <button>Cancel</button></a>
     </form>
 <div>
-
-
 
 {% endblock %}

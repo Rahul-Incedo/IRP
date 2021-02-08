@@ -7,8 +7,13 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 
 from datetime import datetime
-
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from .forms import LoginForm, SignUpForm, FieldForm
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
+
+from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
@@ -19,34 +24,20 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-
-#
+UserModel = get_user_model()
+from .forms import SignUpForm
+import os
+import pdfkit
 
 # Vaishnavi changed authentication
 
 #include models
-from .models import Employee, JD, Job, Candidate, Feedback
+from .models import Employee, Job, Candidate, Feedback, Field, JD
 from .models import TestModel
 
 #include forms
 from .forms import CandidateForm, UploadJdForm, UploadJobForm
 from .forms import TestForm
-
-#for downloading file
-# import os
-# from django.conf import settings
-# from django.http import HttpResponse, Http404
-# def download_view(request, path):
-#     print('path: ', path)
-#     file_path = os.path.join(settings.MEDIA_ROOT, path)
-#     print('file_path: ', file_path)
-#     if os.path.exists(file_path):
-#         with open(file_path, 'rb') as fh:
-#             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
-#             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
-#             return response
-#     raise Http404
-################################################################################
 
 # Create your views here.
 def test_view(request, **kwargs):
@@ -200,7 +191,6 @@ def upload_job_view(request, *args, **kwargs):
         form = UploadJobForm(request.POST, initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
         if form.is_valid():
-            # print(form.cleaned_data)
             obj = form.save()
             return redirect('/manage-job/?requisition_id='+obj.requisition_id)
             return redirect('manage_job_page')
@@ -225,7 +215,6 @@ def home_view(request):
                 query_set = Job.objects.filter(requisition_id__contains=requisition_id)
             else:
                 query_set = Job.objects.filter(requisition_id=requisition_id)
-            # print(query_set)
             context = {
                 'requisition_id' : requisition_id,
                 'query_set': query_set,
@@ -401,7 +390,7 @@ def search_candidate(request, *args, **kwargs):
                 print('request.GET',candidate_email)
             else:
                 return HttpResponse('<h1>error</h1>')
-            
+
             if len(candidate_email)==0:
                 return render(request, 'search.html',{'error_message':'Please enter something'})
             candidate_list = list(Candidate.objects.filter(email__contains=candidate_email))
@@ -424,10 +413,12 @@ def search_candidate(request, *args, **kwargs):
                 temp_dict['req_id']=result[x][0];
                 temp_dict['email']=result[x][1];
                 temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
+                level_ = 0
                 if l1=='pending':
                     temp_dict[1]='pending'
                     temp_dict[2]='-'
                     temp_dict[3]='-'
+                    level_ = 1
                 elif l1=='fail':
                     temp_dict[1]='fail'
                     temp_dict[2]='NA'
@@ -438,6 +429,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[1]='pass'
                         temp_dict[2]='pending'
                         temp_dict[3]='-'
+                        level_ = 2
                     elif l1=='fail':
                         temp_dict[1]='pass'
                         temp_dict[2]='fail'
@@ -448,6 +440,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
                             temp_dict[3]='pending'
+                            level_ = 3
                         elif l3=='fail':
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
@@ -457,7 +450,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[2]='pass'
                             temp_dict[3]='pass'
                 context[str(x+1)]=temp_dict
-            return render(request, 'search.html',{'context':context})
+            return render(request, 'search.html',{'context':context, 'level_':level_})
     elif request.method == 'POST':
         print(request.POST)
         if 'listall' in request.POST:
@@ -486,10 +479,12 @@ def search_candidate(request, *args, **kwargs):
                 temp_dict['req_id']=result[x][0];
                 temp_dict['email']=result[x][1];
                 temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
+                level_=0
                 if l1=='pending':
                     temp_dict[1]='pending'
                     temp_dict[2]='-'
                     temp_dict[3]='-'
+                    level_=1
                 elif l1=='fail':
                     temp_dict[1]='fail'
                     temp_dict[2]='NA'
@@ -500,6 +495,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[1]='pass'
                         temp_dict[2]='pending'
                         temp_dict[3]='-'
+                        level_=2
                     elif l1=='fail':
                         temp_dict[1]='pass'
                         temp_dict[2]='fail'
@@ -510,6 +506,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
                             temp_dict[3]='pending'
+                            level_=3
                         elif l3=='fail':
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
@@ -519,7 +516,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[2]='pass'
                             temp_dict[3]='pass'
                 context[str(x+1)]=temp_dict
-            return render(request, 'search.html',{'context':context})
+            return render(request, 'search.html',{'context':context , 'level_':level_})
         if request.POST['dropdown'] == 'req_id':
             requisition_id=request.POST['search_element']
             if len(requisition_id)==0:
@@ -549,10 +546,12 @@ def search_candidate(request, *args, **kwargs):
                 temp_dict['req_id']=result[x][0];
                 temp_dict['email']=result[x][1];
                 temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
+                level_ = 0
                 if l1=='pending':
                     temp_dict[1]='pending'
                     temp_dict[2]='-'
                     temp_dict[3]='-'
+                    level_ = 1
                 elif l1=='fail':
                     temp_dict[1]='fail'
                     temp_dict[2]='NA'
@@ -563,6 +562,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[1]='pass'
                         temp_dict[2]='pending'
                         temp_dict[3]='-'
+                        level_=2
                     elif l1=='fail':
                         temp_dict[1]='pass'
                         temp_dict[2]='fail'
@@ -573,6 +573,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
                             temp_dict[3]='pending'
+                            level_=3
                         elif l3=='fail':
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
@@ -585,7 +586,7 @@ def search_candidate(request, *args, **kwargs):
                 # print("candidate:list",candidate_list)
             print(request.POST['dropdown'])
                 # print(requisition_id)
-            return render(request, 'search.html',{'context':context})
+            return render(request, 'search.html',{'context':context , 'level_':level_})
         else :
             candidate_email= request.POST['search_element']
             if len(candidate_email)==0:
@@ -614,10 +615,12 @@ def search_candidate(request, *args, **kwargs):
                 temp_dict['req_id']=result[x][0];
                 temp_dict['email']=result[x][1];
                 temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
+                level_=0
                 if l1=='pending':
                     temp_dict[1]='pending'
                     temp_dict[2]='-'
                     temp_dict[3]='-'
+                    level_=1
                 elif l1=='fail':
                     temp_dict[1]='fail'
                     temp_dict[2]='NA'
@@ -628,6 +631,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[1]='pass'
                         temp_dict[2]='pending'
                         temp_dict[3]='-'
+                        level_=2
                     elif l1=='fail':
                         temp_dict[1]='pass'
                         temp_dict[2]='fail'
@@ -638,6 +642,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
                             temp_dict[3]='pending'
+                            level_=3
                         elif l3=='fail':
                             temp_dict[1]='pass'
                             temp_dict[2]='pass'
@@ -647,7 +652,7 @@ def search_candidate(request, *args, **kwargs):
                             temp_dict[2]='pass'
                             temp_dict[3]='pass'
                 context[str(x+1)]=temp_dict
-        return render(request, 'search.html',{'context':context})
+        return render(request, 'search.html',{'context':context , 'level_':level_})
     else:
         print('else part')
         return render(request, 'search.html')
@@ -658,103 +663,122 @@ def feedback(request, req_id, email_id, level):
         return redirect('login')
     if request.method == "POST":
         status = request.POST['status']
-        rating_python = request.POST['rating_python']
-        rating_java = request.POST['rating_java']
-        rating_cpp = request.POST['rating_cpp']
-        rating_sql = request.POST['rating_sql']
         comments = request.POST['comments']
         interviewer_id = Employee.objects.get(email=request.user._wrapped.username).employee_id
 
-        feedback_object = Feedback.objects.get(candidate_email=Candidate.objects.get(email=email_id), requisition_id=Job.objects.get(requisition_id = req_id), level=level, status='pending')
-        # feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_code)
+        feedback_object = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
         feedback_object.status=status
-        feedback_object.rating_python=rating_python
-        feedback_object.rating_java=rating_java
-        feedback_object.rating_cpp=rating_cpp
-        feedback_object.rating_sql=rating_sql
-        feedback_object.comments=comments
         feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
+        feedback_object.comments = comments
+        feedback_object.datetime = datetime.now()
         feedback_object.save()
 
         candidate_email=email_id
-        return redirect('../../../../search_candidate/'+str(candidate_email))
+        return redirect('../../../../search_candidate/?candidate_email='+str(candidate_email))
 
     '''GET part'''
     try:
-        candidate_name = Candidate.objects.get(email=email_id).full_name
-        candidate_cgpa = Candidate.objects.get(email=email_id).CGPA
-        candidate_college_name =  Candidate.objects.get(email=email_id).college_name
+        feedback_object = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
+        form = FieldForm(initial={'feedback_id' : feedback_object})
+        form.fields['feedback_id'].widget = forms.HiddenInput()
+        feedback_id = feedback_object.pk
+        candidate_object = Candidate.objects.get(email=email_id)
+        candidate_name = candidate_object.full_name
+        candidate_cgpa = candidate_object.CGPA
+        candidate_college_name =  candidate_object.college_name
         interviewer_id = Employee.objects.get(email=request.user._wrapped.username)
-        basic_detail={'Name' :candidate_name,
+
+        current_field_object = Field.objects.all().filter(feedback_id = feedback_id)
+        current_field_names = [obj.field_name for obj in current_field_object]
+        current_field_values = [obj.rating for obj in current_field_object]
+        current_field = zip(current_field_names, current_field_values)
+
+        basic_detail={
+                    'Name' :candidate_name,
                     'Email':email_id,
                     'Graduation_CGPA':candidate_cgpa,
                     'University_name':candidate_college_name,
                     'interviewer_id':interviewer_id,
+                    'feedback_id' : feedback_id,
                     }
 
         if(level == 1):
              context = {
                  'basic_detail':basic_detail,
-                 'level':level
+                 'level':level,
+                 'form' : form,
+                 'req_id' :req_id,
+                 'current_field' : current_field,
              }
 
         if(level == 2):
-            status = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).status
-            python_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_python
-            java_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_java
-            cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
-            sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
-            comments = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
-            interviewer_id = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).interviewer_id
+            feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id)
+            status = feedback_object_1.status
+            comments = feedback_object_1.comments
+            interviewer_id = feedback_object_1.interviewer_id
+            feedback_id_1 = feedback_object_1.pk
+            last_update_time = feedback_object_1.timestamp
 
+            field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
+            field_names = [obj.field_name for obj in field_object_1]
+            field_values = [obj.rating for obj in field_object_1]
+            fields_comments = [obj.comments for obj in field_object_1]
             level_1 = { 'status': status,
-                        'python_rating': python_rating,
-                        'java_rating': java_rating,
-                        'cpp_rating': cpp_rating,
-                        'sql_rating': sql_rating,
                         'comments' : comments,
                         'interviewer_id': interviewer_id,
+                        'details' : zip(field_names, field_values, fields_comments),
+                        'timestamp' : last_update_time,
+                        'feedback_id': feedback_id_1,
                         }
 
             context = {
                 'basic_detail':basic_detail,
                 'level_1': level_1,
-                'level':level
+                'level':level,
+                'form' :form,
+                'req_id' :req_id,
+                'current_field' : current_field,
             }
 
         if(level == 3):
-            status = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).status
-            python_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_python
-            java_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_java
-            cpp_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_cpp
-            sql_rating = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).rating_sql
-            comments = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).comments
-            interviewer_id = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id).interviewer_id
+            feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id)
+            status = feedback_object_1.status
+            comments = feedback_object_1.comments
+            interviewer_id = feedback_object_1.interviewer_id
+            feedback_id_1 = feedback_object_1.pk
+            last_update_time = feedback_object_1.timestamp
 
-            status_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).status
-            python_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_python
-            java_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_java
-            cpp_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_cpp
-            sql_rating_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).rating_sql
-            comments_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).comments
-            interviewer_id_ = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id).interviewer_id
+            field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
+            field_names = [obj.field_name for obj in field_object_1]
+            field_values = [obj.rating for obj in field_object_1]
+            fields_comments = [obj.comments for obj in field_object_1]
+
+            feedback_object_2 = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id)
+            status_ = feedback_object_2.status
+            comments_ = feedback_object_2.comments
+            interviewer_id_ = feedback_object_2.interviewer_id
+            feedback_id_2 = feedback_object_2.pk
+            last_update_time_ = feedback_object_2.timestamp
+
+            field_object_2 = Field.objects.all().filter(feedback_id = feedback_id_2)
+            field_names_ = [obj.field_name for obj in field_object_2]
+            field_values_ = [obj.rating for obj in field_object_2]
+            fields_comments_ = [obj.comments for obj in field_object_2]
 
             level_1 = { 'status': status,
-                        'python_rating': python_rating,
-                        'java_rating': java_rating,
-                        'cpp_rating': cpp_rating,
-                        'sql_rating': sql_rating,
                         'comments' : comments,
                         'interviewer_id' : interviewer_id,
+                        'details' : zip(field_names, field_values, fields_comments),
+                        'timestamp' : last_update_time,
+                        'feedback_id': feedback_id_1,
                         }
 
             level_2 = { 'status': status_,
-                        'python_rating': python_rating_,
-                        'java_rating': java_rating_,
-                        'cpp_rating': cpp_rating_,
-                        'sql_rating': sql_rating_,
                         'comments' : comments_,
                         'interviewer_id': interviewer_id_,
+                        'details' : zip(field_names_, field_values_, fields_comments_),
+                        'timestamp': last_update_time_,
+                        'feedback_id' :feedback_id_2,
                         }
 
             context = {
@@ -762,6 +786,9 @@ def feedback(request, req_id, email_id, level):
                 'level_1': level_1,
                 'level_2': level_2,
                 'level': level,
+                'form' :form,
+                'req_id' :req_id,
+                'current_field' : current_field,
             }
 
     except Feedback.DoesNotExist:
@@ -769,37 +796,88 @@ def feedback(request, req_id, email_id, level):
 
     return render(request, 'registration/feedback.html', context)
 
-def edit(request, req_id, email_id, level, edit_level):
+
+def edit(request, req_id, email_id, level, feedback_id):
     if not request.user.is_authenticated:
         return redirect('login')
 
     if request.method == 'POST':
         status=request.POST['status']
-        rating_python=request.POST['rating_python']
-        rating_java=request.POST['rating_java']
-        rating_cpp=request.POST['rating_cpp']
-        rating_sql=request.POST['rating_sql']
         comments=request.POST['comments']
+        #
+        obj = Feedback.objects.get(feedback_id = feedback_id)
+        field_objects = Field.objects.all().filter(feedback_id = obj)
 
-        obj_ = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
+        for field_obj in field_objects:
+            field_obj.rating = request.POST[f'rating{field_obj.field_name}{field_obj.pk}']
+            field_obj.comments = request.POST[f'comments{field_obj.field_name}{field_obj.pk}']
+            field_obj.save()
+
+        obj_ = Feedback.objects.get(pk=feedback_id)
         obj_.status = status
-        obj_.rating_python = rating_python
-        obj_.rating_java = rating_java
-        obj_.rating_cpp = rating_cpp
-        obj_.rating_sql = rating_sql
         obj_.comments = comments
         obj_.save()
 
         candidate_email=email_id
-        return redirect('../../../../../search_candidate/'+str(candidate_email))
+        return redirect('../../../../../search_candidate/?candidate_email='+str(candidate_email))
+        # return redirect('../../../../../search_candidate/'+str(candidate_email))
 
-
+    '''GET METHOD'''
     try:
-        obj= Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=edit_level)
-        Context = vars(obj)
+        obj= Feedback.objects.get(pk = feedback_id)
+        form = FieldForm(initial={'feedback_id' : obj})
+        form.fields['feedback_id'].widget = forms.HiddenInput()
+
+        status = obj.status
+        comments = obj.comments
+        field_object = Field.objects.all().filter(feedback_id = obj)
+        field_names= [obj_.field_name for obj_ in field_object]
+        field_values= [obj_.rating for obj_ in field_object]
+        field_comments = [obj_.comments for obj_ in field_object]
+        field_id = [obj_.field_id for obj_ in field_object]
+        level_ = obj.level
+
+        Context = {
+            'status': status,
+            'comments': comments,
+            'fields': zip(field_names, field_values, field_comments, field_id),
+            'level' : level_,
+            'feedback_id': feedback_id,
+            'form': form
+        }
         return render(request, 'registration/edit.html', Context)
     except:
         return HttpResponse('No details Found')
+
+def field_view(request, req_id, email_id, level, feedback_id):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
+
+    level_ = Feedback.objects.get(feedback_id=feedback_id).level
+    if request.method == 'POST':
+        form = FieldForm(request.POST)
+        if form.is_valid():
+            field_name = form.cleaned_data['field_name']
+            print(field_name)
+            form.save()
+
+        if(level == level_):
+            return redirect('../../')
+        return redirect(f'../../edit{feedback_id}/')
+
+def delete_field(request, req_id, email_id, level, field_name, del_level):
+    feedback_id = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level =del_level).pk
+    obj = Field.objects.get(feedback_id = feedback_id, field_name = field_name)
+    obj.delete()
+    if(level == del_level):
+        return redirect('../')
+    return redirect(f'../edit{feedback_id}')
+
+
+def download_report(request, req_id, email_id, level):
+    # print(os.getcwd())
+    pdfkit.from_file('Incedoinc/templates/registration/report.html', f'media/feedbacks/{req_id}{email_id}.pdf')
+    return redirect('../report/')
 
 
 def test(request):
@@ -809,175 +887,85 @@ def test(request):
     return HttpResponse('inside the test')
 
 
+def report_view(request, req_id, email_id, level):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
 
+    candidate_object = Candidate.objects.get(email=email_id)
+    candidate_name = candidate_object.full_name
+    candidate_email = candidate_object.email
+    candidate_college = candidate_object.college_name
+    candidate_cgpa = candidate_object.CGPA
 
-# def search_candidate_original(request, *args, **kwargs):
-#     if not request.user.is_authenticated:
-#         return redirect('login')
-#
-#     if request.method == 'POST' or kwargs:
-#         if request.method == 'GET' and kwargs:
-#             if not kwargs['candidate_email']:
-#                 raise ValidationError('Get request has arguments type which are not supported')
-#             candidate_email = kwargs['candidate_email']
-#         elif request.method == 'POST':
-#             if request.POST['dropdown'] == 'req_id':
-#                 requisition_id=request.POST['search_element']
-#                 candidate_list = list(set(Feedback.objects.filter(requisition_id=requisition_id).values_list('candidate_email').order_by('-candidate_email')))
-#                 if len(candidate_list)==0 :
-#                     return render(request, 'search.html',{'error_message':'There are no results for this Requisition Id'})
-#                 context = {}
-#                 for x in range(len(candidate_list)):
-#                     temp_dict={}
-#                     print(type(candidate_list[x][0]))
-#                     l1=Feedback.objects.get(requisition_id=requisition_id,candidate_email=candidate_list[x][0], level = 1).status
-#
-#                     temp_dict['req_id']=requisition_id;
-#                     temp_dict['email']=candidate_list[x][0];
-#                     temp_dict['resume'] = Candidate.objects.get(email=candidate_list[x][0]).resume
-#                     if l1=='pending':
-#                         temp_dict[1]='pending'
-#                         temp_dict[2]='-'
-#                         temp_dict[3]='-'
-#                     elif l1=='fail':
-#                         temp_dict[1]='fail'
-#                         temp_dict[2]='NA'
-#                         temp_dict[3]='NA'
-#                     else :
-#                         l2=Feedback.objects.get(requisition_id=requisition_id,candidate_email=candidate_list[x][0], level = 2).status
-#                         if l2=='pending':
-#                             temp_dict[1]='pass'
-#                             temp_dict[2]='pending'
-#                             temp_dict[3]='-'
-#                         elif l1=='fail':
-#                             temp_dict[1]='pass'
-#                             temp_dict[2]='fail'
-#                             temp_dict[3]='NA'
-#                         else :
-#                             l3=Feedback.objects.get(requisition_id=requisition_id,candidate_email=candidate_list[x][0], level = 3).status
-#                             if l3=='pending':
-#                                 temp_dict[1]='pass'
-#                                 temp_dict[2]='pass'
-#                                 temp_dict[3]='pending'
-#                             elif l3=='fail':
-#                                 temp_dict[1]='pass'
-#                                 temp_dict[2]='pass'
-#                                 temp_dict[3]='fail'
-#                             else:
-#                                 temp_dict[1]='pass'
-#                                 temp_dict[2]='pass'
-#                                 temp_dict[3]='pass'
-#                     context[str(x+1)]=temp_dict
-#
-#                 print("candidate:list",candidate_list)
-#                 print(request.POST['dropdown'])
-#                 print(requisition_id)
-#                 return render(request, 'search.html',{'context':context})
-#             else :
-#                 candidate_email= request.POST['search_element']
-#                 req_id_list = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
-#                 if len(req_id_list)==0 :
-#                     return render(request, 'search.html',{'error_message':'There are no results for this Candidate'})
-#                 context = {}
-#                 for x in range(len(req_id_list)):
-#                     temp_dict={}
-#                     print(type(req_id_list[x][x][0]))
-#                     l1=Feedback.objects.get(requisition_id=req_id_list[x][0],candidate_email=candidate_email, level = 1).status
-#
-#                     temp_dict['req_id']=req_id_list[x][0];
-#                     temp_dict['email']=candidate_email;
-#                     temp_dict['resume'] = Candidate.objects.get(email=candidate_email).resume
-#                     if l1=='pending':
-#                         temp_dict[1]='pending'
-#                         temp_dict[2]='-'
-#                         temp_dict[3]='-'
-#                     elif l1=='fail':
-#                         temp_dict[1]='fail'
-#                         temp_dict[2]='NA'
-#                         temp_dict[3]='NA'
-#                     else :
-#                         l2=Feedback.objects.get(requisition_id=req_id_list[x][0],candidate_email=candidate_email, level = 2).status
-#                         if l2=='pending':
-#                             temp_dict[1]='pass'
-#                             temp_dict[2]='pending'
-#                             temp_dict[3]='-'
-#                         elif l1=='fail':
-#                             temp_dict[1]='pass'
-#                             temp_dict[2]='fail'
-#                             temp_dict[3]='NA'
-#                         else :
-#                             l3=Feedback.objects.get(requisition_id=req_id_list[x][0],candidate_email=candidate_email, level = 3).status
-#                             if l3=='pending':
-#                                 temp_dict[1]='pass'
-#                                 temp_dict[2]='pass'
-#                                 temp_dict[3]='pending'
-#                             elif l3=='fail':
-#                                 temp_dict[1]='pass'
-#                                 temp_dict[2]='pass'
-#                                 temp_dict[3]='fail'
-#                             else:
-#                                 temp_dict[1]='pass'
-#                                 temp_dict[2]='pass'
-#                                 temp_dict[3]='pass'
-#                     context[str(x+1)]=temp_dict
-#
-#                 print("req list",req_id_list)
-#                 print(request.POST['dropdown'])
-#                 print(candidate_email)
-#
-#                 return render(request, 'search.html',{'context':context})
-#         # req_id = list(set(Feedback.objects.filter(candidate_email = candidate_email).values_list('requisition_id').order_by('-requisition_id')))
-#         # if len(req_id)==0 :
-#         #     return render(request, 'search.html',{'error_message':'There are no results for this input'})
-#         #
-#         # print(type(req_id))
-#         # print(req_id)
-#         # print("asfaddfsdfs",request.POST['dropdown'])
-#         # context = {}
-#         # for x in range(len(req_id)):
-#         #     temp_dict={}
-#         #     print(type(req_id[x][0]))
-#         #     l1=Feedback.objects.get(requisition_id=req_id[x][0],candidate_email=candidate_email, level = 1).status
-#         #
-#         #     temp_dict['req_id']=req_id[x][0];
-#         #     temp_dict['email']=candidate_email;
-#         #     temp_dict['resume'] = Candidate.objects.get(email=candidate_email).resume
-#         #     if l1=='pending':
-#         #         temp_dict[1]='pending'
-#         #         temp_dict[2]='-'
-#         #         temp_dict[3]='-'
-#         #     elif l1=='fail':
-#         #         temp_dict[1]='fail'
-#         #         temp_dict[2]='NA'
-#         #         temp_dict[3]='NA'
-#         #     else :
-#         #         l2=Feedback.objects.get(requisition_id=req_id[x][0],candidate_email=candidate_email, level = 2).status
-#         #         if l2=='pending':
-#         #             temp_dict[1]='pass'
-#         #             temp_dict[2]='pending'
-#         #             temp_dict[3]='-'
-#         #         elif l1=='fail':
-#         #             temp_dict[1]='pass'
-#         #             temp_dict[2]='fail'
-#         #             temp_dict[3]='NA'
-#         #         else :
-#         #             l3=Feedback.objects.get(requisition_id=req_id[x][0],candidate_email=candidate_email, level = 3).status
-#         #             if l3=='pending':
-#         #                 temp_dict[1]='pass'
-#         #                 temp_dict[2]='pass'
-#         #                 temp_dict[3]='pending'
-#         #             elif l3=='fail':
-#         #                 temp_dict[1]='pass'
-#         #                 temp_dict[2]='pass'
-#         #                 temp_dict[3]='fail'
-#         #             else:
-#         #                 temp_dict[1]='pass'
-#         #                 temp_dict[2]='pass'
-#         #                 temp_dict[3]='pass'
-#         #     context[str(x+1)]=temp_dict
-#         #
-#         #
-#         #
-#         # return render(request, 'search.html',{'context':context})
-#
-#     return render(request, 'search.html')
+    basic_detail = {
+        'candidate_name':candidate_name,
+        'candidate_email':candidate_email,
+        'candidate_college':candidate_college,
+        'candidate_cgpa':candidate_cgpa,
+    }
+
+    feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=1, requisition_id = req_id)
+    status = feedback_object_1.status
+    comments = feedback_object_1.comments
+    interviewer_id = feedback_object_1.interviewer_id
+    feedback_id_1 = feedback_object_1.pk
+    last_update_time = feedback_object_1.timestamp
+
+    field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
+    field_names = [obj.field_name for obj in field_object_1]
+    field_values = [obj.rating for obj in field_object_1]
+    fields_comments = [obj.comments for obj in field_object_1]
+    level_1 = { 'status': status,
+                'comments' : comments,
+                'interviewer_id': interviewer_id,
+                'details' : zip(field_names, field_values, fields_comments),
+                'timestamp' : last_update_time,
+                'feedback_id': feedback_id_1,
+    }
+
+    feedback_object_2 = Feedback.objects.get(candidate_email = email_id, level=2, requisition_id = req_id)
+    status = feedback_object_2.status
+    comments = feedback_object_2.comments
+    interviewer_id = feedback_object_2.interviewer_id
+    feedback_id_2 = feedback_object_2.pk
+    last_update_time = feedback_object_2.timestamp
+
+    field_object_2 = Field.objects.all().filter(feedback_id = feedback_id_2)
+    field_names = [obj.field_name for obj in field_object_2]
+    field_values = [obj.rating for obj in field_object_2]
+    fields_comments = [obj.comments for obj in field_object_2]
+    level_2 = { 'status': status,
+                'comments' : comments,
+                'interviewer_id': interviewer_id,
+                'details' : zip(field_names, field_values, fields_comments),
+                'timestamp' : last_update_time,
+                'feedback_id': feedback_id_1,
+                }
+
+    feedback_object_3 = Feedback.objects.get(candidate_email = email_id, level=3, requisition_id = req_id)
+    status = feedback_object_3.status
+    comments = feedback_object_3.comments
+    interviewer_id = feedback_object_3.interviewer_id
+    feedback_id_3 = feedback_object_3.pk
+    last_update_time = feedback_object_3.timestamp
+
+    field_object_3 = Field.objects.all().filter(feedback_id = feedback_id_3)
+    field_names = [obj.field_name for obj in field_object_3]
+    field_values = [obj.rating for obj in field_object_3]
+    fields_comments = [obj.comments for obj in field_object_3]
+    level_3 = { 'status': status,
+                'comments' : comments,
+                'interviewer_id': interviewer_id,
+                'details' : zip(field_names, field_values, fields_comments),
+                'timestamp' : last_update_time,
+                'feedback_id': feedback_id_1,
+                }
+
+    context = {
+        'basic_detail':basic_detail,
+        'level_1':level_1,
+        'level_2':level_2,
+        'level_3':level_3,
+    }
+
+    return render(request, 'registration/report.html', context)

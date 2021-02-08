@@ -1,0 +1,94 @@
+{% extends "rudra_base.html" %}
+
+{% block title %}
+view report
+{% endblock %}
+
+{% block body %}
+
+<a style="padding:10px;font-size:15px;" href='../Download'> Download</a>
+<div class = "basic_details">
+  <ul>
+    <li> Candidate Name : {{basic_detail.candidate_name}}</li><br>
+    <li> Email Id : {{basic_detail.candidate_email}}</li><br>
+    <li> Graduation CGPA : {{basic_detail.candidate_college}}</li><br>
+    <li> University Name : {{basic_detail.candidate_cgpa}}</li>
+  </ul>
+</div>
+
+<div class = 'level1'>
+  <h4> Level 1 </h4>
+  <ul>
+    <li> Status : {{level_1.status}} </li><br>
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_1.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <br/>
+    <li> Overall Comments : {{level_1.comments}}</li><br/>
+    <li> Interviwer : {{level_1.interviewer_id}} <li>
+    <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
+  </ul>
+</div>
+
+<div class='level2'>
+  <h4> Level 2 </h4>
+  <ul>
+    <li> Status : {{level_2.status}} </li><br>
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_2.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <li> Overall Comments : {{level_2.comments}}</li><br/>
+    <li> Interviwer : {{level_2.interviewer_id}} <li>
+    <li style = 'float:right;color:#ff3300'> Last updated at : {{level_2.timestamp}}</li>
+  </ul>
+</div>
+
+<div class='level3'>
+  <h4> Level 3 </h4>
+  <ul>
+    <li> Status : {{level_3.status}} </li><br>
+    <table>
+      <tr>
+        <th>Field Name</th>
+        <th>Rating </th>
+        <th>Comments </th>
+      </tr>
+      {% for i, j, k in level_3.details %}
+        <tr>
+          <td>{{i}}</td>
+          <td>{{j}}</td>
+          <td>{{k}}</td>
+        </tr>
+      {% endfor %}
+    </table><br>
+    <li> Overall Comments : {{level_3.comments}}</li><br/>
+    <li> Interviwer : {{level_3.interviewer_id}} <li>
+    <li style = 'float:right;color:#ff3300'> Last updated at : {{level_3.timestamp}}</li>
+  </ul>
+</div>
+
+<a style="padding:10px;" href = "../../../../../search_candidate/?candidate_email={{basic_detail.candidate_email}}"><button type="button" name="button">Go Back</button></a><br/>
+<br/>
+{% endblock %}

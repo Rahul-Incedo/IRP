@@ -180,12 +180,12 @@
 
       <tr>
         <th><label >Middle Name </label></th>
-        <td>: <input type="text" placeholder={{candidate_obj.m_name}} name="mname"  pattern="[A-Za-z]{0,64}" /></td>
+        <td>: <input type="text" placeholder={{candidate_obj.m_name}} value={{candidate_obj.m_name}} name="mname"  pattern="[A-Za-z]{0,64}" /></td>
       </tr>
 
       <tr>
         <th><label >Last Name </label></th>
-        <td>: <input type="text" placeholder={{candidate_obj.l_name}} name="lname"  pattern="[A-Za-z]{0,64}"/ ></td>
+        <td>: <input type="text" placeholder={{candidate_obj.l_name}} value={{candidate_obj.l_name}} name="lname"  pattern="[A-Za-z]{0,64}"/ ></td>
       </tr>
 
       <tr>
@@ -219,7 +219,7 @@
 
       <tr>
           <th><label >CGPA </label></th>
-          <td>: <input type="text" placeholder={{candidate_obj.CGPA}} name="CGPA" / ></td>
+          <td>: <input type="number" step="0.001" placeholder={{candidate_obj.CGPA}} value={{candidate_obj.CGPA}} name="CGPA" min="0" max="10" / ></td>
 
       </tr>
 
@@ -227,14 +227,14 @@
           <th><label >College </label></th>
 
 
-          <td>: <input type="text" placeholder={{candidate_obj.college_name}} name="college" / ></td>
+          <td>: <input type="text" placeholder={{candidate_obj.college_name}} value={{candidate_obj.college_name}} name="college" / ></td>
 
       </tr>
 
       <tr>
           <th><label >Experience </label></th>
 
-          <td>: <input type="number" placeholder={{candidate_obj.experience}} name="experience"  /></td>
+          <td>: <input type="number" step="0.01" placeholder={{candidate_obj.experience}} value={{candidate_obj.experience}} name="experience" min="0" /></td>
 
       </tr>
 
@@ -242,7 +242,7 @@
           <th><label >Mobile </label></th>
 
 
-          <td>: <input type="text" placeholder={{candidate_obj.mobile}} pattern="\d*" name="mobile_no" maxlength="10" minlength="10"></td>
+          <td>: <input type="text" placeholder={{candidate_obj.mobile}} value={{candidate_obj.mobile}} pattern="\d*" name="mobile_no" maxlength="10" minlength="10"></td>
 
       </tr>
 
@@ -250,7 +250,7 @@
           <th><label >DOB </label></th>
 
 
-          <td>: <input type="date" placeholder={{candidate_obj.DOB}} name="DOB" / ></td>
+          <td>: <input type="date" placeholder={{candidate_obj.DOB}} value={{candidate_obj.DOB}} name="DOB" / ></td>
 
       </tr>
 
@@ -258,14 +258,14 @@
           <th><label >Projects </label></th>
 
 
-          <td>: <input type="url" placeholder={{candidate_obj.projects_link}} name="project" /></td>
+          <td>: <input type="url" placeholder={{candidate_obj.projects_link}}  name="project" /></td>
 
       </tr>
 
       <tr>
           <th><label >Notice Period </label></th>
 
-          <td>: <input type="number" placeholder={{candidate_obj.notice_period}} name="notice_period"  /></td>
+          <td>: <input type="number" step="0.01" placeholder={{candidate_obj.notice_period}} value={{candidate_obj.notice_period}} name="notice_period"  min="0" /></td>
       </tr>
       <!-- <tr>
           <th><label >Resume </label></th>

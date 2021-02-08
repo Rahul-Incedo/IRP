@@ -80,16 +80,22 @@ class Feedback(models.Model):
     status_choices = [('pass', 'pass'),
                         ('fail', 'fail'),
                         ('pending', 'pending'),]
-    status = models.CharField(choices = status_choices, max_length=10)
-    rating_python = models.IntegerField(null=True, blank=True)
-    rating_java = models.IntegerField(null=True, blank=True)
-    rating_cpp = models.IntegerField(null=True, blank=True)
-    rating_sql = models.IntegerField(null=True, blank=True)
+    status = models.CharField(choices = status_choices, max_length=10, blank=True)
     comments = models.TextField(max_length=500, null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.status}'
+        return f'{self.status} {self.level}'
+
+class Field(models.Model):
+    field_id = models.AutoField(primary_key=True)
+    feedback_id = models.ForeignKey(Feedback, null=True, on_delete=models.CASCADE)
+    field_name = models.CharField(max_length=20, null=False)
+    rating = models.IntegerField(null=True, blank=True)
+    comments = models.TextField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.field_name}'
 
 
 class TestModel(models.Model):
