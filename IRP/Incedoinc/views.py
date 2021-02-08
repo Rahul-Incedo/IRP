@@ -455,11 +455,23 @@ def search_candidate(request, *args, **kwargs):
         for x in range(len(result)):
             temp_dict={}
             # print(type(candidate_list[x][0]))
+            l1_obj=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 1)
+            l2_obj=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2)
+            l3_obj=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3)
+
             l1=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 1).status
+            l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
+            l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
+
+            l1_id = l1_obj.feedback_id
+            l2_id = l2_obj.feedback_id
+            l3_id = l3_obj.feedback_id
+
             temp_dict['req_id']=result[x][0];
             temp_dict['email']=result[x][1];
             temp_dict['resume'] = Candidate.objects.get(email=result[x][1]).resume
-            level_=0
+            level_=3
+            level__ = 3
             if l1=='pending':
                 temp_dict[1]='pending'
                 temp_dict[2]='-'
@@ -469,34 +481,35 @@ def search_candidate(request, *args, **kwargs):
                 temp_dict[1]='fail'
                 temp_dict[2]='NA'
                 temp_dict[3]='NA'
+                level__ = 1
             else :
-                l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
                 if l2=='pending':
                     temp_dict[1]='pass'
                     temp_dict[2]='pending'
                     temp_dict[3]='-'
                     level_=2
-                elif l1=='fail':
+                elif l2=='fail':
                     temp_dict[1]='pass'
                     temp_dict[2]='fail'
                     temp_dict[3]='NA'
+                    level__ = 2
                 else :
-                    l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
                     if l3=='pending':
                         temp_dict[1]='pass'
                         temp_dict[2]='pass'
                         temp_dict[3]='pending'
-                        level_=3
+                        level_=2
                     elif l3=='fail':
                         temp_dict[1]='pass'
                         temp_dict[2]='pass'
                         temp_dict[3]='fail'
+                        level__ = 3
                     else:
                         temp_dict[1]='pass'
                         temp_dict[2]='pass'
                         temp_dict[3]='pass'
             context[str(x+1)]=temp_dict
-        return render(request, 'search.html',{'context':context , 'level_':level_})
+        return render(request, 'search.html',{'context':context , 'level_':level_, 'level__':level__, 'l1_id':l1_id, 'l2_id':l2_id, 'l3_id':l3_id})
     else:
         print('else part')
         return render(request, 'search.html')
@@ -655,6 +668,7 @@ def edit(request, req_id, email_id, level, feedback_id):
         return redirect('login')
 
     if request.method == 'POST':
+        # print(request.method, '======================================================')
         status=request.POST['status']
         comments=request.POST['comments']
         interview_date=request.POST['interview_date']
@@ -701,6 +715,7 @@ def edit(request, req_id, email_id, level, feedback_id):
             'feedback_id': feedback_id,
             'form': form,
             'interview_date': interview_date,
+            'email_id':email_id,
         }
         return render(request, 'registration/edit.html', Context)
     except:
@@ -723,6 +738,8 @@ def field_view(request, req_id, email_id, level, feedback_id):
         return redirect(f'../../edit{feedback_id}/')
 
 def delete_field(request, req_id, email_id, level, field_name, del_level):
+    if not request.user.is_authenticated:
+        return render(request, "users/login.html")
     feedback_id = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level =del_level).pk
     obj = Field.objects.get(feedback_id = feedback_id, field_name = field_name)
     obj.delete()

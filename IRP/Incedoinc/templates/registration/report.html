@@ -6,7 +6,7 @@ view report
 
 {% block body %}
 
-<a style="padding:10px;font-size:15px;" href='../Download'> Download</a>
+<!-- <a style="padding:10px;font-size:15px;" href='../Download'> Download</a> -->
 <div class = "basic_details">
   <ul>
     <li> Candidate Name : {{basic_detail.candidate_name}}</li><br>
@@ -59,7 +59,7 @@ view report
           <td>{{k}}</td>
         </tr>
       {% endfor %}
-    </table>
+    </table><br>
     <li> Overall Comments : {{level_2.comments}}</li>
     <li style = 'float:right;color:#ff3300'> Interview Date : {{level_2.interview_date}}</li><br>
     <li> Interviwer : {{level_2.interviewer_id}} <li>

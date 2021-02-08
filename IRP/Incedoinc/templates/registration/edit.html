@@ -33,12 +33,11 @@ Edit candidate information
       <div>
         <br/>
         <label for = "status">Status: </label><br/>
-        <input name = "status" id = "status" list = "status_choices" placeholder = "status" value = {{status}}>
-          <datalist id = "status_choices">
-                  <option value = "pass">
-                  <option value = "fail">
-                  <option value = "pending">
-          </datalist>
+        <select id = "status" name = status required>
+          <option value = "pending">pending</option>
+          <option value = "pass">pass</option>
+          <option value = "fail">fail</option>
+        </select><br>
       </div>
 
       <br/>
@@ -48,8 +47,8 @@ Edit candidate information
       <textarea rows = "5" cols = "60" name = "comments" value = {{comments}}>{{comments}}
       </textarea><br/>
       <button type="submit" class = "addBtn" value="Submit">Submit</button>
-      <a href= '../'>Cancel</a>
     </form>
 </div>
 
+<center> <a style="width:100%" href= '../../../../../search_candidate/?candidate_email={{email_id}}'><button>Cancel</button></a></center><br>
 {% endblock %}

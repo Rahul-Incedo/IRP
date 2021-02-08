@@ -41,7 +41,7 @@ class CandidateForm(forms.ModelForm):
             'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
             'noticePeriod': '*Notice Period',
         }
-    
+
 
 
 class UploadJdForm(forms.ModelForm):
@@ -124,7 +124,8 @@ class FieldForm(forms.ModelForm):
                         ('Deep Learning', 'Deep Learning'),
                         ('Machine learning', 'Machine learning'),
                         ('.NET', '.NET')]
-    field_name = forms.CharField(max_length = 20, widget=forms.Select(choices=field_choices),)
+    # field_name = forms.CharField(max_length = 20, widget=forms.Select(choices=field_choices),)
+    field_name = forms.CharField(max_length = 20)
     rating = forms.IntegerField(min_value=1, max_value=5)
 
     class Meta:

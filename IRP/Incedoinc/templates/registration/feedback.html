@@ -15,7 +15,7 @@ Candidate feedback {{candiate.id}}
     <li> Email Id : {{basic_detail.Email}}</li><br>
     <li> Graduation CGPA : {{basic_detail.Graduation_CGPA}}</li><br>
     <li> University Name : {{basic_detail.University_name}}</li>
-    <li style="float:right;font-size:12px"><a href = "../../../../../view_candidate/{{basic_detail.Email}}">See More</a></li>
+    <li style="float:right;font-size:12px"><a href = "../../../../../view_candidate/{{basic_detail.Email}}">See More...</a></li>
   </ul>
 </div>
 
@@ -133,12 +133,12 @@ Candidate feedback {{candiate.id}}
       <br/>
       <div>
         <label for = "status">Status: </label><br>
-        <input name = "status" id = "status" list = "status_choices" placeholder = "status" required>
-        <datalist id = "status_choices">
-          <option value = "pass">
-          <option value = "fail">
-          <option value = "pending">
-        </datalist><br>
+        <!-- <input name = "status" id = "status" list = "status_choices" placeholder = "status" required> -->
+        <select id = "status" name = status required>
+          <option value = "pending">pending</option>
+          <option value = "pass">pass</option>
+          <option value = "fail">fail</option>
+        </select><br>
 
         <label for ="interview_date"> Interview Date :<label><br/>
         <input type="date" name="interview_date" id="interview_date" value={{basic_detail.current_date}}>
@@ -150,8 +150,9 @@ Candidate feedback {{candiate.id}}
       </textarea><br/>
 
       <button type="submit" class = "addBtn" value="Submit">Submit</button>
-      <a href = '../../../'> <button>Cancel</button></a>
     </form>
+    <!-- <a href = '../../../'> <button>Cancel</button></a> -->
 <div>
+<center> <a style="width:100%" href= '../../../../search_candidate/?candidate_email={{basic_detail.Email}}'><button>Cancel</button></a></center><br>
 
 {% endblock %}
