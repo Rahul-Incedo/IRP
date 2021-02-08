@@ -101,7 +101,6 @@
         {
           border: none;
           color: white;
-          width:50%;
           text-align: center;
 
           text-decoration: none;
@@ -125,6 +124,10 @@
           margin: 10px 8px;
           border-radius: 15px;
           background-color: #008B8B;
+        }
+        .goback
+        {
+
         }
 
         ul
@@ -257,9 +260,10 @@
           <td>: <a href='{{ candidate_obj.resume.url }}'><label >{{candidate_obj.resume.name}}</label></a></td>
       </tr>
   </table>
+  <br>
   <center><input type="submit" value="Edit Details"></center>
         </form>
-        <center><a href= "../../search_candidate/?candidate_email={{candidate_obj.email}}"><button>Go Back</button></a></center>
+        <center><a href= "../../search_candidate/?candidate_email={{candidate_obj.email}}"><button class="goback">Go Back</button></a></center>
       </br>
     </br>
   </br>
