@@ -4,7 +4,6 @@ from django.conf.urls import url
 from  . import views as core_views
 from .views import dashboard, manage_jd_view, manage_job_view, upload_jd_view, upload_job_view
 from django.contrib.auth import views as auth_views
-from django_pdfkit import PDFView
 #download-file
 from django.conf import settings
 from django.conf.urls.static import static

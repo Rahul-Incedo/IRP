@@ -6,12 +6,13 @@ view report
 
 {% block body %}
 
+<a style="padding:10px;font-size:15px;" href='../Download'> Download</a>
 <div class = "basic_details">
   <ul>
     <li> Candidate Name : {{basic_detail.candidate_name}}</li><br>
     <li> Email Id : {{basic_detail.candidate_email}}</li><br>
-    <li> Graduation CGPA : {{basic_detail.candidate_college}}</li><br>
-    <li> University Name : {{basic_detail.candidate_cgpa}}</li>
+    <li> Graduation CGPA : {{basic_detail.candidate_cgpa}}</li><br>
+    <li> University Name : {{basic_detail.candidate_college}}</li>
   </ul>
 </div>
 
@@ -34,7 +35,8 @@ view report
       {% endfor %}
     </table>
     <br/>
-    <li> Overall Comments : {{level_1.comments}}</li><br/>
+    <li> Overall Comments : {{level_1.comments}}</li>
+    <li style = 'float:right;color:#ff3300'> Interview Date : {{level_1.interview_date}}</li><br>
     <li> Interviwer : {{level_1.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
   </ul>
@@ -58,7 +60,8 @@ view report
         </tr>
       {% endfor %}
     </table>
-    <li> Overall Comments : {{level_2.comments}}</li><br/>
+    <li> Overall Comments : {{level_2.comments}}</li>
+    <li style = 'float:right;color:#ff3300'> Interview Date : {{level_2.interview_date}}</li><br>
     <li> Interviwer : {{level_2.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_2.timestamp}}</li>
   </ul>
@@ -82,7 +85,8 @@ view report
         </tr>
       {% endfor %}
     </table><br>
-    <li> Overall Comments : {{level_3.comments}}</li><br/>
+    <li> Overall Comments : {{level_3.comments}}</li>
+    <li style = 'float:right;color:#ff3300'> Interview Date : {{level_3.interview_date}}</li><br>
     <li> Interviwer : {{level_3.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_3.timestamp}}</li>
   </ul>

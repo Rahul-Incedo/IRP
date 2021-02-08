@@ -28,7 +28,7 @@ UserModel = get_user_model()
 from .forms import SignUpForm
 import os
 import pdfkit
-
+from datetime import date as date_
 # Vaishnavi changed authentication
 
 #include models
@@ -622,11 +622,13 @@ def feedback(request, req_id, email_id, level):
     if request.method == "POST":
         status = request.POST['status']
         comments = request.POST['comments']
+        interview_date = request.POST['interview_date']
         interviewer_id = Employee.objects.get(email=request.user._wrapped.username).employee_id
 
         feedback_object = Feedback.objects.get(candidate_email=email_id, requisition_id=req_id, level=level)
         feedback_object.status=status
         feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
+        feedback_object.interview_date = interview_date
         feedback_object.comments = comments
         feedback_object.datetime = datetime.now()
         feedback_object.save()
@@ -650,6 +652,7 @@ def feedback(request, req_id, email_id, level):
         current_field_names = [obj.field_name for obj in current_field_object]
         current_field_values = [obj.rating for obj in current_field_object]
         current_field = zip(current_field_names, current_field_values)
+        current_date = str(date_.today())
 
         basic_detail={
                     'Name' :candidate_name,
@@ -658,6 +661,7 @@ def feedback(request, req_id, email_id, level):
                     'University_name':candidate_college_name,
                     'interviewer_id':interviewer_id,
                     'feedback_id' : feedback_id,
+                    'current_date' : current_date,
                     }
 
         if(level == 1):
@@ -675,6 +679,7 @@ def feedback(request, req_id, email_id, level):
             comments = feedback_object_1.comments
             interviewer_id = feedback_object_1.interviewer_id
             feedback_id_1 = feedback_object_1.pk
+            interview_date = feedback_object.interview_date
             last_update_time = feedback_object_1.timestamp
 
             field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
@@ -687,6 +692,7 @@ def feedback(request, req_id, email_id, level):
                         'details' : zip(field_names, field_values, fields_comments),
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
+                        'interview_date': interview_date,
                         }
 
             context = {
@@ -703,6 +709,7 @@ def feedback(request, req_id, email_id, level):
             status = feedback_object_1.status
             comments = feedback_object_1.comments
             interviewer_id = feedback_object_1.interviewer_id
+            interview_date = feedback_object_1.interview_date
             feedback_id_1 = feedback_object_1.pk
             last_update_time = feedback_object_1.timestamp
 
@@ -715,6 +722,7 @@ def feedback(request, req_id, email_id, level):
             status_ = feedback_object_2.status
             comments_ = feedback_object_2.comments
             interviewer_id_ = feedback_object_2.interviewer_id
+            interview_date_ = feedback_object_2.interview_date
             feedback_id_2 = feedback_object_2.pk
             last_update_time_ = feedback_object_2.timestamp
 
@@ -729,6 +737,7 @@ def feedback(request, req_id, email_id, level):
                         'details' : zip(field_names, field_values, fields_comments),
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
+                        'interview_date': interview_date,
                         }
 
             level_2 = { 'status': status_,
@@ -737,6 +746,7 @@ def feedback(request, req_id, email_id, level):
                         'details' : zip(field_names_, field_values_, fields_comments_),
                         'timestamp': last_update_time_,
                         'feedback_id' :feedback_id_2,
+                        'interview_date' : interview_date_,
                         }
 
             context = {
@@ -762,6 +772,7 @@ def edit(request, req_id, email_id, level, feedback_id):
     if request.method == 'POST':
         status=request.POST['status']
         comments=request.POST['comments']
+        interview_date=request.POST['interview_date']
         #
         obj = Feedback.objects.get(feedback_id = feedback_id)
         field_objects = Field.objects.all().filter(feedback_id = obj)
@@ -774,6 +785,7 @@ def edit(request, req_id, email_id, level, feedback_id):
         obj_ = Feedback.objects.get(pk=feedback_id)
         obj_.status = status
         obj_.comments = comments
+        obj_.interview_date = interview_date
         obj_.save()
 
         candidate_email=email_id
@@ -788,6 +800,7 @@ def edit(request, req_id, email_id, level, feedback_id):
 
         status = obj.status
         comments = obj.comments
+        interview_date = str(obj.interview_date)
         field_object = Field.objects.all().filter(feedback_id = obj)
         field_names= [obj_.field_name for obj_ in field_object]
         field_values= [obj_.rating for obj_ in field_object]
@@ -801,7 +814,8 @@ def edit(request, req_id, email_id, level, feedback_id):
             'fields': zip(field_names, field_values, field_comments, field_id),
             'level' : level_,
             'feedback_id': feedback_id,
-            'form': form
+            'form': form,
+            'interview_date': interview_date,
         }
         return render(request, 'registration/edit.html', Context)
     except:
@@ -834,8 +848,8 @@ def delete_field(request, req_id, email_id, level, field_name, del_level):
 
 def download_report(request, req_id, email_id, level):
     # print(os.getcwd())
-    # pdfkit.from_file('Incedoinc/templates/registration/report.html', 'micro.pdf')
-    return redirect('../')
+    pdfkit.from_file('Incedoinc/templates/registration/report.html', f'media/feedbacks/{req_id}{email_id}.pdf')
+    return redirect('../report/')
 
 
 def test(request):
@@ -868,6 +882,7 @@ def report_view(request, req_id, email_id, level):
     interviewer_id = feedback_object_1.interviewer_id
     feedback_id_1 = feedback_object_1.pk
     last_update_time = feedback_object_1.timestamp
+    interview_date = feedback_object_1.interview_date
 
     field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
     field_names = [obj.field_name for obj in field_object_1]
@@ -879,6 +894,7 @@ def report_view(request, req_id, email_id, level):
                 'details' : zip(field_names, field_values, fields_comments),
                 'timestamp' : last_update_time,
                 'feedback_id': feedback_id_1,
+                'interview_date' : interview_date,
     }
 
     feedback_object_2 = Feedback.objects.get(candidate_email = email_id, level=2, requisition_id = req_id)
@@ -887,6 +903,7 @@ def report_view(request, req_id, email_id, level):
     interviewer_id = feedback_object_2.interviewer_id
     feedback_id_2 = feedback_object_2.pk
     last_update_time = feedback_object_2.timestamp
+    interview_date = feedback_object_2.interview_date
 
     field_object_2 = Field.objects.all().filter(feedback_id = feedback_id_2)
     field_names = [obj.field_name for obj in field_object_2]
@@ -898,6 +915,7 @@ def report_view(request, req_id, email_id, level):
                 'details' : zip(field_names, field_values, fields_comments),
                 'timestamp' : last_update_time,
                 'feedback_id': feedback_id_1,
+                'interview_date' : interview_date,
                 }
 
     feedback_object_3 = Feedback.objects.get(candidate_email = email_id, level=3, requisition_id = req_id)
@@ -906,6 +924,7 @@ def report_view(request, req_id, email_id, level):
     interviewer_id = feedback_object_3.interviewer_id
     feedback_id_3 = feedback_object_3.pk
     last_update_time = feedback_object_3.timestamp
+    interview_date = feedback_object_3.interview_date
 
     field_object_3 = Field.objects.all().filter(feedback_id = feedback_id_3)
     field_names = [obj.field_name for obj in field_object_3]
@@ -917,6 +936,7 @@ def report_view(request, req_id, email_id, level):
                 'details' : zip(field_names, field_values, fields_comments),
                 'timestamp' : last_update_time,
                 'feedback_id': feedback_id_1,
+                'interview_date': interview_date,
                 }
 
     context = {

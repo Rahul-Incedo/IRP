@@ -42,8 +42,10 @@ Candidate feedback {{candiate.id}}
       </table>
 
       <br/>
-      <li> Overall Comments : {{level_1.comments}}</li><br/>
+      <li> Overall Comments : {{level_1.comments}}</li>
+      <li style = 'float:right;color:#ff3300'> Interview Date : {{level_1.interview_date}}</li><br>
       <li> Interviwer : {{level_1.interviewer_id}} <li>
+
       <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
     </ul>
   {% endif %}
@@ -70,8 +72,9 @@ Candidate feedback {{candiate.id}}
       {% endfor %}
     </table>
     <br/>
-    <li> Overall Comments : {{level_1.comments}}</li><br/>
-    <li> Interviwer : {{level_1.interviewer_id}} <li>
+    <li> Overall Comments : {{level_1.comments}}</li>
+    <li style = 'float:right;color:#ff3300'> Interview Date : {{level_1.interview_date}}</li><br>
+    <li> Interviewer : {{level_1.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
   </ul>
   <hr>
@@ -94,8 +97,9 @@ Candidate feedback {{candiate.id}}
         </tr>
       {% endfor %}
     </table><br/>
-    <li> Overall Comments : {{level_2.comments}}</li><br/>
-    <li> Interviwer : {{level_2.interviewer_id}} <li>
+    <li> Overall Comments : {{level_2.comments}}</li>
+    <li style = 'float:right;color:#ff3300'> Interview Date : {{level_2.interview_date}}</li><br>
+    <li> Interviewer : {{level_2.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_2.timestamp}}</li>
   </ul>
   {% endif %}
@@ -128,13 +132,16 @@ Candidate feedback {{candiate.id}}
     {% csrf_token %}
       <br/>
       <div>
-        <!--<label for = "status">Status: </label><br>-->
-        <input name = "status" id = "status" list = "status_choices" placeholder = "status">
+        <label for = "status">Status: </label><br>
+        <input name = "status" id = "status" list = "status_choices" placeholder = "status" required>
         <datalist id = "status_choices">
           <option value = "pass">
-          <option value = "Fail">
+          <option value = "fail">
           <option value = "pending">
-        </datalist>
+        </datalist><br>
+
+        <label for ="interview_date"> Interview Date :<label><br/>
+        <input type="date" name="interview_date" id="interview_date" value={{basic_detail.current_date}}>
       </div><br/>
 
 

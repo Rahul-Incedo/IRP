@@ -36,12 +36,14 @@ Edit candidate information
         <input name = "status" id = "status" list = "status_choices" placeholder = "status" value = {{status}}>
           <datalist id = "status_choices">
                   <option value = "pass">
-                  <option value = "Fail">
+                  <option value = "fail">
                   <option value = "pending">
           </datalist>
       </div>
 
       <br/>
+      <label for ="interview_date"> Interview Date :</label><br>
+      <input type ="date" id = "interview_date" name ="interview_date" value = "{{interview_date}}">
       <lebel for = 'comments'> Enter your overall feedback here:<lebel> <br/>
       <textarea rows = "5" cols = "60" name = "comments" value = {{comments}}>{{comments}}
       </textarea><br/>

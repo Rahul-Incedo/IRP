@@ -76,8 +76,9 @@ class Feedback(models.Model):
     status_choices = [('pass', 'pass'),
                         ('fail', 'fail'),
                         ('pending', 'pending'),]
-    status = models.CharField(choices = status_choices, max_length=10, blank=True)
+    status = models.CharField(choices = status_choices, max_length=10)
     comments = models.TextField(max_length=500, null=True, blank=True)
+    interview_date = models.DateField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
