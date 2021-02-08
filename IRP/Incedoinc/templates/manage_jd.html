@@ -23,6 +23,9 @@
           margin-left:auto;
           margin-right:auto;
         }
+        .main {
+          margin: 0px;
+        }
       form {
         margin: 25px;
         /* background-color: #588c7e; */
@@ -104,8 +107,8 @@
 
       ul {
           list-style-type: none;
-          margin: 0;
-          padding: 0;
+          margin: 0px;
+          padding: 0px;
           overflow: hidden;
           background-color: #40423f;
           color: #b6b8b5;
@@ -123,13 +126,32 @@
           text-decoration: none;
         }
 
+        .heading
+        {
+          border: none;
+          color: white;
+          width:100%;
+          text-align: center;
+          margin-top:0px;
+          padding-top:5px;
+          padding-bottom: 5px;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 20px;
+          /* margin: 10px 8px; */
+          /* border-radius: 15px; */
+          background-color: #008B8B;
+        }
+
     </style>
     <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script data-require="bootstrap@*" data-semver="3.1.1" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
+
   <body>
     <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -144,18 +166,20 @@
                     <p>You are about to delete this Job Description.</p>
                     <p>This will delete all the requisition created on this jd.</p>
                     <p>Do you want to proceed?</p>
-                    <p class="debug-url"></p>
+                    <!-- <p class="debug-url"></p> -->
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-danger btn-ok">Delete</a>
+                  <center>
+                    <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
+                    <a class="btn btn-danger btn-ok">Confirm Delete</a>
+                  </center> 
                 </div>
             </div>
         </div>
     </div>
     <header>
-      <ul class = 'main'  style="background-color: black">
+      <ul class='main' style="background-color: black">
         <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
         <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
         <li style="float:right"><a href="{%url 'change_password_page'%}">Change Password</a></li>
@@ -163,8 +187,10 @@
         <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
       </ul>
     </header>
+    <center><span class="heading">MANAGE REQUISITION</span></center>
     <div class='my_inputs'>
       <form method="post"> {% csrf_token %}
+          <button class="home-button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
           <input type="text" placeholder="Search JobDescription" name='search_query'>
           <button type="submit" name="search_button">Search</button>
           <button type="submit" name="list_all_button">List All</button>
@@ -179,19 +205,15 @@
             <th>JD Name</th>
             <th>UploadedBy</th>
             <th>Download File</th>
-            <th>Delete</th>
+            <th></th>
+            <!-- <th>Delete</th> -->
           </thead>
               {% for obj in query_set %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <!-- {% url 'view_jd' obj.pk %} -->
-                <!-- <td>{{value.email}}<a href="../view_candidate/{{value.email}}"><button>View</button></a></td> -->
-                <!-- <td><a href= {% url 'view_jd' obj.pk %}><button type='submit'>{{obj.jd_name}}></button></a></td> -->
-                
-                <!-- <td>{{obj.jd_name}}<a href={% url 'view_jd' obj.pk %}><button type='submit'>View</button></a></td> -->
                 <td><a href="{% url 'view_jd' obj.pk %}"><button type='submit' class='button-table'>{{obj.jd_name}}</button></a></td>
                 <td>{{ obj.uploaded_by_employee }}</td>
-                <td><a href="{{ obj.jd_file.url }}/" ><input type="button" value='Download'></a></td>
+                <td><a href="{{ obj.jd_file.url }}/" >{{ obj.get_file_name}}</a></td>
                 <!-- <td><a href="{% url 'delete_jd' obj.pk %}" ><input type="button" value="Delete"></a></td> -->
                 <td><a href="#" data-href="{% url 'delete_jd' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td>
               </tr>

@@ -100,7 +100,9 @@ def manage_jd_view(request, *args, **kwargs):
         }
         return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
-        if 'search_button' in request.POST:
+        if 'home_button' in request.POST:
+            return redirect('home_page')
+        elif 'search_button' in request.POST:
             search_query = request.POST['search_query']
             query_set = JD.objects.filter(jd_name__contains=search_query)
             context = {
@@ -126,7 +128,9 @@ def manage_jd_view(request, *args, **kwargs):
 def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
-    if request.method == 'GET' and 'requisition_id' in request.GET:
+    if 'home_button' in request.POST:
+        return redirect('home_page')
+    elif request.method == 'GET' and 'requisition_id' in request.GET:
         print(request.GET)
         search_query = request.GET['requisition_id']
         query_set = Job.objects.filter(requisition_id = search_query)

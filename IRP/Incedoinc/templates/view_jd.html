@@ -172,15 +172,16 @@
         </tr>
         <tr>
             <th><label>File Name</label></th>
-            <td><label>{{obj.jd_file.name}}</label></td>
+            <td><label>{{obj.get_file_name}}</label></td>
         </tr>
         <tr>
             <th><label>Uploaded By</label></th>
             <td><label>{{obj.uploaded_by_employee}}</label></td>
         </tr>
     </table>
-  <center><input type="submit" value="Edit Details"></center>
-        </form>
+    <!-- <center><a href="{% url 'manage_jd_page' %}" ><button>Close</button></a></center> -->
+  </form>
+  <center><a href="{% url 'manage_jd_page' %}" ><input type="submit" value="Close"></a></center>
       </br>
     </br>
   </br>

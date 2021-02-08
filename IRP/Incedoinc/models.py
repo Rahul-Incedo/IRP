@@ -21,6 +21,10 @@ class JD(models.Model):
 
     def __str__(self):
         return f'{self.jd_name}'
+    def get_file_name(self):
+        file_name = self.jd_file.name
+        print(file_name)
+        return file_name.lstrip('JD').lstrip('/')
 
 #different requisition_id are mapped to one job_description
 class Job(models.Model):
