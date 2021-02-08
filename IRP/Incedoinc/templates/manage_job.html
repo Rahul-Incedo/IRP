@@ -23,6 +23,9 @@
           margin-left:auto;
           margin-right:auto;
         }
+        .main {
+          margin:0px;
+        }
       form {
         margin: 25px;
         /* background-color: #588c7e; */
@@ -39,6 +42,23 @@
         color: #fff;
         border-radius: 15px;
       }
+      /* .home-button {
+        width: fit-content;
+        padding :2px 10px 2px 10px;
+      } */
+    .button-table {
+      border: none;
+      color: white;
+      width: fit-content;
+      padding :2px 10px 2px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 15px;
+      background-color: #fd511c;
+      cursor: pointer;
+    }
       .button-2 {
         float: right;
         width: 20%;
@@ -106,7 +126,30 @@
           padding: 14px 16px;
           text-decoration: none;
         }
+
+        .heading
+        {
+          border: none;
+          color: white;
+          width:100%;
+          text-align: center;
+          margin-top:0px;
+          padding-top:5px;
+          padding-bottom: 5px;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 20px;
+          /* margin: 10px 8px; */
+          /* border-radius: 15px; */
+          background-color: #008B8B;
+        }
     </style>
+    <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script data-require="bootstrap@*" data-semver="3.1.1" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
     <header>
@@ -118,8 +161,33 @@
         <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
       </ul>
     </header>
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+          
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+              </div>
+          
+              <div class="modal-body">
+                  <p>You are about to permanently delete this Requisition.</p>
+                  <p>All the candidates added to this Requisition ID are also deleted.</p>
+                  <p>Do you want to proceed?</p>
+                  <!-- <p class="debug-url"></p> -->
+              </div>
+              
+              <div class="modal-footer">
+                  <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
+                  <center><a class="btn btn-danger btn-ok">Confirm Delete</a></center>
+              </div>
+          </div>
+      </div>
+    </div>
+    <center><span class="heading">MANAGE JOB DESCRIPTION</span></center>
     <div class='my_inputs'>
       <form method="post"> {% csrf_token %}
+          <button class="home-button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
           <input type="text" placeholder="Search Requisition" name='search_query'>
           <button type="submit" name="search_button">Search</button>
           <button type="submit" name="list_all_button">List All</button>
@@ -135,22 +203,31 @@
             <th>Raised By</th>
             <th>Position Owner</th>
             <th>Job Description</th>
-            <th>Edit</th>
             <th>Delete</th>
           </thead>
               {% for obj in query_set %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ obj.requisition_id }}</td>
+                
+                <!-- <td>{{ obj.requisition_id }}</td> -->
+                <td><a href="{% url 'view_job' obj.pk %}"><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a></td>
                 <td>{{ obj.raised_by_employee }}</td>
                 <td>{{ obj.position_owner_id }}</td>
-                <td>{{ obj.jd.jd_name }}</td>
-                <td><a  ><input type="button" value="Edit"></a></td>
-                <td><a href="{% url 'delete_job' obj.pk %}"><input type="button" value="Delete"></a></td>
+                <td><a href="{{obj.jd.jd_file.url}}/">{{ obj.jd.jd_name }}</a></td>
+                <!-- <td><a href="{% url 'delete_job' obj.pk %}"><input type="button" value="Delete"></a></td> -->
+                <td><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td>
               </tr>
               {% endfor %}
         </table>
       </div>
     {% endif %}
+
+    <script>
+      $('#confirm-delete').on('show.bs.modal', function(e) {
+          $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+          
+          $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
+      });
+    </script>
   </body>
 </html>
