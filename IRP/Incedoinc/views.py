@@ -354,9 +354,83 @@ def view_candidate(request,candidate_email):
 
         print("sdfsdfsdfsd------------------------------")
         return redirect('../../edit_candidate/'+str(candidate_email))
+
     candidate_obj=Candidate.objects.filter(email=candidate_email)
-    # print(candidate_obj[0].email)
-    return render(request,'view_candidate.html',{'candidate_obj':candidate_obj[0]})
+    if len(candidate_obj)==0 :
+            return render(request,'view_candidate.html',{'error_msg':"Oops ;( Something went wrong"})
+
+    f_name = candidate_obj[0].f_name
+    if f_name==None:
+        f_name=""
+
+    m_name = candidate_obj[0].m_name
+    if m_name==None:
+        m_name=""
+
+    l_name = candidate_obj[0].l_name
+    if l_name==None:
+        l_name=""
+
+    registered_by = candidate_obj[0].registered_by
+    if registered_by==None:
+        registered_by=""
+
+    email=candidate_obj[0].email
+    if email==None:
+        email=""
+
+    gender=candidate_obj[0].gender
+    if gender==None:
+        gender=""
+
+    CGPA=candidate_obj[0].CGPA
+    if CGPA==None:
+        CGPA=""
+
+    college_name=candidate_obj[0].college_name
+    if college_name==None:
+        college_name=""
+
+    experience=candidate_obj[0].experience
+    if experience==None:
+        experience=""
+
+    mobile=candidate_obj[0].mobile
+    if mobile==None:
+        mobile=""
+
+    projects_link=candidate_obj[0].projects_link
+    if projects_link==None:
+        projects_link=""
+
+    notice_period=candidate_obj[0].notice_period
+    if notice_period==None:
+        notice_period=""
+
+    resume=candidate_obj[0].resume
+
+    timestamp=candidate_obj[0].timestamp
+    if timestamp==None:
+        timestamp=""
+
+    context={
+        'f_name':f_name,
+        'm_name':m_name,
+        'l_name':l_name,
+        'registered_by':registered_by,
+        'email':email,
+        'gender':gender,
+        'CGPA':CGPA,
+        'college_name':college_name,
+        'experience':experience,
+        'mobile':mobile,
+        'projects_link':projects_link,
+        'notice_period':notice_period,
+        'resume':resume,
+        'timestamp':timestamp,
+    }
+    
+    return render(request,'view_candidate.html',context)
 
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
