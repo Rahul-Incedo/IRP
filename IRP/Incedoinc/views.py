@@ -326,6 +326,7 @@ def edit_candidate(request,candidate_email):
         return redirect('login')
     if request.method == 'POST':
         candidate_obj=Candidate.objects.get(email=candidate_email)
+        # print(request.POST)
         if len(request.POST['fname'])!=0 :
             candidate_obj.f_name=request.POST['fname']
         if len(request.POST['mname'])!=0 :
@@ -342,8 +343,8 @@ def edit_candidate(request,candidate_email):
             candidate_obj.experience=request.POST['experience']
         if len(request.POST['mobile_no'])!=0 :
             candidate_obj.mobile=request.POST['mobile_no']
-        if len(request.POST['DOB'])!=0 :
-            candidate_obj.DOB=request.POST['DOB']
+        # if len(request.POST['DOB'])!=0 :
+        #     candidate_obj.DOB=request.POST['DOB']
         if len(request.POST['project'])!=0 :
             candidate_obj.projects_link=request.POST['project']
         if len(request.POST['notice_period'])!=0 :
@@ -351,9 +352,87 @@ def edit_candidate(request,candidate_email):
         candidate_obj.save()
         print(candidate_obj.email)
         return redirect('../../view_candidate/'+str(candidate_email))
+
+
+
     candidate_obj=Candidate.objects.filter(email=candidate_email)
-    print(candidate_obj[0].email)
-    return render(request,'edit_candidate.html',{'candidate_obj':candidate_obj[0]})
+    if len(candidate_obj)==0 :
+            return render(request,'edit_candidate.html',{'error_msg':"Oops ;( Something went wrong"})
+
+    f_name = candidate_obj[0].f_name
+    if f_name==None:
+        f_name=""
+
+    m_name = candidate_obj[0].m_name
+    if m_name==None:
+        m_name=""
+
+    l_name = candidate_obj[0].l_name
+    if l_name==None:
+        l_name=""
+
+    registered_by = candidate_obj[0].registered_by
+    if registered_by==None:
+        registered_by=""
+
+    email=candidate_obj[0].email
+    if email==None:
+        email=""
+
+    gender=candidate_obj[0].gender
+    if gender==None:
+        gender=""
+
+    CGPA=candidate_obj[0].CGPA
+    if CGPA==None:
+        CGPA=""
+
+    college_name=candidate_obj[0].college_name
+    if college_name==None:
+        college_name=""
+
+    experience=candidate_obj[0].experience
+    if experience==None:
+        experience=""
+
+    mobile=candidate_obj[0].mobile
+    if mobile==None:
+        mobile=""
+
+    projects_link=candidate_obj[0].projects_link
+    if projects_link==None:
+        projects_link=""
+
+    notice_period=candidate_obj[0].notice_period
+    if notice_period==None:
+        notice_period=""
+
+    resume_url=candidate_obj[0].resume.url
+    resume_name=candidate_obj[0].resume.name[7:]
+
+    timestamp=candidate_obj[0].timestamp
+    if timestamp==None:
+        timestamp=""
+
+    context={
+        'f_name':f_name,
+        'm_name':m_name,
+        'l_name':l_name,
+        'registered_by':registered_by,
+        'email':email,
+        'gender':gender,
+        'CGPA':CGPA,
+        'college_name':college_name,
+        'experience':experience,
+        'mobile':mobile,
+        'projects_link':projects_link,
+        'notice_period':notice_period,
+        'resume_url':resume_url,
+        'resume_name':resume_name,
+
+        'timestamp':timestamp,
+    }
+    return render(request,'edit_candidate.html', context )
 
 def view_candidate(request,candidate_email):
     if not request.user.is_authenticated:
@@ -364,9 +443,86 @@ def view_candidate(request,candidate_email):
 
         print("sdfsdfsdfsd------------------------------")
         return redirect('../../edit_candidate/'+str(candidate_email))
+
     candidate_obj=Candidate.objects.filter(email=candidate_email)
-    # print(candidate_obj[0].email)
-    return render(request,'view_candidate.html',{'candidate_obj':candidate_obj[0]})
+    if len(candidate_obj)==0 :
+            return render(request,'view_candidate.html',{'error_msg':"Oops ;( Something went wrong"})
+
+    f_name = candidate_obj[0].f_name
+    if f_name==None:
+        f_name=""
+
+    m_name = candidate_obj[0].m_name
+    if m_name==None:
+        m_name=""
+
+    l_name = candidate_obj[0].l_name
+    if l_name==None:
+        l_name=""
+
+    registered_by = candidate_obj[0].registered_by
+    if registered_by==None:
+        registered_by=""
+
+    email=candidate_obj[0].email
+    if email==None:
+        email=""
+
+    gender=candidate_obj[0].gender
+    if gender==None:
+        gender=""
+
+    CGPA=candidate_obj[0].CGPA
+    if CGPA==None:
+        CGPA=""
+
+    college_name=candidate_obj[0].college_name
+    if college_name==None:
+        college_name=""
+
+    experience=candidate_obj[0].experience
+    if experience==None:
+        experience=""
+
+    mobile=candidate_obj[0].mobile
+    if mobile==None:
+        mobile=""
+
+    projects_link=candidate_obj[0].projects_link
+    if projects_link==None:
+        projects_link=""
+
+    notice_period=candidate_obj[0].notice_period
+    if notice_period==None:
+        notice_period=""
+
+    resume_url=candidate_obj[0].resume.url
+    resume_name=candidate_obj[0].resume.name[7:]
+
+    timestamp=candidate_obj[0].timestamp
+    if timestamp==None:
+        timestamp=""
+
+    context={
+        'f_name':f_name,
+        'm_name':m_name,
+        'l_name':l_name,
+        'registered_by':registered_by,
+        'email':email,
+        'gender':gender,
+        'CGPA':CGPA,
+        'college_name':college_name,
+        'experience':experience,
+        'mobile':mobile,
+        'projects_link':projects_link,
+        'notice_period':notice_period,
+        'resume_url':resume_url,
+        'resume_name':resume_name,
+
+        'timestamp':timestamp,
+    }
+
+    return render(request,'view_candidate.html',context)
 
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
@@ -476,6 +632,14 @@ def search_candidate(request, *args, **kwargs):
             l1=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 1).status
             l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
             l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
+            status_dict = {
+                'select' : 'pass',
+                'reject' : 'fail',
+                'pending' : 'pending',
+            }
+            l1 = status_dict[l1]
+            l2 = status_dict[l2]
+            l3 = status_dict[l3]
 
             l1_id = l1_obj.feedback_id
             l2_id = l2_obj.feedback_id
@@ -542,7 +706,7 @@ def feedback(request, req_id, email_id, level):
         feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
         feedback_object.interview_date = interview_date
         feedback_object.comments = comments
-        feedback_object.datetime = datetime.now()
+        feedback_object.timestamp = datetime.now()
         feedback_object.save()
 
         candidate_email=email_id
@@ -589,7 +753,7 @@ def feedback(request, req_id, email_id, level):
             feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id)
             status = feedback_object_1.status
             comments = feedback_object_1.comments
-            interviewer_id = feedback_object_1.interviewer_id
+            interview_date = feedback_object_1.interview_date
             feedback_id_1 = feedback_object_1.pk
             interview_date = feedback_object.interview_date
             last_update_time = feedback_object_1.timestamp
@@ -619,6 +783,10 @@ def feedback(request, req_id, email_id, level):
         if(level == 3):
             feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id)
             status = feedback_object_1.status
+            if(status ==  'pass'):
+                status = 'select'
+            if(status == 'fail'):
+                status = 'reject'
             comments = feedback_object_1.comments
             interviewer_id = feedback_object_1.interviewer_id
             interview_date = feedback_object_1.interview_date
@@ -684,6 +852,11 @@ def edit(request, req_id, email_id, level, feedback_id):
     if request.method == 'POST':
         # print(request.method, '======================================================')
         status=request.POST['status']
+        # if(status ==  'pass'):
+        #     status = 'select'
+        # if(status == 'fail'):
+        #     status = 'reject'
+        # print(status, '+++++++++++++++++++++++++++++++++++++++++++++++++++')
         comments=request.POST['comments']
         interview_date=request.POST['interview_date']
         #
@@ -699,6 +872,7 @@ def edit(request, req_id, email_id, level, feedback_id):
         obj_.status = status
         obj_.comments = comments
         obj_.interview_date = interview_date
+        obj_.timestamp = datetime.now()
         obj_.save()
 
         candidate_email=email_id
@@ -720,6 +894,7 @@ def edit(request, req_id, email_id, level, feedback_id):
         field_comments = [obj_.comments for obj_ in field_object]
         field_id = [obj_.field_id for obj_ in field_object]
         level_ = obj.level
+        current_date = str(date_.today())
 
         Context = {
             'status': status,
@@ -730,6 +905,7 @@ def edit(request, req_id, email_id, level, feedback_id):
             'form': form,
             'interview_date': interview_date,
             'email_id':email_id,
+            'current_date':current_date,
         }
         return render(request, 'registration/edit.html', Context)
     except:

@@ -84,7 +84,7 @@ class Feedback(models.Model):
     status = models.CharField(choices = status_choices, max_length=10)
     comments = models.TextField(max_length=500, null=True, blank=True)
     interview_date = models.DateField(null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.status} {self.level}'

@@ -34,15 +34,15 @@ Edit candidate information
         <br/>
         <label for = "status">Status: </label><br/>
         <select id = "status" name = status required>
-          <option value = "pass">pass</option>
+          <option value = "select">select</option>
           <option value = "pending">pending</option>
-          <option value = "fail">fail</option>
+          <option value = "reject">reject</option>
         </select><br>
       </div>
 
       <br/>
       <label for ="interview_date"> Interview Date :</label><br>
-      <input type ="date" id = "interview_date" name ="interview_date" value = "{{interview_date}}">
+      <input type ="date" id = "interview_date" name ="interview_date" value = "{{interview_date}}" max={{current_date}}>
       <lebel for = 'comments'> Enter your overall feedback here:<lebel> <br/>
       <textarea rows = "5" cols = "60" name = "comments" value = {{comments}}>{{comments}}
       </textarea><br/>
