@@ -14,6 +14,13 @@ class CandidateForm(forms.ModelForm):
                                 validators.MaxValueValidator(10.0),
                             ]
     )
+    mobile = forms.CharField(label='*Mobile No. (must be 10-digits)', required=True,
+                            validators=[
+                                validators.RegexValidator('^[0-9]{10}$',
+                                    message='Mobile No. must be 10 digits'
+                                )
+                            ]
+    )
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
