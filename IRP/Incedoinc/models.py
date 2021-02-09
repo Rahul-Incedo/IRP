@@ -1,6 +1,8 @@
 from django.db import models
 import os
 
+from datetime import datetime
+
 # Create your models here.
 class Employee(models.Model):
     full_name = models.CharField(max_length=64)
@@ -17,7 +19,7 @@ class JD(models.Model):
     jd_name = models.CharField(max_length=64, primary_key=True)
     jd_file = models.FileField(upload_to='JD/')
     uploaded_by_employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
         return f'{self.jd_name}'
@@ -32,7 +34,7 @@ class Job(models.Model):
     raised_by_employee = models.ForeignKey(Employee, related_name='raised_by_employee', null = True, on_delete=models.CASCADE)
     position_owner_id = models.ForeignKey(Employee, related_name='position_owner', null = True, on_delete=models.CASCADE)
     jd = models.ForeignKey(JD, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
         return f'{self.requisition_id}'

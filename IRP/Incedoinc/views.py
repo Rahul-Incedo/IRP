@@ -179,6 +179,8 @@ def upload_jd_view(request, *args, **kwargs):
         form.fields['uploaded_by_employee'].disabled = True
         if form.is_valid():
             # print(form.cleaned_data)
+            # current_datetime = datetime.now()
+            # form.cleaned_data['timestamp'] = current_datetime
             obj = form.save()
             response = redirect('/manage-jd/?jd_name='+obj.jd_name)
             return response
