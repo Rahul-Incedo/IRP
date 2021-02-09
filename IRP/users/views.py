@@ -126,8 +126,8 @@ class change_password_view(PasswordChangeView):
     success_url = reverse_lazy('password_success')
 
 def password_success(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
+    # if not request.user.is_authenticated:
+    #     return redirect('login')
     return render(request, 'accounts/password_change_done.html', {})
 
 

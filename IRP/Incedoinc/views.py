@@ -56,12 +56,12 @@ def delete_jd_view(request, jd_pk):
     query = JD.objects.get(pk=jd_pk)
     query.jd_file.delete()
     query.delete()
-    return redirect('manage_jd_page')
+    return redirect('/manage-jd/?msg=deleted')
 
 def delete_job_view(request, job_pk):
     query = Job.objects.get(pk=job_pk)
     query.delete()
-    return redirect('manage_job_page')
+    return redirect('/manage-job/?msg=deleted')
 
 def view_jd_view(request, jd_pk):
     if not request.user.is_authenticated:
@@ -94,6 +94,11 @@ def manage_jd_view(request, *args, **kwargs):
             'query_set' : query_set
         }
         return render(request, 'manage_jd.html', context)
+    if request.method == 'GET' and 'msg' in request.GET:
+        context = {
+            'msg' : 'Job Description is Deleted'
+        }
+        return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
         if 'home_button' in request.POST:
             return redirect('home_page')
@@ -123,9 +128,7 @@ def manage_jd_view(request, *args, **kwargs):
 def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
-    if 'home_button' in request.POST:
-        return redirect('home_page')
-    elif request.method == 'GET' and 'requisition_id' in request.GET:
+    if request.method == 'GET' and 'requisition_id' in request.GET:
         print(request.GET)
         search_query = request.GET['requisition_id']
         query_set = Job.objects.filter(requisition_id = search_query)
@@ -133,8 +136,15 @@ def manage_job_view(request, *args, **kwargs):
             'query_set' : query_set
         }
         return render(request, 'manage_job.html', context)
+    if request.method == 'GET' and 'msg' in request.GET:
+        context = {
+            'msg' : 'Requisition is Deleted'
+        }
+        return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
         print(request.POST)
+        if 'home_button' in request.POST:
+            return redirect('home_page')
         if 'search_button' in request.POST:
             search_query = request.POST['search_query']
             query_set = Job.objects.filter(requisition_id__contains=search_query)
@@ -169,6 +179,8 @@ def upload_jd_view(request, *args, **kwargs):
         form.fields['uploaded_by_employee'].disabled = True
         if form.is_valid():
             # print(form.cleaned_data)
+            # current_datetime = datetime.now()
+            # form.cleaned_data['timestamp'] = current_datetime
             obj = form.save()
             response = redirect('/manage-jd/?jd_name='+obj.jd_name)
             return response

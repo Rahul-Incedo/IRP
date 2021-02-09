@@ -36,6 +36,6 @@ urlpatterns = [
     
     
     #  path('change_password/', auth_views.PasswordChangeView.as_view(template_name = 'accounts/change_password_page.html'), name = 'change_password_page'),
-     path('change_password/', views.change_password_view.as_view(), name = 'change_password_page'), #6.36
+     path('change_password/', views.change_password_view.as_view(template_name = 'accounts/change_password_page.html'), name = 'change_password_page'), #6.36
      path('password_success/',views.password_success, name = 'password_success')
 ]
