@@ -27,6 +27,7 @@ class CandidateForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = '__all__'
+        exclude = ['DOB']
         labels = {
             'f_name': '*First Name',
             'm_name': 'Middle Name',

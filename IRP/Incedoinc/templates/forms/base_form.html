@@ -9,26 +9,39 @@
         min-height: 100%;
         padding: 0;
         margin: 0;
+        margin-bottom: 50px;
         font-family: Roboto, Arial, sans-serif;
         font-size: 14px;
         color: #666;
       }
-      h1 {
-        /* margin: 0 0 20px; */
+      /* h1 {
+        margin: 0 0 20px;
         font-weight: 400;
         color: #1c87c9;
-      }
+      } */
       p {
         margin: 0 0 5px;
       }
-      .my_class, form {
+      form {
         justify-content: center;
         padding: 25px;
-        margin: 25px;
         margin-left: 200px;
         margin-right: 200px;
-        box-shadow: 0 2px 5px #f5f5f5;
         background: #f5f5f5;
+      }
+      .title {
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        font-weight: 400;
+        margin-left: 200px;
+        margin-right: 200px;
+        background: #008B8B;
+        margin-top: 50px;
+        margin-bottom: 0px; 
+        padding-top: 10px; 
+        padding-bottom: 10px; 
+
       }
       h1 {
         text-align: center;
@@ -61,10 +74,33 @@
         font-size: 16px;
         font-weight: 400;
         color: #fff;
+        cursor: pointer;
       }
       button:hover {
         background: #2371a0;
       }
+      /* .button-add {
+        width: 70%;
+        background: #1c87c9; 
+        display: inline-block;
+
+      } */
+      .button-close {
+        width: 10%;
+        padding: 5px;
+        border: none;
+        background: #fd511c;
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff;
+        border-radius: 15px;
+        cursor: pointer; 
+      }
+      /* .button-close {
+        width: fit-content;
+        background: red;
+        display: inline-block;
+      } */
       textarea {
         padding: 4px 6px;
         box-sizing: border-box;
@@ -112,12 +148,7 @@
         <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
       </ul>
     </header>
-        <div class='my_class'>
-            <h1>Create Requisition ID and Upload Job</h1>
-        </div>
-        <form method='POST' enctype="multipart/form-data"> {% csrf_token %}
-            {{ form.as_p }}
-        <button type="submit">Upload Job</button>
-      </form>
-  </body>
+    {% block content %}
+    {% endblock %}
+    
 </html>

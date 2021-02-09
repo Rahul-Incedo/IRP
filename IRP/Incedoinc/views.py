@@ -179,7 +179,7 @@ def upload_jd_view(request, *args, **kwargs):
     context = {
         'form' : form
     }
-    return render(request, 'upload_jd.html', context)
+    return render(request, 'forms/upload_jd.html', context)
 
 
 def upload_job_view(request, *args, **kwargs):
@@ -204,7 +204,7 @@ def upload_job_view(request, *args, **kwargs):
     context = {
         'form' : form
     }
-    return render(request, 'upload_job.html', context)
+    return render(request, 'forms/upload_job.html', context)
 
 
 def home_view(request):
@@ -277,7 +277,7 @@ def add_candidate_view(request, *args, **kwargs):
     context = {
         'form': form
     }
-    return render(request, 'add_candidate.html', context)
+    return render(request, 'forms/add_candidate.html', context)
 ########################################################################################3
 
 

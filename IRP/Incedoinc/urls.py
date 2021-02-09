@@ -12,8 +12,8 @@ urlpatterns = [
     #pulkit-kartikeyan
     #path("", views.index, name='home'),
     path("home/",views.home_view, name='home_page'),
-    path("upload-jd/", views.upload_jd_view, name='upload_jd_page'),
-    path("upload-job/", views.upload_job_view, name='upload_job_page'),
+    path("manage-jd/upload/", views.upload_jd_view, name='upload_jd_page'),
+    path("manage-job/upload/", views.upload_job_view, name='upload_job_page'),
     path('manage-jd/', views.manage_jd_view, name='manage_jd_page'),
     path('manage-job/', views.manage_job_view, name='manage_job_page'),
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
