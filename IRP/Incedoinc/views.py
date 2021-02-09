@@ -407,7 +407,8 @@ def view_candidate(request,candidate_email):
     if notice_period==None:
         notice_period=""
 
-    resume=candidate_obj[0].resume
+    resume_url=candidate_obj[0].resume.url
+    resume_name=candidate_obj[0].resume.name[7:]
 
     timestamp=candidate_obj[0].timestamp
     if timestamp==None:
@@ -426,10 +427,12 @@ def view_candidate(request,candidate_email):
         'mobile':mobile,
         'projects_link':projects_link,
         'notice_period':notice_period,
-        'resume':resume,
+        'resume_url':resume_url,
+        'resume_name':resume_name,
+
         'timestamp':timestamp,
     }
-    
+
     return render(request,'view_candidate.html',context)
 
 def search_candidate(request, *args, **kwargs):
