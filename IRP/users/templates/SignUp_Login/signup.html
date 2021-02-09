@@ -131,7 +131,21 @@
 					</form>
 				</div>
 
-				{{form.errors}}
+				{% comment %} {{form.errors}} {% endcomment %}
+				{% if form.errors %}
+    <ul class="user-msg error">
+    {% for field in form %}
+        {% for error in field.errors %}
+            <li>
+              {% if field != '_all_' %}
+                <strong>{{ field.label }}:</strong>
+              {% endif %}
+              {{ error }}
+            </li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+{% endif %}
 
 				<div class="mt-4">
 					<div class="d-flex justify-content-center links">
