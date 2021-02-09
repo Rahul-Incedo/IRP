@@ -194,6 +194,9 @@
           <button type="submit"  class='button-2' name="upload_jd_button">Upload JD</button>
       </form>
     </div>
+    {% if msg %}
+    <center><h1>{{ msg }}</h1></center>
+    {% endif %}
     {% if query_set is not None %}
       <div class="my_class">
         <table>

@@ -69,7 +69,8 @@ class Candidate(models.Model):
 
     def __str__(self):
         return f'{self.f_name} : {self.email}'
-
+    def get_resume_name(self):
+        return self.resume.name.lstrip('Resume').lstrip('/')
 
 class Feedback(models.Model):
     feedback_id = models.AutoField(primary_key=True)

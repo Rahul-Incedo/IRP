@@ -234,12 +234,12 @@
 
       </tr>
 
-      <tr>
+      <!-- <tr>
           <th><label >DOB </label></th>
 
           <td>: <label >{{candidate_obj.DOB}}</label></td>
 
-      </tr>
+      </tr> -->
 
       <tr>
           <th><label >Projects </label></th>
@@ -257,7 +257,7 @@
       <tr>
           <th><label >Resume </label></th>
 
-          <td>: <a href='{{ candidate_obj.resume.url }}'><label >{{candidate_obj.resume.name}}</label></a></td>
+          <td>: <a href='{{ candidate_obj.resume.url }}'><label >{{candidate_obj.get_resume_name}}</label></a></td>
       </tr>
   </table>
   <br>
