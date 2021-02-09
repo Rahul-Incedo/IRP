@@ -16,6 +16,7 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ['employee_id', 'username','name', 'password1','password2']  #username is email
+        
         list_display = ('employee','name', 'username')
 
     def clean_employee_id(self):
@@ -38,7 +39,7 @@ class SignUpForm(UserCreationForm):
        
         name = self.cleaned_data['name']
         if any(char.isdigit() for char in name):
-            raise forms.ValidationError("Name is not valid : Name cannot contain a digit.") #Rishabh 8055
+            raise forms.ValidationError("Name is not valid : Name cannot contain a digit.") 
         
         return name
     

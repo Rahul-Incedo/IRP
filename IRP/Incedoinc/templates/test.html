@@ -4,14 +4,18 @@
     <title>Incedo Recruitment Portal</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
-    <style>
-    </style>
     <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script data-require="bootstrap@*" data-semver="3.1.1" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      .model-body {
+        margin: 100px;
+        background-color: brown;
+      }
+    </style>
   </head>
   <body>
     <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -32,24 +36,73 @@
               
               <div class="modal-footer">
                 <center>
-                  <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
                   <a class="btn btn-danger btn-ok">Confirm Delete</a>
                 </center> 
               </div>
           </div>
       </div>
     </div>
-
     <div class="modal fade" id="confirm-message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-          <center>DELETED </center> 
+          <div class="modal-content">
+          
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <!-- <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4> -->
+              </div>
+          
+              <div class="modal-body">
+                <p>Deleted Successfully</p>
+                  <!-- <p class="debug-url"></p> -->
+              </div>
+              
+              <!-- <div class="modal-footer">
+                <center>
+                  <a class="btn btn-danger btn-ok">Confirm Delete</a>
+                </center> 
+              </div> -->
+          </div>
       </div>
     </div>
-    <center><a href="#" data-href="test/?del_button=true" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></center>
-    {% if delete_signal %}
-      <a href="#" data-href="google.com/" data-toggle="modal" data-target="#confirm-message">click to see</a>
-    {% endif %}
-    <script>
+    
+    <div id="ac-wrapper" style='display:none'>
+      <div class="modal fade" id="confirm-message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+            
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <!-- <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4> -->
+                </div>
+            
+                <div class="modal-body">
+                  <p>Deleted Successfully</p>
+                    <!-- <p class="debug-url"></p> -->
+                </div>
+                
+                <!-- <div class="modal-footer">
+                  <center>
+                    <a class="btn btn-danger btn-ok">Confirm Delete</a>
+                  </center> 
+                </div> -->
+            </div>
+        </div>
+      </div>
+    </div>
+  <script type="text/javascript">
+    function PopUp(hideOrshow) {
+        if (hideOrshow == 'hide') document.getElementById('ac-wrapper').style.display = "none";
+        else document.getElementById('ac-wrapper').removeAttribute('style');
+    }
+    window.onload = function () {
+        setTimeout(function () {
+            PopUp('show');
+        });
+    }
+    </script>
+
+
+    <!-- <script>
       $('#confirm-delete').on('show.bs.modal', function(e) {
           $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
           
@@ -60,7 +113,29 @@
         $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
           
         $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
+      });
+
+      window.onload = function () {
+        document.getElementById("confirm-message").show();
+        $('#confirm-message').
+          // $('modal').show();
+          return false;
       };
-    </script>
+      // $("#hazardForm").submit(function()
+      // {
+      //     $('#submitPopup').show();  
+      //     return false;
+      // });
+
+      // window.onload = function () {
+      //     document.getElementById("campaign-alert").style.display = "block";
+      // };
+    </script> -->
+
+      <center><a href="#" data-href="/test?delete_button=true/" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></center>
+      {% if delete_signal %}
+        <button>Delete_signal</button>
+        <a href="#" data-href="google.com/" data-toggle="modal" data-target="#confirm-message">click to see</a>
+      {% endif %}
   </body>
 </html>
