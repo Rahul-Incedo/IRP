@@ -1,6 +1,8 @@
 from django.db import models
 import os
 
+from datetime import datetime
+
 # Create your models here.
 class Employee(models.Model):
     full_name = models.CharField(max_length=64)
@@ -17,7 +19,7 @@ class JD(models.Model):
     jd_name = models.CharField(max_length=64, primary_key=True)
     jd_file = models.FileField(upload_to='JD/')
     uploaded_by_employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
         return f'{self.jd_name}'
@@ -32,7 +34,7 @@ class Job(models.Model):
     raised_by_employee = models.ForeignKey(Employee, related_name='raised_by_employee', null = True, on_delete=models.CASCADE)
     position_owner_id = models.ForeignKey(Employee, related_name='position_owner', null = True, on_delete=models.CASCADE)
     jd = models.ForeignKey(JD, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
         return f'{self.requisition_id}'
@@ -69,7 +71,8 @@ class Candidate(models.Model):
 
     def __str__(self):
         return f'{self.f_name} : {self.email}'
-
+    def get_resume_name(self):
+        return self.resume.name.lstrip('Resume').lstrip('/')
 
 class Feedback(models.Model):
     feedback_id = models.AutoField(primary_key=True)
@@ -83,7 +86,7 @@ class Feedback(models.Model):
     status = models.CharField(choices = status_choices, max_length=10)
     comments = models.TextField(max_length=500, null=True, blank=True)
     interview_date = models.DateField(null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.status} {self.level}'
