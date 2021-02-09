@@ -182,6 +182,12 @@
             <th><label>Job Description</label></th>
             <td><label>{{obj.jd.jd_name}}</label></td>
         </tr>
+        
+        <tr>
+            <th><label>Raised on</label></th>
+            <td><label>{{obj.timestamp}}</label></td>
+        </tr>
+
     </table>
   </form>
   <center><a href="{% url 'manage_job_page' %}" ><input type="submit" value="Close"></a></center>
