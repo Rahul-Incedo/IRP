@@ -622,6 +622,14 @@ def search_candidate(request, *args, **kwargs):
             l1=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 1).status
             l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
             l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
+            status_dict = {
+                'select' : 'pass',
+                'reject' : 'fail',
+                'pending' : 'pending',
+            }
+            l1 = status_dict[l1]
+            l2 = status_dict[l2]
+            l3 = status_dict[l3]
 
             l1_id = l1_obj.feedback_id
             l2_id = l2_obj.feedback_id
@@ -688,7 +696,7 @@ def feedback(request, req_id, email_id, level):
         feedback_object.interviewer_id = Employee.objects.get(employee_id=interviewer_id)
         feedback_object.interview_date = interview_date
         feedback_object.comments = comments
-        feedback_object.datetime = datetime.now()
+        feedback_object.timestamp = datetime.now()
         feedback_object.save()
 
         candidate_email=email_id
@@ -735,7 +743,7 @@ def feedback(request, req_id, email_id, level):
             feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-1, requisition_id = req_id)
             status = feedback_object_1.status
             comments = feedback_object_1.comments
-            interviewer_id = feedback_object_1.interviewer_id
+            interview_date = feedback_object_1.interview_date
             feedback_id_1 = feedback_object_1.pk
             interview_date = feedback_object.interview_date
             last_update_time = feedback_object_1.timestamp
@@ -765,6 +773,10 @@ def feedback(request, req_id, email_id, level):
         if(level == 3):
             feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id)
             status = feedback_object_1.status
+            if(status ==  'pass'):
+                status = 'select'
+            if(status == 'fail'):
+                status = 'reject'
             comments = feedback_object_1.comments
             interviewer_id = feedback_object_1.interviewer_id
             interview_date = feedback_object_1.interview_date
@@ -830,6 +842,11 @@ def edit(request, req_id, email_id, level, feedback_id):
     if request.method == 'POST':
         # print(request.method, '======================================================')
         status=request.POST['status']
+        # if(status ==  'pass'):
+        #     status = 'select'
+        # if(status == 'fail'):
+        #     status = 'reject'
+        # print(status, '+++++++++++++++++++++++++++++++++++++++++++++++++++')
         comments=request.POST['comments']
         interview_date=request.POST['interview_date']
         #
@@ -845,6 +862,7 @@ def edit(request, req_id, email_id, level, feedback_id):
         obj_.status = status
         obj_.comments = comments
         obj_.interview_date = interview_date
+        obj_.timestamp = datetime.now()
         obj_.save()
 
         candidate_email=email_id
@@ -866,6 +884,7 @@ def edit(request, req_id, email_id, level, feedback_id):
         field_comments = [obj_.comments for obj_ in field_object]
         field_id = [obj_.field_id for obj_ in field_object]
         level_ = obj.level
+        current_date = str(date_.today())
 
         Context = {
             'status': status,
@@ -876,6 +895,7 @@ def edit(request, req_id, email_id, level, feedback_id):
             'form': form,
             'interview_date': interview_date,
             'email_id':email_id,
+            'current_date':current_date,
         }
         return render(request, 'registration/edit.html', Context)
     except:
