@@ -1,0 +1,11 @@
+{% extends 'forms/base_form.html' %}
+{% block content %}
+<div class='title'>
+  <h1>ENTER CANDIDATE DETAILS</h1>
+</div>
+<form method='POST' enctype="multipart/form-data"> {% csrf_token %}
+    {{ form.as_p }}
+  <button type="submit">Add Candidate</button>
+</form>
+<center><a href='/search_candidate' ><button class='button-close' type="submit">Close</button></a></center>
+{% endblock %}
