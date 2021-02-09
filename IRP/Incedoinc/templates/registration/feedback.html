@@ -142,7 +142,7 @@ Candidate feedback {{candiate.id}}
 
         <label for ="interview_date"> Interview Date :<label><br/>
           {% if level == 1 %}
-            <input type="date" name="interview_date" id="interview_date" value={{basic_detail.current_date}}>
+            <input type="date" name="interview_date" id="interview_date" value={{basic_detail.current_date}} max={{basic_detail.current_date}}>
           {% endif %}
 
           {% if level == 2 %}
