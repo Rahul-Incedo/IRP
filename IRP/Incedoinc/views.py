@@ -745,7 +745,7 @@ def feedback(request, req_id, email_id, level):
             comments = feedback_object_1.comments
             interview_date = feedback_object_1.interview_date
             feedback_id_1 = feedback_object_1.pk
-            interview_date = feedback_object.interview_date
+            interview_date = feedback_object_1.interview_date
             last_update_time = feedback_object_1.timestamp
 
             field_object_1 = Field.objects.all().filter(feedback_id = feedback_id_1)
@@ -758,7 +758,7 @@ def feedback(request, req_id, email_id, level):
                         'details' : zip(field_names, field_values, fields_comments),
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
-                        'interview_date': interview_date,
+                        'interview_date': str(interview_date),
                         }
 
             context = {
@@ -807,7 +807,7 @@ def feedback(request, req_id, email_id, level):
                         'details' : zip(field_names, field_values, fields_comments),
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
-                        'interview_date': interview_date,
+                        'interview_date': str(interview_date),
                         }
 
             level_2 = { 'status': status_,
@@ -816,7 +816,7 @@ def feedback(request, req_id, email_id, level):
                         'details' : zip(field_names_, field_values_, fields_comments_),
                         'timestamp': last_update_time_,
                         'feedback_id' :feedback_id_2,
-                        'interview_date' : interview_date_,
+                        'interview_date' : str(interview_date_),
                         }
 
             context = {
@@ -886,6 +886,8 @@ def edit(request, req_id, email_id, level, feedback_id):
         level_ = obj.level
         current_date = str(date_.today())
 
+        interview_date_1 = Feedback.objects.get(candidate_email = email_id, level=1, requisition_id = req_id).interview_date
+        interview_date_2 = Feedback.objects.get(candidate_email = email_id, level=2, requisition_id = req_id).interview_date
         Context = {
             'status': status,
             'comments': comments,
@@ -896,6 +898,8 @@ def edit(request, req_id, email_id, level, feedback_id):
             'interview_date': interview_date,
             'email_id':email_id,
             'current_date':current_date,
+            'interview_date_1':str(interview_date_1),
+            'interview_date_2':str(interview_date_2),
         }
         return render(request, 'registration/edit.html', Context)
     except:

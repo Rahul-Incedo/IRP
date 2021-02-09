@@ -141,7 +141,17 @@ Candidate feedback {{candiate.id}}
         </select><br>
 
         <label for ="interview_date"> Interview Date :<label><br/>
-        <input type="date" name="interview_date" id="interview_date" value={{basic_detail.current_date}} max={{basic_detail.current_date}}>
+          {% if level == 1 %}
+            <input type="date" name="interview_date" id="interview_date" value={{basic_detail.current_date}}>
+          {% endif %}
+
+          {% if level == 2 %}
+            <input type="date" name="interview_date" id="interview_date" value={{basic_detail.current_date}} max={{basic_detail.current_date}} min={{level_1.interview_date}}>
+          {% endif %}
+
+          {% if level == 3 %}
+            <input type="date" name="interview_date" id="interview_date" value={{basic_detail.current_date}} max={{basic_detail.current_date}} min={{level_2.interview_date}}>
+          {% endif %}
       </div><br/>
 
 

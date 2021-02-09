@@ -91,7 +91,7 @@ class Feedback(models.Model):
 class Field(models.Model):
     field_id = models.AutoField(primary_key=True)
     feedback_id = models.ForeignKey(Feedback, null=True, on_delete=models.CASCADE)
-    field_name = models.CharField(max_length=20, null=False)
+    field_name = models.CharField(max_length=64, null=False)
     rating = models.IntegerField(null=True, blank=True)
     comments = models.TextField(max_length=100, null=True, blank=True)
 
