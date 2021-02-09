@@ -17,7 +17,7 @@ class SignUpForm(UserCreationForm):
         model = CustomUser
         fields = ['employee_id', 'username','name', 'password1','password2']  #username is email
         
-        list_display = ('employee','name', 'username')
+        # list_display = ('employee','name', 'username')
 
     def clean_employee_id(self):
        
