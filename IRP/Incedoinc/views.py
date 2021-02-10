@@ -331,11 +331,14 @@ def edit_candidate(request,candidate_email):
     candidate_obj=Candidate.objects.filter(email=candidate_email)
     if len(candidate_obj)==0 :
             return render(request,'edit_candidate.html',{'error_msg':"Oops ;( Something went wrong"})
-
-    form = EditCandidateForm(request.POST or None, request.FILES or None,instance=candidate_obj[0])
+            prer
+    form = EditCandidateForm(request.POST or None, instance=candidate_obj[0])
     form.fields['registered_by'].disabled = True
     form.fields['email'].disabled = True
     if form.is_valid():
+        if "resume" in request.FILES:
+            candidate_obj[0].resume.delete()
+            candidate_obj[0].resume=request.FILES["resume"]
         candidate_obj = form.save()
         return redirect('../../view_candidate/'+str(candidate_email))
     context = {
@@ -348,7 +351,7 @@ def view_candidate(request,candidate_email):
         return redirect('login')
 
     if request.method == 'POST':
-        
+
         candidate_obj=Candidate.objects.filter(email=candidate_email)
         print(candidate_email)
 
