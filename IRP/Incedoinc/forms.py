@@ -14,10 +14,10 @@ class CandidateForm(forms.ModelForm):
                                 validators.MaxValueValidator(10.0),
                             ]
     )
-    mobile = forms.CharField(label='*Mobile No. (must be 10-digits)', required=True,
+    mobile = forms.CharField(label='*Mobile Number (10 digits)', required=True,
                             validators=[
                                 validators.RegexValidator('^[0-9]{10}$',
-                                    message='Mobile No. must be 10 digits'
+                                    message='Mobile Number must be 10 digits'
                                 )
                             ]
     )
@@ -26,20 +26,20 @@ class CandidateForm(forms.ModelForm):
     )
     resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
     requisition_id = forms.ModelChoiceField(Job.objects.all(), label='*Requisition ID')
-    # notice_period = forms.DecimalField(label='*Notice Period',
-    #                                     widget = forms.TextInput(
-    #                                         attrs={'placeholder':'enter in months.days'},
-    #                                     )
-    #                 )
-    # experience = forms.DecimalField(label='*Experience',
-    #                     widget = forms.TextInput(
-    #                                         attrs={'placeholder':'enter in months.days'},
-    #                     )
-    #             )
+    notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',
+                                        widget = forms.TextInput(
+                                            attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
+                                        )
+                    )
+    experience = forms.DecimalField(label='*Experience (in Years.Months)',
+                        widget = forms.TextInput(
+                                            attrs={'placeholder':'(1.6) represents 1 Year 6 Months'},
+                        )
+                )
     class Meta:
         model = Candidate
         fields = '__all__'
-        exclude = ['DOB']
+        # exclude = ['DOB']
         labels = {
             'f_name': '*First Name',
             'm_name': 'Middle Name',
@@ -50,7 +50,7 @@ class CandidateForm(forms.ModelForm):
             'CGPA': 'CGPA(out of 10)',
             'experience': '*Experience (in months)',
             'mobile': '*10-digit Mobile No.',
-            'DOB': 'Date of Birth',
+            # 'DOB': 'Date of Birth',
             'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
             'notice_period': '*Notice Period (in months)',
         }
@@ -58,16 +58,17 @@ class CandidateForm(forms.ModelForm):
 
 
 class UploadJdForm(forms.ModelForm):
-    pdf_validator = validators.FileExtensionValidator(
+    extension_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
-    jd_file = forms.FileField(label='*Upload File (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
-    jd_name = forms.CharField(label='*Name of Job Description')
+    jd_file = forms.FileField(label='*Upload File (pdf, doc, and docx extensions are supported)', validators = [extension_validator])
+    # jd_name = forms.CharField(label='*Name of Job Description')
 
     class Meta:
         model = JD
-        fields = ['uploaded_by_employee',  'jd_name', 'jd_file']
-        label = {
+        fields = ['uploaded_by_employee', 'jd_file', 'jd_name']
+        labels = {
+            'jd_name' : '*Name of Job Description'
         }
 
 class UploadJobForm(forms.ModelForm):

@@ -1,6 +1,7 @@
 from django.core.validators import MaxLengthValidator
 from django.db import models
 import os
+import re
 
 from datetime import datetime
 
@@ -26,8 +27,8 @@ class JD(models.Model):
         return f'{self.jd_name}'
     def get_file_name(self):
         file_name = self.jd_file.name
-        print(file_name)
-        return file_name.lstrip('JD').lstrip('/')
+        file_name = re.sub(r'^JD/', '', file_name)
+        return file_name
 
 #different requisition_id are mapped to one job_description
 class Job(models.Model):
@@ -57,7 +58,7 @@ class Candidate(models.Model):
     CGPA = models.DecimalField(null=True, max_digits=5, decimal_places=3)
     experience = models.DecimalField(decimal_places=3 , max_digits=5)
     mobile = models.CharField(max_length=10)
-    DOB = models.DateField(null=True, blank=True)
+    # DOB = models.DateField(null=True, blank=True)
     projects_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to='Resume/')
     notice_period = models.DecimalField(decimal_places=3 , max_digits=5)

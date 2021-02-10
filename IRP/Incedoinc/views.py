@@ -182,8 +182,10 @@ def upload_jd_view(request, *args, **kwargs):
         form = UploadJdForm(request.POST, request.FILES, initial={'uploaded_by_employee':user})
         form.fields['uploaded_by_employee'].disabled = True
         if form.is_valid():
-            print(form.cleaned_data)
             obj = form.save(commit=False)
+            # file_name = obj.get_file_name()
+            # file_name = file_name.replace('.pdf', '').replace('.docx', '').replace('.doc', '')
+            # obj.jd_name = file_name
             obj.timestamp = datetime.now()
             obj.save()
             response = redirect('/manage-jd/?jd_name='+obj.jd_name)
