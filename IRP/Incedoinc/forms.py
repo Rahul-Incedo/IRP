@@ -6,6 +6,54 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 # from .models.Feedback import Field
+class EditCandidateForm(forms.ModelForm):
+    CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
+                            validators=[
+                                validators.MinValueValidator(0),
+                                validators.MaxValueValidator(10.0),
+                            ]
+    )
+    mobile = forms.CharField(label='*Mobile No. (must be 10-digits)', required=True,
+                            validators=[
+                                validators.RegexValidator('^[0-9]{10}$',
+                                    message='Mobile No. must be 10 digits'
+                                )
+                            ]
+    )
+    pdf_validator = validators.FileExtensionValidator(
+        allowed_extensions=['pdf', 'doc', 'docx']
+    )
+    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',max_digits=5, decimal_places=2,
+                            validators=[
+                                validators.MinValueValidator(0),
+                            ]
+                    )
+    experience = forms.DecimalField(label='*Experience (in Years.Months)',max_digits=5, decimal_places=2,
+                            validators=[
+                                validators.MinValueValidator(0),
+                            ]
+                )
+    class Meta:
+        model = Candidate
+        fields = '__all__'
+        exclude = ['DOB']
+        labels = {
+            'f_name': '*First Name',
+            'm_name': 'Middle Name',
+            'l_name': '*Last Name',
+            'registered_by':'Registered By',
+            'email': '*Email',
+            'gender': '*Gender',
+            'CGPA': 'CGPA(out of 10)',
+            'college_name': 'College Name',
+            'experience': '*Experience (in Years.Months)',
+            'mobile': '*10-digit Mobile No.',
+            'projects_link' : 'Project',
+            # 'DOB': 'Date of Birth',
+            'notice_period': '*Notice Period (in Months.Days)',
+            'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
+        }
 
 class CandidateForm(forms.ModelForm):
     CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,

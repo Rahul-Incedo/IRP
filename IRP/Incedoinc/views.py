@@ -36,7 +36,7 @@ from .models import Employee, Job, Candidate, Feedback, Field, JD
 from .models import TestModel
 
 #include forms
-from .forms import CandidateForm, UploadJdForm, UploadJobForm
+from .forms import CandidateForm, UploadJdForm, UploadJobForm , EditCandidateForm
 from .forms import TestForm
 
 # Create your views here.
@@ -326,120 +326,29 @@ def dashboard(request):
 def edit_candidate(request,candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
-    if request.method == 'POST':
-        candidate_obj=Candidate.objects.get(email=candidate_email)
-        # print(request.POST)
-        if len(request.POST['fname'])!=0 :
-            candidate_obj.f_name=request.POST['fname']
-        if len(request.POST['mname'])!=0 :
-            candidate_obj.m_name=request.POST['mname']
-        if len(request.POST['lname'])!=0 :
-            candidate_obj.l_name=request.POST['lname']
-        if len(request.POST['gender'])!=0 :
-            candidate_obj.gender=request.POST['gender']
-        if len(request.POST['CGPA'])!=0 :
-            candidate_obj.CGPA=request.POST['CGPA']
-        if len(request.POST['college'])!=0 :
-            candidate_obj.college_name=request.POST['college']
-        if len(request.POST['experience'])!=0 :
-            candidate_obj.experience=request.POST['experience']
-        if len(request.POST['mobile_no'])!=0 :
-            candidate_obj.mobile=request.POST['mobile_no']
-        # if len(request.POST['DOB'])!=0 :
-        #     candidate_obj.DOB=request.POST['DOB']
-        if len(request.POST['project'])!=0 :
-            candidate_obj.projects_link=request.POST['project']
-        if len(request.POST['notice_period'])!=0 :
-            candidate_obj.notice_period=request.POST['notice_period']
-        candidate_obj.save()
-        print(candidate_obj.email)
+    if "cancel" in request.POST:
         return redirect('../../view_candidate/'+str(candidate_email))
-
-
-
     candidate_obj=Candidate.objects.filter(email=candidate_email)
     if len(candidate_obj)==0 :
             return render(request,'edit_candidate.html',{'error_msg':"Oops ;( Something went wrong"})
 
-    f_name = candidate_obj[0].f_name
-    if f_name==None:
-        f_name=""
-
-    m_name = candidate_obj[0].m_name
-    if m_name==None:
-        m_name=""
-
-    l_name = candidate_obj[0].l_name
-    if l_name==None:
-        l_name=""
-
-    registered_by = candidate_obj[0].registered_by
-    if registered_by==None:
-        registered_by=""
-
-    email=candidate_obj[0].email
-    if email==None:
-        email=""
-
-    gender=candidate_obj[0].gender
-    if gender==None:
-        gender=""
-
-    CGPA=candidate_obj[0].CGPA
-    if CGPA==None:
-        CGPA=""
-
-    college_name=candidate_obj[0].college_name
-    if college_name==None:
-        college_name=""
-
-    experience=candidate_obj[0].experience
-    if experience==None:
-        experience=""
-
-    mobile=candidate_obj[0].mobile
-    if mobile==None:
-        mobile=""
-
-    projects_link=candidate_obj[0].projects_link
-    if projects_link==None:
-        projects_link=""
-
-    notice_period=candidate_obj[0].notice_period
-    if notice_period==None:
-        notice_period=""
-
-    resume_url=candidate_obj[0].resume.url
-    resume_name=candidate_obj[0].resume.name[7:]
-
-    timestamp=candidate_obj[0].timestamp
-    if timestamp==None:
-        timestamp=""
-
-    context={
-        'f_name':f_name,
-        'm_name':m_name,
-        'l_name':l_name,
-        'registered_by':registered_by,
-        'email':email,
-        'gender':gender,
-        'CGPA':CGPA,
-        'college_name':college_name,
-        'experience':experience,
-        'mobile':mobile,
-        'projects_link':projects_link,
-        'notice_period':notice_period,
-        'resume_url':resume_url,
-        'resume_name':resume_name,
-
-        'timestamp':timestamp,
+    form = EditCandidateForm(request.POST or None, request.FILES or None,instance=candidate_obj[0])
+    form.fields['registered_by'].disabled = True
+    form.fields['email'].disabled = True
+    if form.is_valid():
+        candidate_obj = form.save()
+        return redirect('../../view_candidate/'+str(candidate_email))
+    context = {
+    'form': form
     }
-    return render(request,'edit_candidate.html', context )
+    return render(request, 'edit_candidate.html', context)
 
 def view_candidate(request,candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
+
     if request.method == 'POST':
+        
         candidate_obj=Candidate.objects.filter(email=candidate_email)
         print(candidate_email)
 
@@ -520,7 +429,6 @@ def view_candidate(request,candidate_email):
         'notice_period':notice_period,
         'resume_url':resume_url,
         'resume_name':resume_name,
-
         'timestamp':timestamp,
     }
 

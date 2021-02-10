@@ -168,119 +168,21 @@
       <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
     </ul>
   </header>
+  
   <center><button class="heading">EDIT CANDIDATE DETAILS</button></center>
   {% if error_msg %}
     <center><h2>{{error_msg}}</h2></center>
     <center><a href= "../../search_candidate/"><button >Cancel</button></a></center>
   {% else %}
       <form action=""  method="post" enctype="multipart/form-data">{% csrf_token %}
-      <table>
+<table>
+        {{form.as_table}}
+      </table>
 
-      <tr>
-        <th><label text-align="left">First Name </label></th>
-
-        <td>: <input type="text"  value={{f_name}} name="fname" pattern="[A-Za-z]{0,64}" /></td>
-      </tr>
-
-      <tr>
-        <th><label >Middle Name </label></th>
-        <td>: <input type="text"  {% if m_name != "" %} value= "{{ m_name }}" {% endif %} name="mname"  pattern="[A-Za-z]{0,64}" /></td>
-      </tr>
-
-      <tr>
-        <th><label >Last Name </label></th>
-        <td>: <input type="text" {% if l_name != "" %} value= "{{ l_name }}" {% endif %} name="lname"  pattern="[A-Za-z]{0,64}"/ ></td>
-      </tr>
-
-      <tr>
-        <th><label >Registered By </label></th>
-        <td>: <label >{{registered_by}}</label></td>
-
-
-      </tr>
-
-      <tr>
-          <th><label >Email </label></th>
-          <td>: <label >{{email}}</label></td>
-      </tr>
-
-      <tr>
-          <th><label >Gender </label></th>
-          <td>:
-            {% if gender == 'M' %}
-              <select name = "gender">
-                <option value = "M" selected>M</option>
-                <option value = "F">F</option>
-              </select>
-            {% else %}
-            <select name = "gender">
-              <option value = "M" >male</option>
-              <option value = "F" selected>female</option>
-            </select>
-            {% endif %}
-        </td>
-      </tr>
-
-      <tr>
-          <th><label >CGPA </label></th>
-          <td>: <input type="number" step="0.001" {% if CGPA != "" %} value= "{{ CGPA }}" {% endif %} name="CGPA" min="0" max="10" / ></td>
-
-      </tr>
-
-      <tr>
-          <th><label >College </label></th>
-
-
-          <td>: <input type="text" {% if college_name != "" %} value= "{{ college_name }}" {% endif %} name="college" / ></td>
-
-      </tr>
-
-      <tr>
-          <th><label >Experience </label></th>
-
-          <td>: <input type="number" step="0.01" {% if experience != "" %} value= "{{ experience }}" {% endif %} name="experience" min="0" /></td>
-
-      </tr>
-
-      <tr>
-          <th><label >Mobile </label></th>
-
-
-          <td>: <input type="text" {% if mobile != "" %} value= "{{ mobile }}" {% endif %} pattern="\d*" name="mobile_no" maxlength="10" minlength="10"></td>
-
-      </tr>
-
-      <!-- <tr>
-          <th><label >DOB </label></th>
-
-
-          <td>: <input type="date" placeholder={{DOB}} value={{DOB}} name="DOB" / ></td>
-
-      </tr> -->
-
-      <tr>
-          <th><label >Projects </label></th>
-
-
-          <td>: <input type="url" {% if projects_link != "" %} value= "{{ project }}" {% endif %}  name="project" /></td>
-
-      </tr>
-
-      <tr>
-          <th><label >Notice Period </label></th>
-
-          <td>: <input type="number" step="0.01" {% if notice_period != "" %} value= "{{ notice_period }}" {% endif %} name="notice_period"  min="0" /></td>
-      </tr>
-      <!-- <tr>
-          <th><label >Resume </label></th>
-
-          <td>: <input type="file" placeholder={{candidate_obj.resume}} name="resume"  /></td>
-      </tr> -->
-  </table>
   <center><input type="submit" value="Save Details"></center>
+  <center><button type="submit" name="cancel">Cancel</button></a></center>
         </form>
 
-        <center><a href= "../../view_candidate/{{email}}/"><button >Cancel</button></a></center>
         {% endif %}
       </br>
     </br>

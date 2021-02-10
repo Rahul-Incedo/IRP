@@ -55,12 +55,12 @@ class Candidate(models.Model):
 
     college_name = models.CharField(max_length = 254, null=True, blank=True)
     CGPA = models.DecimalField(null=True, max_digits=5, decimal_places=3)
-    experience = models.DecimalField(decimal_places=3 , max_digits=5)
+    experience = models.DecimalField(decimal_places=2 , max_digits=5)
     mobile = models.CharField(max_length=10)
     DOB = models.DateField(null=True, blank=True)
     projects_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to='Resume/')
-    notice_period = models.DecimalField(decimal_places=3 , max_digits=5)
+    notice_period = models.DecimalField(decimal_places=2 , max_digits=5)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     @property
