@@ -1,5 +1,6 @@
 <html>
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style type="text/css">
 
         body
@@ -11,7 +12,8 @@
           margin-left:auto;
           margin-right:auto;
         }
-        input[type=text] {
+        input[type=text]
+        {
           border: none;
           color: black;
 
@@ -20,88 +22,65 @@
           margin: 4px 2px;
           border-radius: 15px;
 
-}
-select
-{
-  border: none;
+        }
+        select
+        {
+          border: none;
 
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 15px;
-}
-option
-{
-  border: none;
-  text-align: center;
-  text-decoration: none;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-
-}
-input[type=submit] {
-  border: none;
-  color: white;
-
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 15px;
-  background-color: #fd511c;
-
-}
-
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+        }
+        option
+        {
+          border: none;
+          text-align: center;
           text-decoration: none;
           font-size: 16px;
           margin: 4px 2px;
+          cursor: pointer;
+
+        }
+
+        select
+        {
+          border: none;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
           border-radius: 15px;
+        }
+        option
+        {
+          border: none;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
 
-}
-select
-{
-  border: none;
+        }
+        input[type=submit]
+        {
+          border: none;
+          color: white;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+          background-color: #fd511c;
 
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 15px;
-}
-option
-{
-  border: none;
-  text-align: center;
-  text-decoration: none;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-
-}
-input[type=submit] {
-  border: none;
-  color: white;
-
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 15px;
-  background-color: #fd511c;
-
-}
-
-
+        }
         h1
         {
             color:black;
@@ -116,8 +95,6 @@ input[type=submit] {
             text-align:center;
             color:white;
         }
-
-
 
         table
         {
@@ -148,21 +125,58 @@ input[type=submit] {
 
         }
 
-    button {
-      border: none;
-      color: white;
+        input[type=submit] {
+          border: none;
+          color: white;
 
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      cursor: pointer;
-      border-radius: 15px;
-      background-color: #fd511c;
-    }
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+          background-color: #fd511c;
 
-        ul {
+        }
+        input[type=submit]:hover
+        {
+          background-color: #E53601;
+        }
+        button
+        {
+          border: none;
+          color: white;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+          background-color: #fd511c;
+        }
+        button:hover
+        {
+          background-color: #E53601;
+        }
+
+        .home_button
+        {
+          background-color: #fd511c;
+          border: none;
+          color: white;
+          /* padding: 12px 16px; */
+          font-size: 16px;
+          cursor: pointer;
+        }
+        .home_button:hover
+        {
+          background-color: #E53601;
+        }
+
+        ul
+        {
           list-style-type: none;
           margin: 0;
           padding: 0;
@@ -183,7 +197,6 @@ input[type=submit] {
           text-decoration: none;
         }
 
-
     </style>
 </head>
 <body>
@@ -201,9 +214,10 @@ input[type=submit] {
   </div><!--closing of header-->
     <table>
       <tr>
+
         <form action=""  method="post">{% csrf_token %}
         <th>
-
+          <button class="home_button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
             <!--<label for = "status">Status: </label><br>-->
             <select name = "dropdown">
             <option value = "req_id" selected>Requisition id</option>

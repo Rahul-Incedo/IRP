@@ -533,6 +533,8 @@ def search_candidate(request, *args, **kwargs):
         context={}
         result=[]
         if request.method == 'POST':
+            if 'home_button' in request.POST:
+                return redirect('home_page')
             print(request.POST)
             if 'listall' in request.POST:
                 temp_candidate_list_tuple = list(set((Feedback.objects.all().values_list('candidate_email'))))
