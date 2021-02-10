@@ -54,14 +54,16 @@ def index(request):
 
 def delete_jd_view(request, jd_pk):
     query = JD.objects.get(pk=jd_pk)
+    jd_name = query.jd_name
     query.jd_file.delete()
     query.delete()
-    return redirect('/manage-jd/?msg=deleted')
+    return redirect('/manage-jd/?deleted='+jd_name)
 
 def delete_job_view(request, job_pk):
     query = Job.objects.get(pk=job_pk)
+    requisition = query.requisition_id
     query.delete()
-    return redirect('/manage-job/?msg=deleted')
+    return redirect('/manage-job/?deleted='+requisition)
 
 def view_jd_view(request, jd_pk):
     if not request.user.is_authenticated:
@@ -94,9 +96,10 @@ def manage_jd_view(request, *args, **kwargs):
             'query_set' : query_set
         }
         return render(request, 'manage_jd.html', context)
-    if request.method == 'GET' and 'msg' in request.GET:
+    elif request.method == 'GET' and 'deleted' in request.GET:
+        msg = 'JD ( '+request.GET['deleted']+' ) is deleted'
         context = {
-            'msg' : 'Job Description is Deleted'
+            'msg' : msg
         }
         return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
@@ -136,9 +139,10 @@ def manage_job_view(request, *args, **kwargs):
             'query_set' : query_set
         }
         return render(request, 'manage_job.html', context)
-    if request.method == 'GET' and 'msg' in request.GET:
+    elif request.method == 'GET' and 'deleted' in request.GET:
+        msg = 'Requisition ( '+request.GET['deleted']+' ) is Deleted'
         context = {
-            'msg' : 'Requisition is Deleted'
+            'msg' : msg
         }
         return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
@@ -178,10 +182,10 @@ def upload_jd_view(request, *args, **kwargs):
         form = UploadJdForm(request.POST, request.FILES, initial={'uploaded_by_employee':user})
         form.fields['uploaded_by_employee'].disabled = True
         if form.is_valid():
-            # print(form.cleaned_data)
-            # current_datetime = datetime.now()
-            # form.cleaned_data['timestamp'] = current_datetime
-            obj = form.save()
+            print(form.cleaned_data)
+            obj = form.save(commit=False)
+            obj.timestamp = datetime.now()
+            obj.save()
             response = redirect('/manage-jd/?jd_name='+obj.jd_name)
             return response
             # return custom_redirect('manage_jd_page', arg1='dfo')
@@ -207,9 +211,10 @@ def upload_job_view(request, *args, **kwargs):
         form = UploadJobForm(request.POST, initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
         if form.is_valid():
-            obj = form.save()
+            obj = form.save(commit=False)
+            obj.timestamp = datetime.now()
+            obj.save()
             return redirect('/manage-job/?requisition_id='+obj.requisition_id)
-            return redirect('manage_job_page')
     else:
         form = UploadJobForm(initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
