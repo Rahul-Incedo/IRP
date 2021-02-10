@@ -36,7 +36,7 @@ from .models import Employee, Job, Candidate, Feedback, Field, JD
 from .models import TestModel
 
 #include forms
-from .forms import CandidateForm, UploadJdForm, UploadJobForm
+from .forms import CandidateForm, UploadJdForm, UploadJobForm , EditCandidateForm
 from .forms import TestForm
 
 # Create your views here.
@@ -54,14 +54,16 @@ def index(request):
 
 def delete_jd_view(request, jd_pk):
     query = JD.objects.get(pk=jd_pk)
+    jd_name = query.jd_name
     query.jd_file.delete()
     query.delete()
-    return redirect('/manage-jd/?msg=deleted')
+    return redirect('/manage-jd/?deleted='+jd_name)
 
 def delete_job_view(request, job_pk):
     query = Job.objects.get(pk=job_pk)
+    requisition = query.requisition_id
     query.delete()
-    return redirect('/manage-job/?msg=deleted')
+    return redirect('/manage-job/?deleted='+requisition)
 
 def view_jd_view(request, jd_pk):
     if not request.user.is_authenticated:
@@ -94,9 +96,10 @@ def manage_jd_view(request, *args, **kwargs):
             'query_set' : query_set
         }
         return render(request, 'manage_jd.html', context)
-    if request.method == 'GET' and 'msg' in request.GET:
+    elif request.method == 'GET' and 'deleted' in request.GET:
+        msg = 'JD ( '+request.GET['deleted']+' ) is deleted'
         context = {
-            'msg' : 'Job Description is Deleted'
+            'msg' : msg
         }
         return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
@@ -136,9 +139,10 @@ def manage_job_view(request, *args, **kwargs):
             'query_set' : query_set
         }
         return render(request, 'manage_job.html', context)
-    if request.method == 'GET' and 'msg' in request.GET:
+    elif request.method == 'GET' and 'deleted' in request.GET:
+        msg = 'Requisition ( '+request.GET['deleted']+' ) is Deleted'
         context = {
-            'msg' : 'Requisition is Deleted'
+            'msg' : msg
         }
         return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
@@ -178,10 +182,12 @@ def upload_jd_view(request, *args, **kwargs):
         form = UploadJdForm(request.POST, request.FILES, initial={'uploaded_by_employee':user})
         form.fields['uploaded_by_employee'].disabled = True
         if form.is_valid():
-            # print(form.cleaned_data)
-            # current_datetime = datetime.now()
-            # form.cleaned_data['timestamp'] = current_datetime
-            obj = form.save()
+            obj = form.save(commit=False)
+            # file_name = obj.get_file_name()
+            # file_name = file_name.replace('.pdf', '').replace('.docx', '').replace('.doc', '')
+            # obj.jd_name = file_name
+            obj.timestamp = datetime.now()
+            obj.save()
             response = redirect('/manage-jd/?jd_name='+obj.jd_name)
             return response
             # return custom_redirect('manage_jd_page', arg1='dfo')
@@ -207,9 +213,10 @@ def upload_job_view(request, *args, **kwargs):
         form = UploadJobForm(request.POST, initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
         if form.is_valid():
-            obj = form.save()
+            obj = form.save(commit=False)
+            obj.timestamp = datetime.now()
+            obj.save()
             return redirect('/manage-job/?requisition_id='+obj.requisition_id)
-            return redirect('manage_job_page')
     else:
         form = UploadJobForm(initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
@@ -326,120 +333,29 @@ def dashboard(request):
 def edit_candidate(request,candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
-    if request.method == 'POST':
-        candidate_obj=Candidate.objects.get(email=candidate_email)
-        # print(request.POST)
-        if len(request.POST['fname'])!=0 :
-            candidate_obj.f_name=request.POST['fname']
-        if len(request.POST['mname'])!=0 :
-            candidate_obj.m_name=request.POST['mname']
-        if len(request.POST['lname'])!=0 :
-            candidate_obj.l_name=request.POST['lname']
-        if len(request.POST['gender'])!=0 :
-            candidate_obj.gender=request.POST['gender']
-        if len(request.POST['CGPA'])!=0 :
-            candidate_obj.CGPA=request.POST['CGPA']
-        if len(request.POST['college'])!=0 :
-            candidate_obj.college_name=request.POST['college']
-        if len(request.POST['experience'])!=0 :
-            candidate_obj.experience=request.POST['experience']
-        if len(request.POST['mobile_no'])!=0 :
-            candidate_obj.mobile=request.POST['mobile_no']
-        # if len(request.POST['DOB'])!=0 :
-        #     candidate_obj.DOB=request.POST['DOB']
-        if len(request.POST['project'])!=0 :
-            candidate_obj.projects_link=request.POST['project']
-        if len(request.POST['notice_period'])!=0 :
-            candidate_obj.notice_period=request.POST['notice_period']
-        candidate_obj.save()
-        print(candidate_obj.email)
+    if "cancel" in request.POST:
         return redirect('../../view_candidate/'+str(candidate_email))
-
-
-
     candidate_obj=Candidate.objects.filter(email=candidate_email)
     if len(candidate_obj)==0 :
             return render(request,'edit_candidate.html',{'error_msg':"Oops ;( Something went wrong"})
-
-    f_name = candidate_obj[0].f_name
-    if f_name==None:
-        f_name=""
-
-    m_name = candidate_obj[0].m_name
-    if m_name==None:
-        m_name=""
-
-    l_name = candidate_obj[0].l_name
-    if l_name==None:
-        l_name=""
-
-    registered_by = candidate_obj[0].registered_by
-    if registered_by==None:
-        registered_by=""
-
-    email=candidate_obj[0].email
-    if email==None:
-        email=""
-
-    gender=candidate_obj[0].gender
-    if gender==None:
-        gender=""
-
-    CGPA=candidate_obj[0].CGPA
-    if CGPA==None:
-        CGPA=""
-
-    college_name=candidate_obj[0].college_name
-    if college_name==None:
-        college_name=""
-
-    experience=candidate_obj[0].experience
-    if experience==None:
-        experience=""
-
-    mobile=candidate_obj[0].mobile
-    if mobile==None:
-        mobile=""
-
-    projects_link=candidate_obj[0].projects_link
-    if projects_link==None:
-        projects_link=""
-
-    notice_period=candidate_obj[0].notice_period
-    if notice_period==None:
-        notice_period=""
-
-    resume_url=candidate_obj[0].resume.url
-    resume_name=candidate_obj[0].resume.name[7:]
-
-    timestamp=candidate_obj[0].timestamp
-    if timestamp==None:
-        timestamp=""
-
-    context={
-        'f_name':f_name,
-        'm_name':m_name,
-        'l_name':l_name,
-        'registered_by':registered_by,
-        'email':email,
-        'gender':gender,
-        'CGPA':CGPA,
-        'college_name':college_name,
-        'experience':experience,
-        'mobile':mobile,
-        'projects_link':projects_link,
-        'notice_period':notice_period,
-        'resume_url':resume_url,
-        'resume_name':resume_name,
-
-        'timestamp':timestamp,
+            prer
+    form = EditCandidateForm(request.POST or None, request.FILES or None, instance=candidate_obj[0])
+    form.fields['registered_by'].disabled = True
+    form.fields['email'].disabled = True
+    if form.is_valid():
+        candidate_obj = form.save()
+        return redirect('../../view_candidate/'+str(candidate_email))
+    context = {
+    'form': form
     }
-    return render(request,'edit_candidate.html', context )
+    return render(request, 'edit_candidate.html', context)
 
 def view_candidate(request,candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
+
     if request.method == 'POST':
+
         candidate_obj=Candidate.objects.filter(email=candidate_email)
         print(candidate_email)
 
@@ -520,7 +436,6 @@ def view_candidate(request,candidate_email):
         'notice_period':notice_period,
         'resume_url':resume_url,
         'resume_name':resume_name,
-
         'timestamp':timestamp,
     }
 
@@ -533,6 +448,8 @@ def search_candidate(request, *args, **kwargs):
         context={}
         result=[]
         if request.method == 'POST':
+            if 'home_button' in request.POST:
+                return redirect('home_page')
             print(request.POST)
             if 'listall' in request.POST:
                 temp_candidate_list_tuple = list(set((Feedback.objects.all().values_list('candidate_email'))))
@@ -635,8 +552,8 @@ def search_candidate(request, *args, **kwargs):
             l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
             l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
             status_dict = {
-                'select' : 'pass',
-                'reject' : 'fail',
+                'selected' : 'pass',
+                'rejected' : 'fail',
                 'pending' : 'pending',
             }
             l1 = status_dict[l1]
@@ -771,6 +688,7 @@ def feedback(request, req_id, email_id, level):
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
                         'interview_date': str(interview_date),
+                        'interview_date_show': str(interview_date.strftime('%b. %d, %Y')),
                         }
 
             context = {
@@ -786,9 +704,9 @@ def feedback(request, req_id, email_id, level):
             feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id)
             status = feedback_object_1.status
             if(status ==  'pass'):
-                status = 'select'
+                status = 'selected'
             if(status == 'fail'):
-                status = 'reject'
+                status = 'rejected'
             comments = feedback_object_1.comments
             interviewer_id = feedback_object_1.interviewer_id
             interview_date = feedback_object_1.interview_date
@@ -820,6 +738,7 @@ def feedback(request, req_id, email_id, level):
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
                         'interview_date': str(interview_date),
+                        'interview_date_show': str(interview_date.strftime('%b. %d, %Y')),
                         }
 
             level_2 = { 'status': status_,
@@ -829,6 +748,7 @@ def feedback(request, req_id, email_id, level):
                         'timestamp': last_update_time_,
                         'feedback_id' :feedback_id_2,
                         'interview_date' : str(interview_date_),
+                        'interview_date_show': str(interview_date_.strftime('%b. %d, %Y')),
                         }
 
             context = {
@@ -930,7 +850,7 @@ def field_view(request, req_id, email_id, level, feedback_id):
             form.save()
 
         if(level == level_):
-            return redirect('../../')
+            return redirect('../../#field')
         return redirect(f'../../edit{feedback_id}/')
 
 def delete_field(request, req_id, email_id, level, field_name, del_level):

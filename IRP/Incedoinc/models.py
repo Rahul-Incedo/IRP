@@ -1,6 +1,7 @@
 from django.core.validators import MaxLengthValidator
 from django.db import models
 import os
+import re
 
 from datetime import datetime
 
@@ -20,14 +21,14 @@ class JD(models.Model):
     jd_name = models.CharField(max_length=64, primary_key=True)
     jd_file = models.FileField(upload_to='JD/')
     uploaded_by_employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(default=datetime.now())
+    timestamp = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.jd_name}'
     def get_file_name(self):
         file_name = self.jd_file.name
-        print(file_name)
-        return file_name.lstrip('JD').lstrip('/')
+        file_name = re.sub(r'^JD/', '', file_name)
+        return file_name
 
 #different requisition_id are mapped to one job_description
 class Job(models.Model):
@@ -35,7 +36,7 @@ class Job(models.Model):
     raised_by_employee = models.ForeignKey(Employee, related_name='raised_by_employee', null = True, on_delete=models.CASCADE)
     position_owner_id = models.ForeignKey(Employee, related_name='position_owner', null = True, on_delete=models.CASCADE)
     jd = models.ForeignKey(JD, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(default=datetime.now())
+    timestamp = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.requisition_id}'
@@ -55,12 +56,12 @@ class Candidate(models.Model):
 
     college_name = models.CharField(max_length = 254, null=True, blank=True)
     CGPA = models.DecimalField(null=True, max_digits=5, decimal_places=3)
-    experience = models.DecimalField(decimal_places=3 , max_digits=5)
+    experience = models.DecimalField(decimal_places=2 , max_digits=5)
     mobile = models.CharField(max_length=10)
-    DOB = models.DateField(null=True, blank=True)
+    # DOB = models.DateField(null=True, blank=True)
     projects_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to='Resume/')
-    notice_period = models.DecimalField(decimal_places=3 , max_digits=5)
+    notice_period = models.DecimalField(decimal_places=2 , max_digits=5)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     @property

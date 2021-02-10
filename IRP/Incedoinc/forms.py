@@ -6,8 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 # from .models.Feedback import Field
-
-class CandidateForm(forms.ModelForm):
+class EditCandidateForm(forms.ModelForm):
     CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
                             validators=[
                                 validators.MinValueValidator(0),
@@ -25,21 +24,70 @@ class CandidateForm(forms.ModelForm):
         allowed_extensions=['pdf', 'doc', 'docx']
     )
     resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
-    requisition_id = forms.ModelChoiceField(Job.objects.all(), label='*Requisition ID')
-    # notice_period = forms.DecimalField(label='*Notice Period',
-    #                                     widget = forms.TextInput(
-    #                                         attrs={'placeholder':'enter in months.days'},
-    #                                     )
-    #                 )
-    # experience = forms.DecimalField(label='*Experience',
-    #                     widget = forms.TextInput(
-    #                                         attrs={'placeholder':'enter in months.days'},
-    #                     )
-    #             )
+    notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',max_digits=5, decimal_places=2,
+                            validators=[
+                                validators.MinValueValidator(0),
+                            ]
+                    )
+    experience = forms.DecimalField(label='*Experience (in Years.Months)',max_digits=5, decimal_places=2,
+                            validators=[
+                                validators.MinValueValidator(0),
+                            ]
+                )
     class Meta:
         model = Candidate
         fields = '__all__'
         exclude = ['DOB']
+        labels = {
+            'f_name': '*First Name',
+            'm_name': 'Middle Name',
+            'l_name': '*Last Name',
+            'registered_by':'Registered By',
+            'email': '*Email',
+            'gender': '*Gender',
+            'CGPA': 'CGPA(out of 10)',
+            'college_name': 'College Name',
+            'experience': '*Experience (in Years.Months)',
+            'mobile': '*10-digit Mobile No.',
+            'projects_link' : 'Project',
+            # 'DOB': 'Date of Birth',
+            'notice_period': '*Notice Period (in Months.Days)',
+            'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
+        }
+
+class CandidateForm(forms.ModelForm):
+    CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
+                            validators=[
+                                validators.MinValueValidator(0),
+                                validators.MaxValueValidator(10.0),
+                            ]
+    )
+    mobile = forms.CharField(label='*Mobile Number (10 digits)', required=True,
+                            validators=[
+                                validators.RegexValidator('^[0-9]{10}$',
+                                    message='Mobile Number must be 10 digits'
+                                )
+                            ]
+    )
+    pdf_validator = validators.FileExtensionValidator(
+        allowed_extensions=['pdf', 'doc', 'docx']
+    )
+    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    requisition_id = forms.ModelChoiceField(Job.objects.all(), label='*Requisition ID')
+    notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',
+                                        widget = forms.TextInput(
+                                            attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
+                                        )
+                    )
+    experience = forms.DecimalField(label='*Experience (in Years.Months)',
+                        widget = forms.TextInput(
+                                            attrs={'placeholder':'(1.6) represents 1 Year 6 Months'},
+                        )
+                )
+    class Meta:
+        model = Candidate
+        fields = '__all__'
+        # exclude = ['DOB']
         labels = {
             'f_name': '*First Name',
             'm_name': 'Middle Name',
@@ -50,7 +98,7 @@ class CandidateForm(forms.ModelForm):
             'CGPA': 'CGPA(out of 10)',
             'experience': '*Experience (in months)',
             'mobile': '*10-digit Mobile No.',
-            'DOB': 'Date of Birth',
+            # 'DOB': 'Date of Birth',
             'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
             'notice_period': '*Notice Period (in months)',
         }
@@ -58,16 +106,17 @@ class CandidateForm(forms.ModelForm):
 
 
 class UploadJdForm(forms.ModelForm):
-    pdf_validator = validators.FileExtensionValidator(
+    extension_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
-    jd_file = forms.FileField(label='*Upload File (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
-    jd_name = forms.CharField(label='*Name of Job Description')
+    jd_file = forms.FileField(label='*Upload File (pdf, doc, and docx extensions are supported)', validators = [extension_validator])
+    # jd_name = forms.CharField(label='*Name of Job Description')
 
     class Meta:
         model = JD
-        fields = ['uploaded_by_employee',  'jd_name', 'jd_file']
-        label = {
+        fields = ['uploaded_by_employee', 'jd_file', 'jd_name']
+        labels = {
+            'jd_name' : '*Name of Job Description'
         }
 
 class UploadJobForm(forms.ModelForm):
@@ -138,8 +187,8 @@ class FieldForm(forms.ModelForm):
                         ('Machine learning', 'Machine learning'),
                         ('.NET', '.NET')]
     # field_name = forms.CharField(max_length = 20, widget=forms.Select(choices=field_choices),)
-    field_name = forms.CharField(max_length = 20)
-    rating = forms.IntegerField(min_value=1, max_value=5)
+    field_name = forms.CharField(max_length = 64, widget=forms.TextInput(attrs={'placeholder': 'Enter the field name'}))
+    rating = forms.IntegerField(min_value=1, max_value=5, widget=forms.TextInput(attrs={'placeholder': 'Enter your rating out of 5'}))
 
     class Meta:
         model = Field
