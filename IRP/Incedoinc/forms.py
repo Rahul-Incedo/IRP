@@ -1,5 +1,6 @@
 from django.core import validators
 from django import forms
+from django.forms.fields import IntegerField
 from .models import Candidate, Job, TestModel, Employee, Feedback, Field, JD
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -24,15 +25,32 @@ class EditCandidateForm(forms.ModelForm):
         allowed_extensions=['pdf', 'doc', 'docx']
     )
     resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
-    notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',max_digits=5, decimal_places=2,
-                            validators=[
-                                validators.MinValueValidator(0),
-                            ]
+    # notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',max_digits=5, decimal_places=2,
+    #                         validators=[
+    #                             validators.MinValueValidator(0),
+    #                         ]
+    #                 )
+    # experience = forms.DecimalField(label='*Experience (in Years.Months)',max_digits=5, decimal_places=2,
+    #                         validators=[
+    #                             validators.MinValueValidator(0),
+    #                         ]
+    # )
+    notice_period = forms.CharField(label='*Notice Period (in Months.Days)',
+                        widget = forms.TextInput(
+                            attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
+                        ),
+                        validators = [
+                            validators.RegexValidator(r'^[0-9]+(\.[0-9]{1,2})?$'),
+                        ]
                     )
-    experience = forms.DecimalField(label='*Experience (in Years.Months)',max_digits=5, decimal_places=2,
-                            validators=[
-                                validators.MinValueValidator(0),
-                            ]
+
+    experience = forms.CharField(label='*Experience (in Years.Months)',
+                        widget = forms.TextInput(
+                            attrs={'placeholder':'(1.10) represents 1 Year 10 Months'},
+                        ),
+                        validators = [
+                            validators.RegexValidator(r'^[0-9]+(\.[0-9]{1,2})?$'),
+                        ]
                 )
     class Meta:
         model = Candidate
@@ -74,15 +92,27 @@ class CandidateForm(forms.ModelForm):
     )
     resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
     requisition_id = forms.ModelChoiceField(Job.objects.all(), label='*Requisition ID')
-    notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',
-                                        widget = forms.TextInput(
-                                            attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
-                                        )
-                    )
-    experience = forms.DecimalField(label='*Experience (in Years.Months)',
+    # notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',
+    #                                     widget = forms.TextInput(
+    #                                         attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
+    #                                     )
+    #                 )
+    notice_period = forms.CharField(label='*Notice Period (in Months.Days)',
                         widget = forms.TextInput(
-                                            attrs={'placeholder':'(1.6) represents 1 Year 6 Months'},
-                        )
+                            attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
+                        ),
+                        validators = [
+                            validators.RegexValidator(r'^[0-9]+(\.[0-9]{1,2})?$'),
+                        ]
+                    )
+
+    experience = forms.CharField(label='*Experience (in Years.Months)',
+                        widget = forms.TextInput(
+                            attrs={'placeholder':'(1.10) represents 1 Year 10 Months'},
+                        ),
+                        validators = [
+                            validators.RegexValidator(r'^[0-9]+(\.[0-9]{1,2})?$'),
+                        ]
                 )
     class Meta:
         model = Candidate
