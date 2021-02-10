@@ -43,7 +43,7 @@ Candidate feedback {{candiate.id}}
 
       <br>
       <li> Overall Comments : {{level_1.comments}}</li>
-      <li style = 'float:right;color:#ff3300'> Interview Date : {{level_1.interview_date}}</li><br>
+      <li style = 'float:right;color:#ff3300'> Interview Date : {{level_1.interview_date_show}}</li><br>
       <li> Interviewer : {{level_1.interviewer_id}} </li>
 
       <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
@@ -73,7 +73,7 @@ Candidate feedback {{candiate.id}}
     </table>
     <br/>
     <li> Overall Comments : {{level_1.comments}}</li>
-    <li style = 'float:right;color:#ff3300'> Interview Date : {{level_1.interview_date}}</li><br>
+    <li style = 'float:right;color:#ff3300'> Interview Date : {{level_1.interview_date_show}}</li><br>
     <li> Interviewer : {{level_1.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_1.timestamp}}</li>
   </ul>
@@ -98,7 +98,7 @@ Candidate feedback {{candiate.id}}
       {% endfor %}
     </table><br/>
     <li> Overall Comments : {{level_2.comments}}</li>
-    <li style = 'float:right;color:#ff3300'> Interview Date : {{level_2.interview_date}}</li><br>
+    <li style = 'float:right;color:#ff3300'> Interview Date : {{level_2.interview_date_show}}</li><br>
     <li> Interviewer : {{level_2.interviewer_id}} <li>
     <li style = 'float:right;color:#ff3300'> Last updated at : {{level_2.timestamp}}</li>
   </ul>
@@ -112,9 +112,12 @@ Candidate feedback {{candiate.id}}
 
 <label for="interviewer_code"><h4>Interviewer : {{basic_detail.interviewer_id}}</h4></label>
 
+<div id="field">
 {% for i, j in current_field %}
   <h4>{{i}} : {{j}} <a style="font-size: smaller" href = '{{i}}{{level}}'>delete</a></h4>
 {% endfor %}
+</div>
+
 <div id="fill">
   <div class = 'new_'>
     <form method = 'POST' action = 'field/{{basic_detail.feedback_id}}/'>
@@ -136,8 +139,8 @@ Candidate feedback {{candiate.id}}
         <!-- <input name = "status" id = "status" list = "status_choices" placeholder = "status" required> -->
         <select id = "status" name = status required>
           <option value = "pending">pending</option>
-          <option value = "select">select</option>
-          <option value = "reject">reject</option>
+          <option value = "selected">selected</option>
+          <option value = "rejected">rejected</option>
         </select><br>
 
         <label for ="interview_date"> Interview Date :<label><br/>

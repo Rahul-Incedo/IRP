@@ -635,8 +635,8 @@ def search_candidate(request, *args, **kwargs):
             l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
             l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
             status_dict = {
-                'select' : 'pass',
-                'reject' : 'fail',
+                'selected' : 'pass',
+                'rejected' : 'fail',
                 'pending' : 'pending',
             }
             l1 = status_dict[l1]
@@ -771,6 +771,7 @@ def feedback(request, req_id, email_id, level):
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
                         'interview_date': str(interview_date),
+                        'interview_date_show': str(interview_date.strftime('%b. %d, %Y')),
                         }
 
             context = {
@@ -786,9 +787,9 @@ def feedback(request, req_id, email_id, level):
             feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id)
             status = feedback_object_1.status
             if(status ==  'pass'):
-                status = 'select'
+                status = 'selected'
             if(status == 'fail'):
-                status = 'reject'
+                status = 'rejected'
             comments = feedback_object_1.comments
             interviewer_id = feedback_object_1.interviewer_id
             interview_date = feedback_object_1.interview_date
@@ -820,6 +821,7 @@ def feedback(request, req_id, email_id, level):
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
                         'interview_date': str(interview_date),
+                        'interview_date_show': str(interview_date.strftime('%b. %d, %Y')),
                         }
 
             level_2 = { 'status': status_,
@@ -829,6 +831,7 @@ def feedback(request, req_id, email_id, level):
                         'timestamp': last_update_time_,
                         'feedback_id' :feedback_id_2,
                         'interview_date' : str(interview_date_),
+                        'interview_date_show': str(interview_date_.strftime('%b. %d, %Y')),
                         }
 
             context = {
@@ -930,7 +933,7 @@ def field_view(request, req_id, email_id, level, feedback_id):
             form.save()
 
         if(level == level_):
-            return redirect('../../')
+            return redirect('../../#field')
         return redirect(f'../../edit{feedback_id}/')
 
 def delete_field(request, req_id, email_id, level, field_name, del_level):

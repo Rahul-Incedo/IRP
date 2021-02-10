@@ -138,8 +138,8 @@ class FieldForm(forms.ModelForm):
                         ('Machine learning', 'Machine learning'),
                         ('.NET', '.NET')]
     # field_name = forms.CharField(max_length = 20, widget=forms.Select(choices=field_choices),)
-    field_name = forms.CharField(max_length = 20)
-    rating = forms.IntegerField(min_value=1, max_value=5)
+    field_name = forms.CharField(max_length = 64, widget=forms.TextInput(attrs={'placeholder': 'Enter the field name'}))
+    rating = forms.IntegerField(min_value=1, max_value=5, widget=forms.TextInput(attrs={'placeholder': 'Enter your rating out of 5'}))
 
     class Meta:
         model = Field
