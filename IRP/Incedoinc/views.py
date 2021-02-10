@@ -54,14 +54,16 @@ def index(request):
 
 def delete_jd_view(request, jd_pk):
     query = JD.objects.get(pk=jd_pk)
+    jd_name = query.jd_name
     query.jd_file.delete()
     query.delete()
-    return redirect('/manage-jd/?msg=deleted')
+    return redirect('/manage-jd/?deleted='+jd_name)
 
 def delete_job_view(request, job_pk):
     query = Job.objects.get(pk=job_pk)
+    requisition = query.requisition_id
     query.delete()
-    return redirect('/manage-job/?msg=deleted')
+    return redirect('/manage-job/?deleted='+requisition)
 
 def view_jd_view(request, jd_pk):
     if not request.user.is_authenticated:
@@ -94,9 +96,10 @@ def manage_jd_view(request, *args, **kwargs):
             'query_set' : query_set
         }
         return render(request, 'manage_jd.html', context)
-    if request.method == 'GET' and 'msg' in request.GET:
+    elif request.method == 'GET' and 'deleted' in request.GET:
+        msg = 'JD ( '+request.GET['deleted']+' ) is deleted'
         context = {
-            'msg' : 'Job Description is Deleted'
+            'msg' : msg
         }
         return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
@@ -136,9 +139,10 @@ def manage_job_view(request, *args, **kwargs):
             'query_set' : query_set
         }
         return render(request, 'manage_job.html', context)
-    if request.method == 'GET' and 'msg' in request.GET:
+    elif request.method == 'GET' and 'deleted' in request.GET:
+        msg = 'Requisition ( '+request.GET['deleted']+' ) is Deleted'
         context = {
-            'msg' : 'Requisition is Deleted'
+            'msg' : msg
         }
         return render(request, 'manage_jd.html', context)
     if request.method == 'POST':
@@ -178,10 +182,10 @@ def upload_jd_view(request, *args, **kwargs):
         form = UploadJdForm(request.POST, request.FILES, initial={'uploaded_by_employee':user})
         form.fields['uploaded_by_employee'].disabled = True
         if form.is_valid():
-            # print(form.cleaned_data)
-            # current_datetime = datetime.now()
-            # form.cleaned_data['timestamp'] = current_datetime
-            obj = form.save()
+            print(form.cleaned_data)
+            obj = form.save(commit=False)
+            obj.timestamp = datetime.now()
+            obj.save()
             response = redirect('/manage-jd/?jd_name='+obj.jd_name)
             return response
             # return custom_redirect('manage_jd_page', arg1='dfo')
@@ -207,9 +211,10 @@ def upload_job_view(request, *args, **kwargs):
         form = UploadJobForm(request.POST, initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
         if form.is_valid():
-            obj = form.save()
+            obj = form.save(commit=False)
+            obj.timestamp = datetime.now()
+            obj.save()
             return redirect('/manage-job/?requisition_id='+obj.requisition_id)
-            return redirect('manage_job_page')
     else:
         form = UploadJobForm(initial={'raised_by_employee':user})
         form.fields['raised_by_employee'].disabled = True
@@ -548,8 +553,8 @@ def search_candidate(request, *args, **kwargs):
             l3=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 3).status
             l2=Feedback.objects.get(requisition_id=result[x][0],candidate_email=result[x][1], level = 2).status
             status_dict = {
-                'select' : 'pass',
-                'reject' : 'fail',
+                'selected' : 'pass',
+                'rejected' : 'fail',
                 'pending' : 'pending',
             }
             l1 = status_dict[l1]
@@ -684,6 +689,7 @@ def feedback(request, req_id, email_id, level):
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
                         'interview_date': str(interview_date),
+                        'interview_date_show': str(interview_date.strftime('%b. %d, %Y')),
                         }
 
             context = {
@@ -699,9 +705,9 @@ def feedback(request, req_id, email_id, level):
             feedback_object_1 = Feedback.objects.get(candidate_email = email_id, level=level-2, requisition_id = req_id)
             status = feedback_object_1.status
             if(status ==  'pass'):
-                status = 'select'
+                status = 'selected'
             if(status == 'fail'):
-                status = 'reject'
+                status = 'rejected'
             comments = feedback_object_1.comments
             interviewer_id = feedback_object_1.interviewer_id
             interview_date = feedback_object_1.interview_date
@@ -733,6 +739,7 @@ def feedback(request, req_id, email_id, level):
                         'timestamp' : last_update_time,
                         'feedback_id': feedback_id_1,
                         'interview_date': str(interview_date),
+                        'interview_date_show': str(interview_date.strftime('%b. %d, %Y')),
                         }
 
             level_2 = { 'status': status_,
@@ -742,6 +749,7 @@ def feedback(request, req_id, email_id, level):
                         'timestamp': last_update_time_,
                         'feedback_id' :feedback_id_2,
                         'interview_date' : str(interview_date_),
+                        'interview_date_show': str(interview_date_.strftime('%b. %d, %Y')),
                         }
 
             context = {
@@ -843,7 +851,7 @@ def field_view(request, req_id, email_id, level, feedback_id):
             form.save()
 
         if(level == level_):
-            return redirect('../../')
+            return redirect('../../#field')
         return redirect(f'../../edit{feedback_id}/')
 
 def delete_field(request, req_id, email_id, level, field_name, del_level):
