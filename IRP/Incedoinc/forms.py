@@ -40,7 +40,7 @@ class EditCandidateForm(forms.ModelForm):
                             attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
                         ),
                         validators = [
-                            validators.RegexValidator(r'^[0-9]+(\.[0-9]{1,2})?$'),
+                            validators.RegexValidator(r'^[0-9]*(\.([0-9]|[1-2][0-9]))?$'),
                         ]
                     )
 
@@ -49,7 +49,7 @@ class EditCandidateForm(forms.ModelForm):
                             attrs={'placeholder':'(1.10) represents 1 Year 10 Months'},
                         ),
                         validators = [
-                            validators.RegexValidator(r'^[0-9]+(\.[0-9]{1,2})?$'),
+                            validators.RegexValidator(r'^[0-9]*(\.([0-9]|[1][0-1]))?$'),
                         ]
                 )
     class Meta:
@@ -102,7 +102,7 @@ class CandidateForm(forms.ModelForm):
                             attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
                         ),
                         validators = [
-                            validators.RegexValidator(r'^[0-9]+(\.[0-9]{1,2})?$'),
+                            validators.RegexValidator(r'^[0-9]*(\.([0-9]|[1-2][0-9]))?$'),
                         ]
                     )
 
@@ -111,7 +111,7 @@ class CandidateForm(forms.ModelForm):
                             attrs={'placeholder':'(1.10) represents 1 Year 10 Months'},
                         ),
                         validators = [
-                            validators.RegexValidator(r'^[0-9]+(\.[0-9]{1,2})?$'),
+                            validators.RegexValidator(r'^[0-9]*(\.([0-9]|[1][0-1]))?$'),
                         ]
                 )
     class Meta:
