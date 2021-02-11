@@ -62,6 +62,14 @@ def delete_jd_view(request, jd_pk):
 def delete_job_view(request, job_pk):
     query = Job.objects.get(pk=job_pk)
     requisition = query.requisition_id
+
+    candidate_list_tuple = list(set(Feedback.objects.filter(requisition_id=requisition).values_list('candidate_email').order_by('-candidate_email')))
+    candidate_list=[x[0] for x in candidate_list_tuple]
+    for c in candidate_list:
+        candidate_obj=Candidate.objects.filter(email=c)
+        candidate_obj[0].resume.delete()
+        candidate_obj[0].delete()
+
     query.delete()
     return redirect('/manage-job/?deleted='+requisition)
 
@@ -144,7 +152,7 @@ def manage_job_view(request, *args, **kwargs):
         context = {
             'msg' : msg
         }
-        return render(request, 'manage_jd.html', context)
+        return render(request, 'manage_job.html', context)
     if request.method == 'POST':
         print(request.POST)
         if 'home_button' in request.POST:
