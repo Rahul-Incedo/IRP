@@ -38,6 +38,15 @@ class Job(models.Model):
     jd = models.ForeignKey(JD, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(blank=True, null=True)
 
+    requisition_choices = [('open', 'open'),
+                            ('offered', 'offered'),
+                            ('closed', 'closed')]
+    requisition_status = models.CharField(choices = requisition_choices, max_length=20, default='open')
+    internal_choices  = [('yes', 'yes'),
+                        ('no', 'no')]
+    open_to_internal = models.CharField(choices = internal_choices, max_length=3, default='no')
+
+
     def __str__(self):
         return f'{self.requisition_id}'
 
@@ -103,6 +112,25 @@ class Field(models.Model):
     def __str__(self):
         return f'{self.field_name}'
 
+
+class RequisitionCandidate(models.Model):
+    requisition_candidate_id = models.AutoField(primary_key=True)
+    requisition_id = models.ForeignKey(Job, blank=True, null=True, on_delete=models.CASCADE)
+    candidate_email = models.ForeignKey(Candidate, blank=True, null=True, on_delete=models.CASCADE)
+    referred_by = models.ForeignKey(Employee, blank=True, null=True, on_delete=models.CASCADE, default=None)
+    referred_date = models.DateField(null=True, blank=True)
+    expected_doj = models.DateField(null=True, blank=True)
+    actual_doj = models.DateField(null=True, blank=True)
+    status_choices = [('selected', 'selected'),
+                        ('rejected', 'rejected'),
+                        ('on_hold', 'on_hold'),
+                        ('offered', 'offered'),
+                        ('joined', 'joined'),
+                        ('in_progress', 'in_progress')]
+    candidate_status = models.CharField(choices=status_choices, max_length=20, default = 'in_progress')
+
+    def __str__(self):
+        return f'{self.requisition_candidate_id} {self.candidate_status}'
 
 class TestModel(models.Model):
     field1 = models.CharField(blank=True, max_length=100)
