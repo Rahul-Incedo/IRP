@@ -257,6 +257,8 @@ def home_view(request):
             return redirect('manage_job_page')
         elif 'manage_candidate_button' in request.POST:
             return redirect('search_candidate')
+        elif 'referrals_button' in request.POST:
+            return redirect('referrals_page')
         else:
             return Http404('Page Not Exist')
     return render(request,'home.html')
@@ -973,3 +975,25 @@ def report_view(request, req_id, email_id, level):
     }
 
     return render(request, 'registration/report.html', context)
+
+
+def referrals_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        if 'home_button' in request.POST:
+             return redirect('home_page')
+        # print(request.POST)
+        elif 'listallopen' in request.POST:
+            temp_list_tuple = list(set(Job.objects.filter(requisition_status='open' or 'offered' )))
+            print("werwerwerwer",temp_list_tuple)
+            if len(temp_list_tuple)==0:
+                return render(request, 'referrals.html',{'error_message':'Oops :( So Empty'})
+            context={}
+            for x in range(len(temp_list_tuple)):
+                context[x+1]=temp_list_tuple[x]
+            print(context,"asdfdsfsdfsdfsd")
+            return render(request, 'referrals.html',{'context':context})
+
+
+    return render(request, 'referrals.html')
