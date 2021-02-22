@@ -1,0 +1,289 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style type="text/css">
+
+        body
+        {
+          margin:0px;
+          padding:0px;
+          width:100%;
+          height:100%;
+          margin-left:auto;
+          margin-right:auto;
+        }
+        input[type=text]
+        {
+          border: none;
+          color: black;
+          border-style: solid;
+          text-decoration: none;
+          font-size: 16px;
+          margin: 4px 2px;
+          border-radius: 15px;
+
+        }
+        select
+        {
+          border: none;
+
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+        }
+        option
+        {
+          border: none;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+
+        }
+
+        select
+        {
+          border: none;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+        }
+        option
+        {
+          border: none;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+
+        }
+        input[type=submit]
+        {
+          border: none;
+          color: white;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+          background-color: #fd511c;
+
+        }
+        center
+        {
+            color:white;
+            text-align:center;
+            width: 100%;
+            font-family: monospace;
+            font-size: 25px;
+            background-color: #588c7e;
+        }
+        h3
+        {
+          color:white;
+          text-align:center;
+          width: 100%;
+          font-family: monospace;
+          font-size: 25px;
+          background-color: #588c7e;
+        }
+        #title h2
+        {
+            text-align:center;
+            color:white;
+        }
+
+        table
+        {
+            border-collapse: collapse;
+            width: 100%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 20px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+        th
+        {
+            background-color: #588c7e;
+            color: yellow;
+            padding: 5px;
+        }
+        .search_bar
+        {
+          background-color: white;
+          color: black;
+          padding: 5px;
+        }
+        td
+        {
+          padding: 5px;
+          border: 1px solid black;
+        }
+        tr:nth-child(even)
+        {
+            background-color: #f2f2f2;
+            padding: 5px;
+
+        }
+
+        input[type=submit] {
+          border: none;
+          color: white;
+
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+          background-color: #fd511c;
+
+        }
+        input[type=submit]:hover
+        {
+          background-color: #E53601;
+        }
+        button
+        {
+          border: none;
+          color: white;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 15px;
+          background-color: #fd511c;
+        }
+        button:hover
+        {
+          background-color: #E53601;
+        }
+
+        .home_button
+        {
+          background-color: #fd511c;
+          border: none;
+          color: white;
+          /* padding: 12px 16px; */
+          font-size: 16px;
+          cursor: pointer;
+        }
+        .home_button:hover
+        {
+          background-color: #E53601;
+        }
+
+        ul
+        {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #40423f;
+          color: #b6b8b5;
+        }
+
+        li {
+          float: left;
+        }
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+
+    </style>
+</head>
+<body>
+  <header>
+    <ul class = 'main'  style="background-color: black">
+      <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
+      <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
+       <li style="float:right"><a href="{%url 'change_password_page'%}">Change Password</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
+    </ul>
+    <center>REFERRALS</center>
+  </header>
+    <table >
+      <tr>
+
+        <form action=""  method="post">{% csrf_token %}
+        <th class='search_bar'>
+          <button class="home_button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
+          <input type="text" placeholder="Search Requition Id or JD" name="search_element">
+          <input type="submit" value="Search" name="search">
+          <input type="submit" value="List All Open Position" name="listallopen">
+          <a href="../add-candidate/" style="float:right"><button>My Referrals</button>
+        </th>
+        </form>
+
+      </tr>
+    </table>
+
+    <table>
+    </br>
+      <tr>
+        <th>Sr.No</th>
+        <th>Req Id</th>
+        <th>Position Owner</th>
+
+        <th>Jd</th>
+        <th>Status</th>
+        <th>Open To internal</th>
+        <th>Refer</th>
+
+      </tr>
+
+
+
+      {%for key , value in context.items %}
+
+      <tr>
+        <td>{{key}}</td>
+        <td>{{value.requisition_id}}</td>
+        <td>{{value.position_owner_id}}</td>
+        <td>{{value.jd}}</td>
+        <td>{{value.requisition_status}}</td>
+        <td>{{value.open_to_internal}}</td>
+        <td>refer</td>
+      </tr>
+      {% endfor %}
+
+
+
+
+
+
+    {% if error_message %}
+      <h3><center><strong>{{ error_message }}</strong></center><h3>
+    {% endif %}
+
+
+
+
+
+</body>
+</html>

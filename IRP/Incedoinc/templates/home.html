@@ -126,7 +126,7 @@
             background-color: #f2f2f2;
         }
 
-    .button1, .button2, .button3 {
+    .button1, .button2, .button3 , .button4{
       border-radius: 15px;
       background-color: #fd511c;
     }
@@ -139,17 +139,17 @@
   <body>
     <header>
       <ul class = 'main'  style="background-color: black">
-    
-      </ul> 
+
+      </ul>
 
      <ul class = 'main'  style="background-color: black">
         <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
-       
-        <li style="float:right"><a href="{%url 'logout'%}">Log out</a></li> 
+
+        <li style="float:right"><a href="{%url 'logout'%}">Log out</a></li>
         <li style="float:right"><a href="{%url 'change_password_page'%}">Change Password</a></li>
         <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
         <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
-        
+
       </ul>
     </header>
     <h1 > Incedo Recruitment Portal</h1>
@@ -158,13 +158,9 @@
         <div><input type='submit' class="button button1" value='Manage Job Description' name='manage_jd_button' /></div>
         <div><input type='submit' class="button button2" value='Manage Requisitions' name='manage_job_button' /></div>
         <div><input type='submit' class="button button3" value='Manage Candidates and Interviews' name='manage_candidate_button' /></div>
+        <div><input type='submit' class="button button4" value='Referrals' name='referrals_button' /></div>
       </div>
     </form>
-    
+
 </body>
-</html> 
-
-
-
-
-
+</html>
