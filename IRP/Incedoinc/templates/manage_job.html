@@ -76,6 +76,7 @@
       }
       .table-head {
         padding-left: 10px;
+        padding-right: 10px;
         text-align: center;
       }
       .table-cell {
@@ -197,21 +198,26 @@
     {% if query_set is not None %}
       <div class="my_class">
         <table>
+          <thead>
             <th class="table-head">Sr.</th>
             <th class="table-head">Requisition ID</th>
             <th class="table-head">Raised By</th>
             <th class="table-head">Position Owner</th>
             <th class="table-head">Job Description</th>
-            <th class="table-head">Delete</th>
+            <th class="table-head">Current Status</th>
+            <th class="table-head">Open to Internal</th>
+            <!-- <th class="table-head">Delete</th> -->
           </thead>
           {% for obj in query_set %}
           <tr>
             <td class="table-cell">{{ forloop.counter }}</td>
-            <td class="table-cell"><a href="{% url 'view_job' obj.pk %}"><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a></td>
+            <td class="table-cell"><a href="{% url 'edit_job' obj.pk %}"><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a></td>
             <td class="table-cell">{{ obj.raised_by_employee }}</td>
             <td class="table-cell">{{ obj.position_owner_id }}</td>
             <td class="table-cell"><a href="{{obj.jd.jd_file.url}}/">{{ obj.jd.jd_name }}</a></td>
-            <td class="table-cell"><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td>
+            <td class="table-cell">{{ obj.requisition_status }}</td>
+            <td class="table-cell">{{ obj.open_to_internal }}</td>
+            <!-- <td class="table-cell"><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td> -->
           </tr>
           {% endfor %}
         </table>

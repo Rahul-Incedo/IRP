@@ -153,7 +153,7 @@ class UploadJobForm(forms.ModelForm):
     jd = forms.ModelChoiceField(JD.objects.all(), label='*Select Job Description')
     class Meta:
         model = Job
-        fields = ['raised_by_employee', 'position_owner_id', 'requisition_id', 'jd']
+        fields = ['requisition_id', 'raised_by_employee', 'position_owner_id', 'jd', 'requisition_status', 'open_to_internal']
         label = {
             'position_owner_id': '*Position Owner',
             'requisition_id': '*Requisition ID',
