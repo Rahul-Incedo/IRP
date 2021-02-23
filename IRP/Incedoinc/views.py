@@ -175,6 +175,15 @@ def manage_job_view(request, *args, **kwargs):
             'query_set' : query_set
         }
         return render(request, 'manage_job.html', context)
+    elif request.method == 'GET' and 'expand_token' in request.GET:
+        expand_token = request.GET['expand_token']
+        query_set = Job.objects.all()
+        context = {
+            'query_set' : query_set,
+            'expand_token' : expand_token,
+            'sub_query_set' : RequisitionCandidate.objects.filter(requisition_id=expand_token)
+        }
+        return render(request, 'manage_job.html', context)
     elif request.method == 'GET' and 'deleted' in request.GET:
         msg = 'Requisition ( '+request.GET['deleted']+' ) is Deleted'
         context = {
@@ -194,7 +203,7 @@ def manage_job_view(request, *args, **kwargs):
         elif 'list_all_button' in request.POST:
             query_set = Job.objects.all()
             context = {
-                'query_set': query_set
+                'query_set': query_set,
             }
             return render(request, 'manage_job.html', context)
         elif 'raise_requisition_button' in request.POST:
