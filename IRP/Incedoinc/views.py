@@ -169,7 +169,6 @@ def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
     if request.method == 'GET' and 'requisition_id' in request.GET:
-        print(request.GET)
         search_query = request.GET['requisition_id']
         query_set = Job.objects.filter(requisition_id = search_query)
         context = {
@@ -183,7 +182,6 @@ def manage_job_view(request, *args, **kwargs):
         }
         return render(request, 'manage_job.html', context)
     if request.method == 'POST':
-        print(request.POST)
         if 'home_button' in request.POST:
             return redirect('home_page')
         if 'search_button' in request.POST:
@@ -267,8 +265,6 @@ def upload_job_view(request, *args, **kwargs):
 def home_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    print(request.GET)
-    print(request.POST)
     if request.method == 'POST':
         if 'search_requisition_id_button' in request.POST:
             requisition_id = request.POST.get('requisition_id')
@@ -495,7 +491,7 @@ def search_candidate(request, *args, **kwargs):
         if request.method == 'POST':
             if 'home_button' in request.POST:
                 return redirect('home_page')
-            print(request.POST)
+            # print(request.POST)
             if 'listall' in request.POST:
                 temp_candidate_list_tuple = list(set((Feedback.objects.all().values_list('candidate_email'))))
                 temp_candidate_list=[x[0] for x in temp_candidate_list_tuple]
