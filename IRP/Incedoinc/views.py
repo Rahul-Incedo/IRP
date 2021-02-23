@@ -328,6 +328,11 @@ def add_candidate_view(request, *args, **kwargs):
                 requisition_id=job_obj,
                 status='pending',
             )
+            RequisitionCandidate.objects.create(
+                requisition_id = job_obj,
+                candidate_email = candidate_obj,
+                candidate_status = 'in_progress',
+            )
             # return redirect('../search_candidate/', )
             return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
     else:
