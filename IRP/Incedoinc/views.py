@@ -86,12 +86,33 @@ def view_jd_view(request, jd_pk):
 def view_job_view(request, job_pk):
     if not request.user.is_authenticated:
         return redirect('login')
-    if request.method == 'POST':
-        pass
+    if 'edit' in request.GET:
+        return redirect('../edit/')
     context = {
         'obj' : Job.objects.get(pk=job_pk)
     }
     return render(request, 'view_job.html', context)
+
+def edit_job_view(request, job_pk):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if 'cancel' in request.GET:
+        return redirect(manage_job_view)
+    
+    job_object = Job.objects.get(requisition_id=job_pk)
+    form = UploadJobForm(request.POST or None, instance=job_object)
+    form.fields['raised_by_employee'].disabled = True
+    form.fields['requisition_id'].disabled = True
+
+    if form.is_valid():
+        job_object = form.save()
+        return redirect('../view/')
+        return HttpResponse('<h1>save success</h1>')
+    context = {
+        'form' : form
+    }
+    return render(request, 'edit_job.html', context)
 
 def manage_jd_view(request, *args, **kwargs):
     if not request.user.is_authenticated:

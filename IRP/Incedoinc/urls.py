@@ -17,10 +17,15 @@ urlpatterns = [
     path('manage-jd/', views.manage_jd_view, name='manage_jd_page'),
     path('manage-job/', views.manage_job_view, name='manage_job_page'),
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
+
     #view objects
     url(r'^jd/(?P<jd_pk>.*)/view/$', views.view_jd_view, name='view_jd'),
     url(r'^job/(?P<job_pk>.*)/view/$', views.view_job_view, name='view_job'),
-
+    
+    #edit objects
+    url(r'^job/(?P<job_pk>.*)/edit/$', views.edit_job_view, name='edit_job'),
+    
+    
     #delete objects
     url(r'^jd/(?P<jd_pk>.*)/delete/$', views.delete_jd_view, name='delete_jd'),
     url(r'^job/(?P<job_pk>.*)/delete/$', views.delete_job_view, name='delete_job'),
