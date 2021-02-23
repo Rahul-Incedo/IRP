@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.db.models import query
+from django.db.models import query , Q
 from django.shortcuts import redirect, render
 from decimal import Context
 from django.contrib.auth.backends import UserModel
@@ -99,7 +99,7 @@ def edit_job_view(request, job_pk):
 
     if 'cancel' in request.GET:
         return redirect(manage_job_view)
-    
+
     job_object = Job.objects.get(requisition_id=job_pk)
     form = UploadJobForm(request.POST or None, instance=job_object)
     form.fields['raised_by_employee'].disabled = True
@@ -1002,18 +1002,29 @@ def referrals_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
+        print(request.POST)
         if 'home_button' in request.POST:
              return redirect('home_page')
-        # print(request.POST)
         elif 'listallopen' in request.POST:
-            temp_list_tuple = list(set(Job.objects.filter(requisition_status='open' or 'offered' )))
-            print("werwerwerwer",temp_list_tuple)
+            temp_list_tuple = list(set(Job.objects.filter(requisition_status='open')))
+            # print("werwerwerwer",temp_list_tuple)
             if len(temp_list_tuple)==0:
                 return render(request, 'referrals.html',{'error_message':'Oops :( So Empty'})
             context={}
             for x in range(len(temp_list_tuple)):
                 context[x+1]=temp_list_tuple[x]
-            print(context,"asdfdsfsdfsdfsd")
+            # print(context,"asdfdsfsdfsdfsd")
+            return render(request, 'referrals.html',{'context':context})
+        elif 'search' in request.POST:
+            search_element=request.POST['search_element']
+            # print(search_element,"-----------------")
+            temp_list_tuple = list(set(Job.objects.filter(Q(requisition_id__contains=search_element) | Q(jd__in=JD.objects.filter(jd_name__contains=search_element)))))
+            if len(temp_list_tuple)==0:
+                return render(request, 'referrals.html',{'error_message':'No Matching results for '+str(search_element)})
+            context={}
+            for x in range(len(temp_list_tuple)):
+                context[x+1]=temp_list_tuple[x]
+            # print(context,"asdfdsfsdfsdfsd")
             return render(request, 'referrals.html',{'context':context})
 
 

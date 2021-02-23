@@ -99,6 +99,19 @@
           font-size: 25px;
           background-color: #588c7e;
         }
+        h4
+        {
+          border: none;
+          color: black;
+
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          border-radius: 5px;
+          background-color: #e5e5e5;
+        }
         #title h2
         {
             text-align:center;
@@ -236,15 +249,34 @@
           <input type="text" placeholder="Search Requition Id or JD" name="search_element">
           <input type="submit" value="Search" name="search">
           <input type="submit" value="List All Open Position" name="listallopen">
+
           <a href="../add-candidate/" style="float:right"><button>My Referrals</button>
         </th>
-        </form>
 
       </tr>
+      <tr>
+        <th class='search_bar'>
+        <h4>
+        <label>1)Open To Internal? :</label>
+        <input type="checkbox" name="open_to_internal" value="yes">
+        <label for="yes">Yes</label>
+        <input type="checkbox" name="open_to_internal" value="no">
+        <label for="no">No</label>
+        </h4>
+        <h4>
+        <label>2)Status</label>
+        <input type="checkbox" name="requisition_status" value="open">
+        <label for="yes">Open</label>
+        <input type="checkbox" name="requisition_status" value="on_hold">
+        <label for="no">On Hold</label>
+        </h4>
+        </th>
+      </tr>
+    </form>
     </table>
 
     <table>
-    </br>
+
       <tr>
         <th>Sr.No</th>
         <th>Req Id</th>
@@ -272,13 +304,13 @@
       </tr>
       {% endfor %}
 
-
+</table>
 
 
 
 
     {% if error_message %}
-      <h3><center><strong>{{ error_message }}</strong></center><h3>
+  </br><center><strong>{{ error_message }}</strong></center>
     {% endif %}
 
 
