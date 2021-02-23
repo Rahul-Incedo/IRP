@@ -32,7 +32,7 @@ from datetime import date as date_
 # Vaishnavi changed authentication
 
 #include models
-from .models import Employee, Job, Candidate, Feedback, Field, JD
+from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
 from .models import TestModel
 
 #include forms
@@ -88,8 +88,14 @@ def view_job_view(request, job_pk):
         return redirect('login')
     if 'edit' in request.GET:
         return redirect('../edit/')
+    job_object = Job.objects.get(pk=job_pk)
+    # candidate_set = set(Feedback.objects.filter(requisition_id=job_pk).values_list('candidate_email'))
+    # offered_count = 0
+    # for candidate in candidate_set:
+    #     if candidate.status == ''
+    # open_positions = job_object.total_positions-len(RequisitionCandidate.objects.filter(candidate_status='offered'))
     context = {
-        'obj' : Job.objects.get(pk=job_pk)
+        'obj' : job_object,
     }
     return render(request, 'view_job.html', context)
 
@@ -98,7 +104,7 @@ def edit_job_view(request, job_pk):
         return redirect('login')
 
     if 'cancel' in request.GET:
-        return redirect(manage_job_view)
+        return redirect('../view/')
 
     job_object = Job.objects.get(requisition_id=job_pk)
     form = UploadJobForm(request.POST or None, instance=job_object)
@@ -106,7 +112,9 @@ def edit_job_view(request, job_pk):
     form.fields['requisition_id'].disabled = True
 
     if form.is_valid():
-        job_object = form.save()
+        job_object = form.save(commit=False)
+        job_object.timestamp_updated = datetime.now()
+        job_object.save()
         return redirect('../view/')
         return HttpResponse('<h1>save success</h1>')
     context = {
@@ -243,7 +251,8 @@ def upload_job_view(request, *args, **kwargs):
         form.fields['raised_by_employee'].disabled = True
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.timestamp = datetime.now()
+            obj.timestamp_created = datetime.now()
+            obj.timestamp_updated = datetime.now()
             obj.save()
             return redirect('/manage-job/?requisition_id='+obj.requisition_id)
     else:

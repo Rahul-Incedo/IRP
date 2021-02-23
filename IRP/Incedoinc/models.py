@@ -36,20 +36,24 @@ class Job(models.Model):
     raised_by_employee = models.ForeignKey(Employee, related_name='raised_by_employee', null = True, on_delete=models.CASCADE)
     position_owner_id = models.ForeignKey(Employee, related_name='position_owner', null = True, on_delete=models.CASCADE)
     jd = models.ForeignKey(JD, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(blank=True, null=True)
-
+    timestamp_created = models.DateTimeField(blank=True, null=True)
+    timestamp_updated = models.DateTimeField(blank=True, null=True)
     requisition_choices = [('open', 'open'),
                             ('offered', 'offered'),
                             ('closed', 'closed')]
     requisition_status = models.CharField(choices = requisition_choices, max_length=20, default='open')
     internal_choices  = [('yes', 'yes'),
                         ('no', 'no')]
+
+    total_positions = models.IntegerField(default=1)
     open_to_internal = models.CharField(choices = internal_choices, max_length=3, default='no')
 
 
     def __str__(self):
         return f'{self.requisition_id}'
 
+    def get_open_positions(self):
+        return (self.total_positions-len(RequisitionCandidate.objects.filter(requisition_id=self, candidate_status='offered')))
 
 class Candidate(models.Model):
     registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE )
