@@ -189,15 +189,30 @@
             </tr>
             
             <tr>
+                <th><label>Total Positions</label></th>
+                <td><label>{{obj.total_positions}}</label></td>
+            </tr>
+            
+            <tr>
+              <th><label>Open Positions</label></th>
+              <td><label>{{obj.get_open_positions}}</label></td>
+            </tr>
+          
+
+            <tr>
                 <th><label>Open To Internal</label></th>
                 <td><label>{{obj.open_to_internal}}</label></td>
             </tr>
 
             <tr>
                 <th><label>Raised on</label></th>
-                <td><label>{{obj.timestamp}}</label></td>
+                <td><label>{{obj.timestamp_created}}</label></td>
             </tr>
-
+            
+            <tr>
+              <th><label>Last Updated</label></th>
+              <td><label>{{obj.timestamp_updated}}</label></td>
+            </tr>
         </table>
 
         <center><input type='submit' value='Edit' name='edit'></center>
