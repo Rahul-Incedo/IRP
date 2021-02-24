@@ -1015,6 +1015,8 @@ def referrals_view(request):
         if 'home_button' in request.POST:
              return redirect('home_page')
         elif 'listallopen' in request.POST:
+            if 'open_to_internal' in request.POST:
+                print(request.POST['open_to_internal'][0])
             temp_list_tuple = list(set(Job.objects.filter(requisition_status='open')))
             # print("werwerwerwer",temp_list_tuple)
             if len(temp_list_tuple)==0:
@@ -1026,6 +1028,9 @@ def referrals_view(request):
             return render(request, 'referrals.html',{'context':context})
         elif 'search' in request.POST:
             search_element=request.POST['search_element']
+
+            if(len(search_element)==0):
+                return render(request, 'referrals.html',{'error_message':'Please Enter Something'})
             # print(search_element,"-----------------")
             temp_list_tuple = list(set(Job.objects.filter(Q(requisition_id__contains=search_element) | Q(jd__in=JD.objects.filter(jd_name__contains=search_element)))))
             if len(temp_list_tuple)==0:

@@ -272,7 +272,6 @@
         </h4>
         </th>
       </tr>
-    </form>
     </table>
 
     <table>
@@ -281,8 +280,8 @@
         <th>Sr.No</th>
         <th>Req Id</th>
         <th>Position Owner</th>
-
         <th>Jd</th>
+        <th>Open Position(s)</th>
         <th>Status</th>
         <th>Open To internal</th>
         <th>Refer</th>
@@ -298,14 +297,16 @@
         <td>{{value.requisition_id}}</td>
         <td>{{value.position_owner_id}}</td>
         <td>{{value.jd}}</td>
+        <td>{{value.get_open_positions}}</td>
         <td>{{value.requisition_status}}</td>
         <td>{{value.open_to_internal}}</td>
-        <td>refer</td>
+        <td><input type="submit" value="Refer A Candidate" name="refer"></td>
       </tr>
       {% endfor %}
 
 </table>
 
+</form>
 
 
 
