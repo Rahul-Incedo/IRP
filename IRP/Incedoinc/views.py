@@ -48,6 +48,7 @@ def test_view(request, **kwargs):
         return render(request, 'test.html', {'delete_signal': 'true'})
     return render(request, 'test.html', {})
     return HttpResponse('<h1> test page </h>')
+
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -300,12 +301,50 @@ def add_candidate_view(request, *args, **kwargs):
         return redirect('login')
 
     user = Employee.objects.get(email=request.user.username)
-    if request.method == 'POST':
-        form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
+    if request.method == 'POST' and 'form_' in request.POST:
+        form = ResumeForm(request.POST, request.FILES)
+        if form.is_valid():
+            print('form is valid ******************************************************************************')
+            form_ = form.save()
+        data = resumeparse.read_file(f'media/Resume/{form_.get_resume_name()}')
+        full_name = data['name'].split(' ')
+        f_name = ''
+        m_name = ''
+        l_name = ''
+        if len(full_name) == 1:
+            f_name = full_name[0]
+        elif len(full_name) == 2:
+            f_name = full_name[0]
+            l_name = full_name[1]
+        else:
+            f_name = full_name[0]
+            l_name = full_name[len(full_name)-1]
+            m_name = full_name[1]
+
+        context = {'f_name': f_name,
+                        'm_name': m_name,
+                        'l_name' : l_name,
+                        'email': data['email'],
+                        'mobile':data['phone'],
+                       }
+
+        new_form = CandidateForm(initial={'registered_by': user,
+                                       'f_name' : f_name,
+                                       'm_name' : m_name,
+                                       'l_name' : l_name,
+                                       'email' : data['email'],
+                                       'mobile' : data['phone'],
+                            }
+                )
+        new_form.fields['registered_by'].disabled = True
+        return render(request, 'forms/add_candidate.html', {'form':new_form})
+
+    elif request.method == 'POST' and 'form' in request.POST:
+        form = CandidateForm(request.POST, initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
 
         if form.is_valid():
-            candidate_obj = form.save()
+            # candidate_obj = Candidate.objects.get(email)
             requisition_id = form.cleaned_data['requisition_id']
 
             candidate_email = form.cleaned_data['email']
@@ -340,32 +379,6 @@ def add_candidate_view(request, *args, **kwargs):
         'form_':form_,
     }
     return render(request, 'forms/add_candidate.html', context)
-########################################################################################3
-
-
-
-
-
-
-
-
-
-#
-# def login_view(request):
-  #  username = request.POST['username']
- #   password = request.POST['password']
-  #  print(username)
-
-  #  user = authenticate(request, username=username, password=password)
-  #  if user is not None:
-   #     login(request, user)
-  #      return HttpResponseRedirect(reverse('index'))
-    #else:
- #       return render(request, "users/login.html", {"message":"Invalid credential"})
-
-
-
-
 
 
 def dashboard(request):
@@ -1008,42 +1021,6 @@ def report_view(request, req_id, email_id, level):
     }
 
     return render(request, 'registration/report.html', context)
-
-
-def upload_resume_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-
-    if(request.method == 'POST'):
-        form = ResumeForm(request.POST, request.FILES)
-        if form.is_valid():
-            print('form is valid ******************************************************************************')
-            form_ = form.save()
-        data = resumeparse.read_file(f'media/Resume/{form_.get_resume_name()}')
-        full_name = data['name'].split(' ')
-        f_name = ''
-        m_name = ''
-        l_name = ''
-        if len(full_name) == 1:
-            f_name = full_name[0]
-        elif len(full_name) == 2:
-            f_name = full_name[0]
-            l_name = full_name[1]
-        else:
-            f_name = full_name[0]
-            l_name = full_name[len(full_name)-1]
-            m_name = full_name[1]
-
-        primary_data = {'f_name': f_name,
-                        'm_name': m_name,
-                        'l_name' : l_name,
-                        'email': data['email'],
-                        'mobile':data['phone'],
-                       }
-        print(primary_data)
-
-    form = ResumeForm()
-    return render(request, 'registration/resume.html', {'form':form})
 
 
 def referrals_view(request):

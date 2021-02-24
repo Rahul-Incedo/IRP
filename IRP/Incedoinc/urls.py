@@ -43,7 +43,7 @@ urlpatterns = [
     path("view_candidate/<str:candidate_email>/", views.view_candidate, name = 'view_candidate'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/report/', views.report_view, name = "report_view"),
 
-    path('upload-resume/', views.upload_resume_view, name='upload_resume'),
+    # path('upload-resume/', views.upload_resume_view, name='upload_resume'),
 
     path('referrals/', views.referrals_view, name = "referrals_page")
 ]

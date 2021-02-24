@@ -128,7 +128,7 @@ class CandidateForm(forms.ModelForm):
     class Meta:
         model = Candidate
         # fields = '__all__'
-        fields = ['f_name', 'm_name', 'l_name', 'email', 'registered_by', 'gender', 'college_name', 'CGPA', 'college_name', 'experience', 'mobile', 'notice_period']
+        fields = ['f_name', 'm_name', 'l_name', 'email', 'registered_by', 'gender', 'college_name', 'CGPA', 'college_name', 'experience', 'mobile', 'notice_period', 'candidate_id']
         # exclude = ['DOB']
         labels = {
             'f_name': '*First Name',
