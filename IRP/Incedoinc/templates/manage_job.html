@@ -220,8 +220,16 @@
             <th class="table-head">Position Owner</th>
             <th class="table-head">Job Description</th>
             <th class="table-head">Current Status</th>
-            <th class="table-head">Total Positions</th>
-            <th class="table-head">Open Positions</th>
+            <th colspan='2'>
+              <table>
+                <tr><th colspan='2' class="table-head">Positions</th></tr>
+                <tr>
+                  <th class="table-head">Total</th>
+                  <th class="table-head">Open</th>
+                </tr>
+              </table>
+            </th>
+
             <th class="table-head">Open to Internal</th>
             <!-- <th class="table-head">Delete</th> -->
           </thead>
@@ -247,11 +255,11 @@
               <td colspan='9'>
                 <table class='sub-table'>
                   <thead>
-                    <th>Sr.</th>
-                    <th>Candidate</th>
-                    <th>Status</th>
-                    <th>Expected DOJ</th>
-                    <th>Actual DOJ</th>
+                    <th class="table-head">Sr.</th>
+                    <th class="table-head">Candidate</th>
+                    <th class="table-head">Status</th>
+                    <th class="table-head">Expected DOJ</th>
+                    <th class="table-head">Actual DOJ</th>
                   </thead>
                   {% for obj in sub_query_set %}
                   <tr>
