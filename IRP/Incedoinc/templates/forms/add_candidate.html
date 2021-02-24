@@ -3,9 +3,15 @@
 <div class='title'>
   <h1>ENTER CANDIDATE DETAILS</h1>
 </div>
+<form method ='POST' name = 'resume_file' enctype="multipart/form-data" action = '{% url "upload_resume" %}'>
+  {% csrf_token %}
+  {{form_.as_p}}
+  <input style='margin-left:20px; width:60px; float:left' type='submit' value = 'upload'>
+</form>
 <form method='POST' enctype="multipart/form-data"> {% csrf_token %}
     {{ form.as_p }}
-  <button type="submit">Add Candidate</button>
+  <button type="submit">Add Candidate</button><br><br>
+  <button type="submit" formaction='delete_candidate'>Cancel</button>
 </form>
 <center><a href='/search_candidate' ><button class='button-close' type="submit">Close</button></a></center>
 {% endblock %}

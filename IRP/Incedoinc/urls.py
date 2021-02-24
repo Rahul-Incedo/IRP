@@ -21,11 +21,11 @@ urlpatterns = [
     #view objects
     url(r'^jd/(?P<jd_pk>.*)/view/$', views.view_jd_view, name='view_jd'),
     url(r'^job/(?P<job_pk>.*)/view/$', views.view_job_view, name='view_job'),
-    
+
     #edit objects
     url(r'^job/(?P<job_pk>.*)/edit/$', views.edit_job_view, name='edit_job'),
-    
-    
+
+
     #delete objects
     url(r'^jd/(?P<jd_pk>.*)/delete/$', views.delete_jd_view, name='delete_jd'),
     url(r'^job/(?P<job_pk>.*)/delete/$', views.delete_job_view, name='delete_job'),
@@ -42,6 +42,8 @@ urlpatterns = [
     path("edit_candidate/<str:candidate_email>/", views.edit_candidate, name = 'edit_candidate'),
     path("view_candidate/<str:candidate_email>/", views.view_candidate, name = 'view_candidate'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/report/', views.report_view, name = "report_view"),
+
+    path('upload-resume/', views.upload_resume_view, name='upload_resume'),
 
     path('referrals/', views.referrals_view, name = "referrals_page")
 ]

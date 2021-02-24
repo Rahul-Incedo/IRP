@@ -29,6 +29,7 @@ from .forms import SignUpForm
 import os
 import pdfkit
 from datetime import date as date_
+from resume_parser import resumeparse
 # Vaishnavi changed authentication
 
 #include models
@@ -36,7 +37,7 @@ from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCa
 from .models import TestModel
 
 #include forms
-from .forms import CandidateForm, UploadJdForm, UploadJobForm , EditCandidateForm
+from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm
 from .forms import TestForm
 
 # Create your views here.
@@ -105,7 +106,7 @@ def edit_job_view(request, job_pk):
 
     if 'cancel' in request.GET:
         return redirect('../view/')
-    
+
     job_object = Job.objects.get(requisition_id=job_pk)
     form = UploadJobForm(request.POST or None, instance=job_object)
     form.fields['raised_by_employee'].disabled = True
@@ -331,10 +332,12 @@ def add_candidate_view(request, *args, **kwargs):
             # return redirect('../search_candidate/', )
             return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
     else:
+        form_ = ResumeForm()
         form = CandidateForm(initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
     context = {
-        'form': form
+        'form': form,
+        'form_':form_,
     }
     return render(request, 'forms/add_candidate.html', context)
 ########################################################################################3
@@ -1005,6 +1008,42 @@ def report_view(request, req_id, email_id, level):
     }
 
     return render(request, 'registration/report.html', context)
+
+
+def upload_resume_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if(request.method == 'POST'):
+        form = ResumeForm(request.POST, request.FILES)
+        if form.is_valid():
+            print('form is valid ******************************************************************************')
+            form_ = form.save()
+        data = resumeparse.read_file(f'media/Resume/{form_.get_resume_name()}')
+        full_name = data['name'].split(' ')
+        f_name = ''
+        m_name = ''
+        l_name = ''
+        if len(full_name) == 1:
+            f_name = full_name[0]
+        elif len(full_name) == 2:
+            f_name = full_name[0]
+            l_name = full_name[1]
+        else:
+            f_name = full_name[0]
+            l_name = full_name[len(full_name)-1]
+            m_name = full_name[1]
+
+        primary_data = {'f_name': f_name,
+                        'm_name': m_name,
+                        'l_name' : l_name,
+                        'email': data['email'],
+                        'mobile':data['phone'],
+                       }
+        print(primary_data)
+
+    form = ResumeForm()
+    return render(request, 'registration/resume.html', {'form':form})
 
 
 def referrals_view(request):
