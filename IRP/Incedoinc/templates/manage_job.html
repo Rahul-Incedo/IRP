@@ -205,14 +205,14 @@
     <div class='my_inputs'>
       <form method="post"> {% csrf_token %}
           <button class="button-home glyphicon glyphicon-home" name="home_button"> Home</button>
-          <input type="text" placeholder="Search Requisition" name='search_query'>
+          <input type="text" placeholder="Search Query" name='search_query'>
           <button type="submit" name="search_button">Search</button>
           <button type="submit" name="list_all_button">List All</button>
           <button type="submit"  class='button-2' name="raise_requisition_button">Raise Requisition</button>
       </form>
     </div>
     {% if msg %}
-    <center><h1>{{ msg }}</h1></center>
+    <center><h2>{{ msg }}</h2></center>
     {% endif %}
     {% if query_set is not None %}
       <div class="my_class">
