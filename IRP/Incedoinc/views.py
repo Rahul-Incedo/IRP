@@ -306,6 +306,8 @@ def add_candidate_view(request, *args, **kwargs):
         if form.is_valid():
             print('form is valid ******************************************************************************')
             form_ = form.save()
+            prim_key = form_.candidate_id
+
         data = resumeparse.read_file(f'media/Resume/{form_.get_resume_name()}')
         full_name = data['name'].split(' ')
         f_name = ''
@@ -337,17 +339,33 @@ def add_candidate_view(request, *args, **kwargs):
                             }
                 )
         new_form.fields['registered_by'].disabled = True
-        return render(request, 'forms/add_candidate.html', {'form':new_form})
+        return render(request, 'forms/add_candidate.html', {'form':new_form, 'prim_key':prim_key})
 
     elif request.method == 'POST' and 'form' in request.POST:
         form = CandidateForm(request.POST, initial={'registered_by': user})
-        form.fields['registered_by'].disabled = True
+        # form.fields['registered_by'].disabled = True
+
+        candidate_id = request.POST['candidate_id']
+        # print('--------------------------candidate_id------------------------', candidate_id)
 
         if form.is_valid():
-            # candidate_obj = Candidate.objects.get(email)
+            candidate_obj = Candidate.objects.get(candidate_id=candidate_id)
+            # print(candidate_obj)
             requisition_id = form.cleaned_data['requisition_id']
-
             candidate_email = form.cleaned_data['email']
+
+            candidate_obj.email = candidate_email
+            candidate_obj.f_name = form.cleaned_data['f_name']
+            candidate_obj.m_name = form.cleaned_data['m_name']
+            candidate_obj.registered_by = user
+            candidate_obj.l_name = form.cleaned_data['l_name']
+            candidate_obj.gender = form.cleaned_data['gender']
+            candidate_obj.college_name = form.cleaned_data['college_name']
+            candidate_obj.CGPA = form.cleaned_data['CGPA']
+            candidate_obj.mobile = form.cleaned_data['mobile']
+            candidate_obj.projects_link = form.cleaned_data['projects_link']
+            candidate_obj.notice_period = form.cleaned_data['notice_period']
+            candidate_obj.save()
 
             job_obj = Job.objects.get(requisition_id=requisition_id)
             Feedback.objects.create(
@@ -380,6 +398,13 @@ def add_candidate_view(request, *args, **kwargs):
     }
     return render(request, 'forms/add_candidate.html', context)
 
+
+def delete_temp_candidate(request, candidate_id):
+    obj = Candidate.objects.get(pk=candidate_id)
+    resume_name = obj.get_resume_name()
+    obj.delete()
+    os.remove(f'media/Resume/{resume_name}')
+    return redirect('../search_candidate/')
 
 def dashboard(request):
     return render(request, "Signup_Login/dashboard.html")
