@@ -157,7 +157,23 @@ class UploadJobForm(forms.ModelForm):
         label = {
             'position_owner_id': '*Position Owner',
             'requisition_id': '*Requisition ID',
+            'total_positions': '*Total Positions',
+            'open_to_internal': 'Open To Internal',
         }
+    
+    def clean_total_positions(self):
+        cleaned_data = self.cleaned_data
+        total_positions = cleaned_data['total_positions']
+        requisition_id = cleaned_data['requisition_id']
+        try:
+            job_obj = Job.objects.get(requisition_id=requisition_id)
+        except:
+            pass
+        else:
+            cnt_offered = job_obj.total_positions-job_obj.get_open_positions()
+            if total_positions < cnt_offered:
+                raise ValidationError(f'{cnt_offered} positions are already offered')
+        return total_positions
 
 class TestForm(forms.ModelForm):
     class Meta:

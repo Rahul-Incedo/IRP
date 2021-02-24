@@ -169,11 +169,19 @@ def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
     if request.method == 'GET' and 'requisition_id' in request.GET:
-        print(request.GET)
         search_query = request.GET['requisition_id']
         query_set = Job.objects.filter(requisition_id = search_query)
         context = {
             'query_set' : query_set
+        }
+        return render(request, 'manage_job.html', context)
+    elif request.method == 'GET' and 'expand_token' in request.GET:
+        expand_token = request.GET['expand_token']
+        query_set = Job.objects.all()
+        context = {
+            'query_set' : query_set,
+            'expand_token' : expand_token,
+            'sub_query_set' : RequisitionCandidate.objects.filter(requisition_id=expand_token)
         }
         return render(request, 'manage_job.html', context)
     elif request.method == 'GET' and 'deleted' in request.GET:
@@ -183,7 +191,6 @@ def manage_job_view(request, *args, **kwargs):
         }
         return render(request, 'manage_job.html', context)
     if request.method == 'POST':
-        print(request.POST)
         if 'home_button' in request.POST:
             return redirect('home_page')
         if 'search_button' in request.POST:
@@ -196,7 +203,7 @@ def manage_job_view(request, *args, **kwargs):
         elif 'list_all_button' in request.POST:
             query_set = Job.objects.all()
             context = {
-                'query_set': query_set
+                'query_set': query_set,
             }
             return render(request, 'manage_job.html', context)
         elif 'raise_requisition_button' in request.POST:
@@ -267,8 +274,6 @@ def upload_job_view(request, *args, **kwargs):
 def home_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    print(request.GET)
-    print(request.POST)
     if request.method == 'POST':
         if 'search_requisition_id_button' in request.POST:
             requisition_id = request.POST.get('requisition_id')
@@ -327,6 +332,11 @@ def add_candidate_view(request, *args, **kwargs):
                 level=3,
                 requisition_id=job_obj,
                 status='pending',
+            )
+            RequisitionCandidate.objects.create(
+                requisition_id = job_obj,
+                candidate_email = candidate_obj,
+                candidate_status = 'in_progress',
             )
             # return redirect('../search_candidate/', )
             return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
@@ -490,7 +500,7 @@ def search_candidate(request, *args, **kwargs):
         if request.method == 'POST':
             if 'home_button' in request.POST:
                 return redirect('home_page')
-            print(request.POST)
+            # print(request.POST)
             if 'listall' in request.POST:
                 temp_candidate_list_tuple = list(set((Feedback.objects.all().values_list('candidate_email'))))
                 temp_candidate_list=[x[0] for x in temp_candidate_list_tuple]

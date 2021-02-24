@@ -40,6 +40,7 @@ class Job(models.Model):
     timestamp_updated = models.DateTimeField(blank=True, null=True)
     requisition_choices = [('open', 'open'),
                             ('offered', 'offered'),
+                            ('onhold', 'onhold'),
                             ('closed', 'closed')]
     requisition_status = models.CharField(choices = requisition_choices, max_length=20, default='open')
     internal_choices  = [('yes', 'yes'),

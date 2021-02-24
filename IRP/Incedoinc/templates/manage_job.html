@@ -66,6 +66,11 @@
         margin-left: auto;
         margin-right: auto;
       }
+      .sub-table {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        width: 90%;
+      }
       th {
         background-color:#588c7e;
         color: #fff;
@@ -210,18 +215,49 @@
             <!-- <th class="table-head">Delete</th> -->
           </thead>
           {% for obj in query_set %}
-          <tr>
-            <td class="table-cell">{{ forloop.counter }}</td>
-            <td class="table-cell"><a href="{% url 'view_job' obj.pk %}"><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a></td>
-            <td class="table-cell">{{ obj.raised_by_employee }}</td>
-            <td class="table-cell">{{ obj.position_owner_id }}</td>
-            <td class="table-cell"><a href="{{obj.jd.jd_file.url}}/">{{ obj.jd.jd_name }}</a></td>
-            <td class="table-cell">{{ obj.requisition_status }}</td>
-            <td class="table-cell">{{ obj.get_open_positions }}</td>
-            <td class="table-cell">{{ obj.open_to_internal }}</td>
-            <!-- <td class="table-cell"><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td> -->
-          </tr>
+            <tr>
+              <td class="table-cell">{{ forloop.counter }}</td>
+              <td class="table-cell">
+                <a href="{% url 'view_job' obj.pk %}"><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a>
+                <a href="./?expand_token={{obj.requisition_id}}"><input type='submit' value='+'></a>
+              </td>
+              <td class="table-cell">{{ obj.raised_by_employee }}</td>
+              <td class="table-cell">{{ obj.position_owner_id }}</td>
+              <td class="table-cell"><a href="{{obj.jd.jd_file.url}}/">{{ obj.jd.jd_name }}</a></td>
+              <td class="table-cell">{{ obj.requisition_status }}</td>
+              <td class="table-cell">{{ obj.get_open_positions }}</td>
+              <td class="table-cell">{{ obj.open_to_internal }}</td>
+              <!-- <td class="table-cell"><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td> -->
+            </tr>
+
+            {% if expand_token == obj.requisition_id %}
+            <tr>
+              <td colspan='8'>
+                <table class='sub-table'>
+                  <thead>
+                    <th>Sr.</th>
+                    <th>Candidate</th>
+                    <th>Status</th>
+                    <th>Expected DOJ</th>
+                    <th>Actual DOJ</th>
+                  </thead>
+                  {% for obj in sub_query_set %}
+                  <tr>
+                    <td class="table-cell">{{ forloop.counter }}</td>
+                    <td class="table-cell">{{ obj.candidate_email }}</td>
+                    <td class="table-cell">{{ obj.candidate_status }}</td>
+                    <td class="table-cell">{{ obj.expected_doj }}</td>
+                    <td class="table-cell">{{ obj.actual_doj }}</td>
+                  </tr>
+                  {% endfor %}
+                </table>
+              </td>
+            </tr>
+            {% endif %}
+
+
           {% endfor %}
+
         </table>
       </div>
     {% endif %}
@@ -235,3 +271,5 @@
     </script>
   </body>
 </html>
+
+
