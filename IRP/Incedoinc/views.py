@@ -1125,11 +1125,31 @@ def refer_candidate_view(request,requisition_id):
     if request.method=='POST':
         print(request.POST)
         if 'yes' in request.POST:
+            candidate_obj=Candidate.objects.filter(email=request.POST['yes'])[0]
             RequisitionCandidate.objects.create(
                 requisition_id=job_obj[0],
-                candidate_email=Candidate.objects.filter(email=request.POST['yes'])[0],
+                candidate_email=candidate_obj,
                 referred_by=Employee.objects.get(email=request.user.username),
                 candidate_status='in_progress'
+            )
+
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=1,
+                requisition_id=job_obj[0],
+                status='pending',
+            )
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=2,
+                requisition_id=job_obj[0],
+                status='pending',
+            )
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=3,
+                requisition_id=job_obj[0],
+                status='pending',
             )
             # print("asdasdsa")
         if 'refer_this_candidate' in request.POST:
