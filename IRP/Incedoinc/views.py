@@ -144,9 +144,17 @@ def manage_jd_view(request, *args, **kwargs):
             return redirect('home_page')
         elif 'search_button' in request.POST:
             search_query = request.POST['search_query']
-            query_set = JD.objects.filter(jd_name__contains=search_query)
+            if search_query is '':
+                query_set = None
+                msg = 'Enter something to search'
+            else:
+                query_set = JD.objects.filter(Q(jd_name__icontains=search_query)
+                                            | Q(uploaded_by_employee__full_name__icontains=search_query)
+                            ).distinct()
+                msg = None
             context = {
-                'query_set': query_set
+                'query_set': query_set,
+                'msg' : msg,
             }
             return render(request, 'manage_jd.html', context)
         elif 'list_all_button' in request.POST:
@@ -195,9 +203,21 @@ def manage_job_view(request, *args, **kwargs):
             return redirect('home_page')
         if 'search_button' in request.POST:
             search_query = request.POST['search_query']
-            query_set = Job.objects.filter(requisition_id__contains=search_query)
+            if search_query is '':
+                query_set = None
+                msg = 'Enter something to search'
+            else:
+                query_set = Job.objects.filter( Q(requisition_id__icontains=search_query)
+                                            | Q(jd__jd_name__icontains=search_query)
+                                            | Q(requisitioncandidate__candidate_email__f_name__icontains=search_query)
+                                            | Q(position_owner_id__full_name__icontains=search_query)
+                                            | Q(raised_by_employee__full_name__icontains=search_query)
+                                            | Q(requisition_status__exact = search_query)
+                            ).distinct()
+                msg = None
             context = {
-                'query_set': query_set
+                'query_set': query_set,
+                'msg' : msg,
             }
             return render(request, 'manage_job.html', context)
         elif 'list_all_button' in request.POST:
