@@ -71,7 +71,7 @@
             text-align:center;
             color:white;
         }
-        table
+        table.table1
         {
             border-collapse: collapse;
             width : 100%;
@@ -83,13 +83,13 @@
             margin-right: auto;
             table-layout : fixed;
         }
-        th
+        table.table1 th
         {
             background-color: #f0f8ff;
             text-align: right;
             padding: 5px;
         }
-        td
+        table.table1 td
         {
           background-color: #f0f8ff;
           padding: 5px;
@@ -153,6 +153,45 @@
           padding: 14px 16px;
           text-decoration: none;
         }
+
+
+        table.table2
+        {
+            border-collapse: collapse;
+            width: 100%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 20px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+        table.table2 th
+        {
+            background-color: #588c7e;
+            color: yellow;
+            padding: 5px;
+        }
+        table.table2 th.search_bar
+        {
+          background-color: white;
+          color: black;
+          padding: 5px;
+        }
+        table.table2 td
+        {
+          padding: 5px;
+          border: 1px solid black;
+        }
+        table.table2 tr:nth-child(even)
+        {
+            background-color: #f2f2f2;
+            padding: 5px;
+
+        }
+
     </style>
 </head>
 <body>
@@ -172,7 +211,7 @@
     <center><h2>{{error_msg}}</h2></center>
   {% else %}
       <form action=""  method="post">{% csrf_token %}
-      <table>
+      <table class="table1">
 
       <tr>
         <th><label text-align="left">First Name </label></th>
@@ -273,6 +312,38 @@
   <center><input type="submit" value="Edit Details"></center>
         </form>
         {% endif %}
+
+
+
+        <table class="table2">
+
+          <tr>
+            <th>Sr.No</th>
+            <th>Requition</th>
+            <th>JD</th>
+            <th>Referred By</th>
+            <th>Status Of Candidate</th>
+
+          </tr>
+
+
+
+          {%for key , value in requisition_candidate_context.items %}
+
+          <tr>
+            <td>{{key}}</td>
+            <td>{{value.requisition_id.requisition_id}}</td>
+            <td>{{value.requisition_id.jd}}</td>
+            <td>{{value.referred_by}}</td>
+            <td>{{value.candidate_status}}</td>
+
+          </tr>
+          {% endfor %}
+
+</table>
+
+
+
         <center><a href= "../../search_candidate/?candidate_email={{email}}"><button class="goback">Go Back</button></a></center>
       </br>
     </br>

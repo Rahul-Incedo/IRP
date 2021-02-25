@@ -491,6 +491,13 @@ def view_candidate(request,candidate_email):
     if timestamp==None:
         timestamp=""
 
+    requisition_candidate_temp_list_tuple = list(set(RequisitionCandidate.objects.filter(candidate_email=Candidate.objects.get(email=candidate_email))))
+    # if len(requisition_candidate_temp_list_tuple)==0:
+    #     return render(request, 'my_referrals.html',{'error_message':'Something Went Wrong'})
+    requisition_candidate_context={}
+    for x in range(len(requisition_candidate_temp_list_tuple)):
+        requisition_candidate_context[x+1]=requisition_candidate_temp_list_tuple[x]
+
     context={
         'f_name':f_name,
         'm_name':m_name,
@@ -507,6 +514,7 @@ def view_candidate(request,candidate_email):
         'resume_url':resume_url,
         'resume_name':resume_name,
         'timestamp':timestamp,
+        'requisition_candidate_context':requisition_candidate_context
     }
 
     return render(request,'view_candidate.html',context)
