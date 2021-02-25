@@ -1021,9 +1021,14 @@ def referrals_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
+        print(type(request.POST))
         print(request.POST)
         if 'home_button' in request.POST:
              return redirect('home_page')
+        elif 'refer_candidate' in request.POST:
+            return redirect('../referrals/refer_candidate/%s' %request.POST['refer_candidate'])
+        elif 'my_referrals' in request.POST:
+            return redirect('../referrals/my_referrals/%s' %Employee.objects.get(email=request.user.username).employee_id)
         elif 'listallopen' in request.POST:
             open_to_internal_list=['yes','no']
             if 'open_to_internal' in request.POST:
@@ -1064,3 +1069,71 @@ def referrals_view(request):
 
 
     return render(request, 'referrals.html')
+
+def my_referrals_view(request,employee_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if 'home_button' in request.POST:
+        return redirect('home_page')
+    if 'go_back' in request.POST:
+            return redirect('referrals_page')
+    temp_list_tuple = list(set(RequisitionCandidate.objects.filter(referred_by=Employee.objects.get(employee_id=employee_id))))
+    if len(temp_list_tuple)==0:
+        return render(request, 'my_referrals.html',{'error_message':'Something Went Wrong'})
+    context={}
+    for x in range(len(temp_list_tuple)):
+        context[x+1]=temp_list_tuple[x]
+    # print(context,"asdfdsfsdfsdfsd")
+    return render(request, 'my_referrals.html',{'context':context})
+
+    print(employee_id,"{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}")
+
+
+def refer_candidate_view(request,requisition_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if 'home_button' in request.POST:
+        return redirect('home_page')
+    if 'go_back' in request.POST:
+            return redirect('referrals_page')
+    job_obj=Job.objects.filter(requisition_id=requisition_id)
+    # print(type(job_obj[0]))
+    if(len(job_obj)==0):
+        return render(request, 'refer_candidate.html',{'error_message':'Oops , Something went wrong!'})
+    context={}
+    requisition_candidate_obj_dict={}
+    if request.method=='POST':
+        print(request.POST)
+        if 'yes' in request.POST:
+            RequisitionCandidate.objects.create(
+                requisition_id=job_obj[0],
+                candidate_email=Candidate.objects.filter(email=request.POST['yes'])[0],
+                referred_by=Employee.objects.get(email=request.user.username),
+                candidate_status='in_progress'
+            )
+            # print("asdasdsa")
+        if 'refer_this_candidate' in request.POST:
+            confirmation_candidate_obj=(Candidate.objects.filter(email=request.POST['refer_this_candidate']))[0]
+            print("asdasdasd-----",type(confirmation_candidate_obj))
+            return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmation_candidate_obj':confirmation_candidate_obj})
+        if 'search' in request.POST:
+            if len(request.POST['search_element'])==0:
+                return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'error_message_2':'Please Enter Something'})
+            candidate_obj=Candidate.objects.filter(Q(f_name__contains=request.POST['search_element']) | Q(email__contains=request.POST['search_element']))
+            if(len(candidate_obj)==0):
+                return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'error_message_2':'No Matching results'})
+            for x in range(len(candidate_obj)):
+                temp_dict={}
+                temp_dict['candidate_obj']=candidate_obj[x]
+                requisition_candidate_obj=RequisitionCandidate.objects.filter(requisition_id=job_obj[0],candidate_email=candidate_obj[x])
+                if len(requisition_candidate_obj)==0:
+                    temp_dict['requisition_candidate_obj']=None
+                else:
+                    temp_dict['requisition_candidate_obj']=requisition_candidate_obj[0]
+                context[x+1]=temp_dict
+
+            print("context[[[[[[]]]]]]",context)
+
+
+
+    return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'context':context,'requisition_candidate_obj_dict':requisition_candidate_obj_dict})

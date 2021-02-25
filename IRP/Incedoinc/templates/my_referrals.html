@@ -88,7 +88,11 @@
             width: 100%;
             font-family: monospace;
             font-size: 25px;
-            background-color: #588c7e;
+
+        }
+        .heading
+        {
+          background-color: #588c7e;
         }
         h3
         {
@@ -238,52 +242,21 @@
       <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
       <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
     </ul>
-    <strong><center>REFERRALS</center></strong>
+    <strong><center class="heading">MY REFERRALS</center></strong>
   </header>
-    <table >
-      <tr>
 
-        <form action=""  method="post" enctype="multipart/form-data">{% csrf_token %}
-        <th class='search_bar'>
-          <button class="home_button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
-          <input type="text" placeholder="Search Requition Id or JD" name="search_element">
-          <input type="submit" value="Search" name="search">
-          <input type="submit" value="List All Open/On Hold Position" name="listallopen">
-          <button type="submit" name="my_referrals" value="{{value.requisition_id}}" style="float:right">My Referrals</button>
-        </th>
-
-      </tr>
-      <tr>
-        <th class='search_bar'>
-        <h4>
-        <label>1)Open To Internal? :</label>
-        <input type="checkbox" name="open_to_internal" value="yes">
-        <label for="yes">Yes</label>
-        <input type="checkbox" name="open_to_internal" value="no">
-        <label for="no">No</label>
-        </h4>
-        <h4>
-        <label>2)Status</label>
-        <input type="checkbox" name="requisition_status" value="open">
-        <label for="open">Open</label>
-        <input type="checkbox" name="requisition_status" value="onhold">
-        <label for="onhold">On Hold</label>
-        </h4>
-        </th>
-      </tr>
-    </table>
-
+<form action=""  method="post" enctype="multipart/form-data">{% csrf_token %}
+  <button class="home_button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
+  <button type="submit" name="go_back" value="" style="float:right">Go Back</button>
     <table>
 
       <tr>
         <th>Sr.No</th>
-        <th>Req Id</th>
-        <th>Position Owner</th>
-        <th>Jd</th>
-        <th>Open Position(s)</th>
-        <th>Status</th>
-        <th>Open To internal</th>
-        <th>Refer</th>
+        <th>Candidate Name</th>
+        <th>Email</th>
+        <th>Referred For</th>
+        <th>Referred On</th>
+        <th>Status Of Candidate</th>
 
       </tr>
 
@@ -293,21 +266,18 @@
 
       <tr>
         <td>{{key}}</td>
+        <td>{{value.candidate_email}}</td>
+        <td>{{value.candidate_email}}</td>
         <td>{{value.requisition_id}}</td>
-        <td>{{value.position_owner_id}}</td>
-        <td>{{value.jd}}</td>
-        <td>{{value.get_open_positions}}</td>
-        <td>{{value.requisition_status}}</td>
-        <td>{{value.open_to_internal}}</td>
-        <td><button type="submit" name="refer_candidate" value="{{value.requisition_id}}">Refer A Candidate</button>
-          <!-- <input type="submit" value="Refer A Candidate" name="{{value.requisition_id}}"> -->
-        </td>
+        <td>{{value.referred_date}}</td>
+            <td>{{value.candidate_status}}</td>
+
       </tr>
       {% endfor %}
 
-    </form>
 </table>
-
+</br>
+</form>
 
 
 

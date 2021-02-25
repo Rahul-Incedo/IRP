@@ -1,0 +1,324 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style type="text/css">
+    body
+    {
+      margin:0px;
+      padding:0px;
+      width:100%;
+      height:100%;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    input[type=text] , input[type=number], input[type=url] ,input[type=email] , input[type=date]
+    {
+      border: none;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 4px 2px;
+      border-radius: 15px;
+      size :50%;
+
+      background-color:white;
+    }
+    select
+    {
+      border: none;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 15px;
+    }
+    option
+    {
+      border: none;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+
+    }
+    input[type=submit] {
+      border: none;
+      color: white;
+
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 15px;
+      background-color: #fd511c;
+
+    }
+    h1
+    {
+        color:black;
+        text-align:center;
+    }
+    h3
+    {
+        font-size: 20px;
+    }
+    #title h2
+    {
+        text-align:center;
+        color:white;
+    }
+    table.table1
+    {
+        border-collapse: collapse;
+        width : 100%;
+        color: #588c7e;
+        font-family: monospace;
+        font-size: 16px;
+        text-align: left;
+        margin-left: auto;
+        margin-right: auto;
+        table-layout : fixed;
+    }
+    table.table1 th
+    {
+        background-color: #f0f8ff;
+        text-align: right;
+        padding: 5px;
+    }
+    table.table1 td
+    {
+      background-color: #f0f8ff;
+      padding: 5px;
+      color:black;
+    }
+
+    table.table2
+    {
+        border-collapse: collapse;
+        width: 100%;
+        color: #588c7e;
+        font-family: monospace;
+        font-size: 20px;
+        text-align: left;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    table.table2 th
+    {
+        background-color: #588c7e;
+        color: yellow;
+        padding: 5px;
+    }
+    table.table2 th.search_bar
+    {
+      background-color: white;
+      color: black;
+      padding: 5px;
+    }
+    table.table2 td
+    {
+      padding: 5px;
+      border: 1px solid black;
+    }
+    table.table2 tr:nth-child(even)
+    {
+        background-color: #f2f2f2;
+        padding: 5px;
+
+    }
+
+    button
+    {
+      border: none;
+      color: white;
+      text-align: center;
+
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 15px;
+      background-color: #fd511c;
+    }
+    button.confirm
+    {
+      border: none;
+      color: black;
+      text-align: center;
+      width:50%;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20 px;
+      font-family: monospace;
+      font-weight: bold;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+      background-color: #8FBC8F;
+    }
+    .heading
+    {
+      border: none;
+      color: white;
+      width:50%;
+      text-align: center;
+      overflow: hidden;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      margin: 10px 8px;
+      border-radius: 15px;
+      background-color: #008B8B;
+    }
+    .goback
+    {
+
+    }
+
+    ul
+    {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #40423f;
+      color: #b6b8b5;
+    }
+
+    li
+    {
+      float: left;
+    }
+
+    li a
+    {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+    </style>
+</head>
+<body>
+
+
+  <header>
+    <ul class = 'main'  style="background-color: black">
+      <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
+      <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
+      <li style="float:right"><a href="{%url 'change_password_page'%}">Change Password</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
+      <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
+    </ul>
+  </header>
+  <form action=""  method="post">{% csrf_token %}
+  <strong><center>
+    <button class="home_button" type="submit" name="home_button" style="float:left"><i class="fa fa-home"></i> Home</button>
+    <button type="submit" name="go_back" value="" style="float:right">Go Back</button>
+    <button class="heading">REFER  CANDIDATE</button></center></strong>
+  {% if error_message %}
+    <center><h2>{{error_message}}</h2></center>
+  {% else %}
+  <table class="table1">
+
+  <tr>
+    <th><label text-align="left">Requition Id  </label></th>
+    <td>: <label >{{job_obj.requisition_id}}</label></td>
+  </tr>
+
+  <tr>
+    <th><label >Job Description </label></th>
+
+    <td>: <label >{{job_obj.jd}}</label></td>
+  </tr>
+
+</table>
+{% if confirmation_candidate_obj %}
+
+  <strong>
+    <center>
+      <button class="confirm" disabled>
+        Do You Want to Refer below mentioned candidate</br></br>
+        NAME : {{confirmation_candidate_obj.f_name}}</br>
+        EMAIL : {{confirmation_candidate_obj.email}}
+      </button>
+    </center>
+    <center>
+      <button type="submit" name="yes" value="{{confirmation_candidate_obj.email}}">Yes</button>
+
+      <button type="submit" name="no" value="{{confirmation_candidate_obj.email}}">No</button>
+    </center>
+    <strong>
+
+{% endif %}
+</br>
+<table class="table1">
+  <tr>
+    <th>
+
+    <input type="text" placeholder="Enter Name or Email" name="search_element">
+    <input type="submit" value="Search" name="search">
+  </th>
+  <th>
+    <input type="submit" value="Add New Candidate & Refer" name="add_new_refer">
+  </th>
+
+
+  </tr>
+
+</table>
+
+</br>
+
+
+</br>
+<table class="table2">
+
+  <tr >
+    <th >Sr.No</th>
+    <th >Name</th>
+    <th >Email</th>
+
+    <th >Refer</th>
+
+  </tr>
+
+
+  {%for key , value in context.items %}
+
+  <tr >
+
+    <td >{{key}}</td>
+    <td >{{value.candidate_obj.f_name}}</td>
+    <td >{{value.candidate_obj.email}}</td>
+    {% if value.requisition_candidate_obj  %}
+    <td>already applied/referred by : {{value.requisition_candidate_obj.referred_by}}</td>
+    {% else %}
+    <td><button type="submit" name="refer_this_candidate" value="{{value.candidate_obj.email}}">Refer This Candidate</button></td>
+    {%endif %}
+  </tr>
+  {% endfor %}
+
+</table>
+
+</form>
+{% if error_message_2 %}
+<center><h2>{{error_message_2}}</h2></center>
+{% endif %}
+{% endif %}
+<br>
+
+
+
+</body>
+</html>
