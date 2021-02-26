@@ -304,7 +304,7 @@ def add_candidate_view(request, *args, **kwargs):
     if request.method == 'POST' and 'form_' in request.POST:
         form = ResumeForm(request.POST, request.FILES)
         if form.is_valid():
-            print('form is valid ******************************************************************************')
+            # print('form is valid ******************************************************************************')
             form_ = form.save()
             prim_key = form_.candidate_id
 
@@ -335,9 +335,10 @@ def add_candidate_view(request, *args, **kwargs):
                                        'm_name' : m_name,
                                        'l_name' : l_name,
                                        'email' : data['email'],
-                                       'mobile' : data['phone'],
+                                       'mobile' : data['phone'][-10:],
                             }
                 )
+        # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
         new_form.fields['registered_by'].disabled = True
         return render(request, 'forms/add_candidate.html', {'form':new_form, 'prim_key':prim_key})
 
@@ -400,11 +401,17 @@ def add_candidate_view(request, *args, **kwargs):
 
 
 def delete_temp_candidate(request, candidate_id):
+    if candidate_id == None:
+        return redirect('../../search_candidate/')
+
     obj = Candidate.objects.get(pk=candidate_id)
     resume_name = obj.get_resume_name()
     obj.delete()
     os.remove(f'media/Resume/{resume_name}')
-    return redirect('../search_candidate/')
+    return redirect('../../search_candidate/')
+
+def delete_temp(request):
+    return redirect('search_candidate')
 
 def dashboard(request):
     return render(request, "Signup_Login/dashboard.html")
