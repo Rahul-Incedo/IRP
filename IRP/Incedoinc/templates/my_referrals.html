@@ -255,6 +255,7 @@
         <th>Candidate Name</th>
         <th>Email</th>
         <th>Referred For</th>
+
         <th>Referred On</th>
         <th>Status Of Candidate</th>
 
@@ -266,11 +267,11 @@
 
       <tr>
         <td>{{key}}</td>
-        <td>{{value.candidate_email}}</td>
-        <td>{{value.candidate_email}}</td>
-        <td>{{value.requisition_id}}</td>
+        <td>{{value.candidate_email.f_name}}</td>
+        <td>{{value.candidate_email.email}}</td>
+        <td>[ {{value.requisition_id}} ] [ {{value.requisition_id.jd}} ]</td>
         <td>{{value.referred_date}}</td>
-            <td>{{value.candidate_status}}</td>
+        <td>{{value.candidate_status}}</td>
 
       </tr>
       {% endfor %}
