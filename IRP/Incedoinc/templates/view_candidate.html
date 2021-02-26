@@ -325,18 +325,13 @@
             <th>Status Of Candidate</th>
 
           </tr>
-
-
-
           {%for key , value in requisition_candidate_context.items %}
-
           <tr>
             <td>{{key}}</td>
             <td>{{value.requisition_id.requisition_id}}</td>
             <td>{{value.requisition_id.jd}}</td>
             <td>{{value.referred_by}}</td>
             <td>{{value.candidate_status}}</td>
-
           </tr>
           {% endfor %}
 

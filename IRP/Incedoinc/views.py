@@ -1138,7 +1138,8 @@ def refer_candidate_view(request,requisition_id):
                 requisition_id=job_obj[0],
                 candidate_email=candidate_obj,
                 referred_by=Employee.objects.get(email=request.user.username),
-                candidate_status='in_progress'
+                candidate_status='in_progress',
+                referred_date=date_.today()
             )
 
             Feedback.objects.create(
