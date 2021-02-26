@@ -29,6 +29,7 @@ from .forms import SignUpForm
 import os
 import pdfkit
 from datetime import date as date_
+from resume_parser import resumeparse
 # Vaishnavi changed authentication
 
 #include models
@@ -36,7 +37,7 @@ from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCa
 from .models import TestModel
 
 #include forms
-from .forms import CandidateForm, UploadJdForm, UploadJobForm , EditCandidateForm
+from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm
 from .forms import TestForm
 
 # Create your views here.
@@ -47,6 +48,7 @@ def test_view(request, **kwargs):
         return render(request, 'test.html', {'delete_signal': 'true'})
     return render(request, 'test.html', {})
     return HttpResponse('<h1> test page </h>')
+
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -324,15 +326,72 @@ def add_candidate_view(request, *args, **kwargs):
         return redirect('login')
 
     user = Employee.objects.get(email=request.user.username)
-    if request.method == 'POST':
-        form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
-        form.fields['registered_by'].disabled = True
+    if request.method == 'POST' and 'form_' in request.POST:
+        form = ResumeForm(request.POST, request.FILES)
+        if form.is_valid():
+            # print('form is valid ******************************************************************************')
+            form_ = form.save()
+            prim_key = form_.candidate_id
+
+        data = resumeparse.read_file(f'media/Resume/{form_.get_resume_name()}')
+        full_name = data['name'].split(' ')
+        f_name = ''
+        m_name = ''
+        l_name = ''
+        if len(full_name) == 1:
+            f_name = full_name[0]
+        elif len(full_name) == 2:
+            f_name = full_name[0]
+            l_name = full_name[1]
+        else:
+            f_name = full_name[0]
+            l_name = full_name[len(full_name)-1]
+            m_name = full_name[1]
+
+        context = {'f_name': f_name,
+                        'm_name': m_name,
+                        'l_name' : l_name,
+                        'email': data['email'],
+                        'mobile':data['phone'],
+                       }
+
+        new_form = CandidateForm(initial={'registered_by': user,
+                                       'f_name' : f_name,
+                                       'm_name' : m_name,
+                                       'l_name' : l_name,
+                                       'email' : data['email'],
+                                       'mobile' : data['phone'][-10:],
+                            }
+                )
+        # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
+        new_form.fields['registered_by'].disabled = True
+        return render(request, 'forms/add_candidate.html', {'form':new_form, 'prim_key':prim_key})
+
+    elif request.method == 'POST' and 'form' in request.POST:
+        form = CandidateForm(request.POST, initial={'registered_by': user})
+        # form.fields['registered_by'].disabled = True
+
+        candidate_id = request.POST['candidate_id']
+        # print('--------------------------candidate_id------------------------', candidate_id)
 
         if form.is_valid():
-            candidate_obj = form.save()
+            candidate_obj = Candidate.objects.get(candidate_id=candidate_id)
+            # print(candidate_obj)
             requisition_id = form.cleaned_data['requisition_id']
-
             candidate_email = form.cleaned_data['email']
+
+            candidate_obj.email = candidate_email
+            candidate_obj.f_name = form.cleaned_data['f_name']
+            candidate_obj.m_name = form.cleaned_data['m_name']
+            candidate_obj.registered_by = user
+            candidate_obj.l_name = form.cleaned_data['l_name']
+            candidate_obj.gender = form.cleaned_data['gender']
+            candidate_obj.college_name = form.cleaned_data['college_name']
+            candidate_obj.CGPA = form.cleaned_data['CGPA']
+            candidate_obj.mobile = form.cleaned_data['mobile']
+            candidate_obj.projects_link = form.cleaned_data['projects_link']
+            candidate_obj.notice_period = form.cleaned_data['notice_period']
+            candidate_obj.save()
 
             job_obj = Job.objects.get(requisition_id=requisition_id)
             Feedback.objects.create(
@@ -361,39 +420,28 @@ def add_candidate_view(request, *args, **kwargs):
             # return redirect('../search_candidate/', )
             return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
     else:
+        form_ = ResumeForm()
         form = CandidateForm(initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
     context = {
-        'form': form
+        'form': form,
+        'form_':form_,
     }
     return render(request, 'forms/add_candidate.html', context)
-########################################################################################3
 
 
+def delete_temp_candidate(request, candidate_id):
+    if candidate_id == None:
+        return redirect('../../search_candidate/')
 
+    obj = Candidate.objects.get(pk=candidate_id)
+    resume_name = obj.get_resume_name()
+    obj.delete()
+    os.remove(f'media/Resume/{resume_name}')
+    return redirect('../../search_candidate/')
 
-
-
-
-
-
-#
-# def login_view(request):
-  #  username = request.POST['username']
- #   password = request.POST['password']
-  #  print(username)
-
-  #  user = authenticate(request, username=username, password=password)
-  #  if user is not None:
-   #     login(request, user)
-  #      return HttpResponseRedirect(reverse('index'))
-    #else:
- #       return render(request, "users/login.html", {"message":"Invalid credential"})
-
-
-
-
-
+def delete_temp(request):
+    return redirect('search_candidate')
 
 def dashboard(request):
     return render(request, "Signup_Login/dashboard.html")
