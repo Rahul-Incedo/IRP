@@ -444,7 +444,7 @@ def add_candidate_view(request, *args, **kwargs):
         #     django_file = File(resume_file)
         #     candidate_obj.resume.save() = File(resume_file)
             # candidate_obj.save()
-        os.remove(f'media/{resume_name}')
+        # os.remove(f'media/{resume_name}')
         return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
 
     form_ = ResumeForm()
