@@ -35,7 +35,7 @@ class EditCandidateForm(forms.ModelForm):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
-    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator], required=False)
     notice_period = forms.CharField(label='*Notice Period (in Months.Days)',
                         widget = forms.TextInput(
                             attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},

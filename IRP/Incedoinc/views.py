@@ -331,7 +331,7 @@ def add_candidate_view(request, *args, **kwargs):
     print('request.POSTtttttttttttttttttt', request.POST)
     if request.method == 'POST' and 'form_' in request.POST:
         form = ResumeForm(request.POST, request.FILES)
-        
+
         if form.is_valid():
             print('form is valid ******************************************************************************')
             resume = request.FILES['resume']
@@ -343,6 +343,7 @@ def add_candidate_view(request, *args, **kwargs):
             # prim_key = form_.candidate_id
 
         data = resumeparse.read_file(f'media/{resume_name}')
+        print(data)
         full_name = data['name'].split(' ')
         f_name = ''
         m_name = ''
@@ -371,7 +372,9 @@ def add_candidate_view(request, *args, **kwargs):
                                            'l_name' : l_name,
                                            'email' : data['email'],
                                            'mobile' : data['phone'][-10:],
-                                           'resume' : resume_file,
+                                           # 'resume' : f'settings.media/{resume_name}',
+                                           'experience' : data['total_exp'],
+                                           # 'college_name' : data['university'][0],
                                  }
                     )
         # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
@@ -384,7 +387,6 @@ def add_candidate_view(request, *args, **kwargs):
 
         # with open(f'media/{resume_name}') as resume_file:
 
-        os.remove(f'media/{resume_name}')
 
         form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
         # form.fields['registered_by'].disabled = True
@@ -420,7 +422,13 @@ def add_candidate_view(request, *args, **kwargs):
                 candidate_status = 'in_progress',
             )
             # return redirect('../search_candidate/', )
-            return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
+        #
+        # with open(f'media/{resume_name}') as resume_file:
+        #     django_file = File(resume_file)
+        #     candidate_obj.resume.save() = File(resume_file)
+            # candidate_obj.save()
+        os.remove(f'media/{resume_name}')
+        return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
 
     form_ = ResumeForm()
     form = CandidateForm(initial={'registered_by': user})
