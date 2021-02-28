@@ -155,7 +155,20 @@
         /* border-radius: 15px; */
         background-color: #008B8B;
       }
+      .filters
+      {
+        border: none;
+        color: black;
 
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        padding: 0px 10px;
+        margin: 5px 10px;
+        border-radius: 5px;
+        background-color: #e5e5e5;
+      }
     </style>
 
     <!-- Latest compiled and minified CSS -->
@@ -209,6 +222,24 @@
           <button type="submit" name="search_button">Search</button>
           <button type="submit" name="list_all_button">List All</button>
           <button type="submit"  class='button-2' name="raise_requisition_button">Raise Requisition</button>
+          <div>
+            <span class="filters">
+              <label>Open to Internal</label>
+              <input type="checkbox" name="open_to_internal" value="yes">
+              <!-- <label for="internal"></label> -->
+            </span>
+            <span class="filters">
+            <label>Status  :</label>
+            <input type="checkbox" id="open" name="requisition_status" value="open" checked>
+            <label for="internal">open</label>
+            <input type="checkbox" id="closed" name="requisition_status" value="closed" checked>
+            <label for="internal">closed</label>
+            <input type="checkbox" id="onhold" name="requisition_status" value="onhold" checked>
+            <label for="internal">onhold</label>
+            <input type="checkbox" id="offered" name="requisition_status" value="offered" checked>
+            <label for="internal">offered</label>
+            </span>
+          </div>
       </form>
     </div>
     {% if msg %}
@@ -246,7 +277,7 @@
               </td>
               <td class="table-cell">{{ obj.raised_by_employee }}</td>
               <td class="table-cell">{{ obj.position_owner_id }}</td>
-              <td class="table-cell"><a href="{{obj.jd.jd_file.url}}/">{{ obj.jd.jd_name }}</a></td>
+              <td class="table-cell"><a href="{{obj.jd.jd_file.url}}/" target="_new">{{ obj.jd.jd_name }}</a></td>
               <td class="table-cell">{{ obj.requisition_status }}</td>
               <td class="table-cell">{{ obj.total_positions }}</td>
               <td class="table-cell">{{ obj.get_open_positions }}</td>
