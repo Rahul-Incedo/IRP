@@ -320,20 +320,29 @@ def home_view(request):
             return Http404('Page Not Exist')
     return render(request,'home.html')
 
+from django.core.files.storage import FileSystemStorage
+from django.core.files import File
 
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
 
     user = Employee.objects.get(email=request.user.username)
+    print('request.POSTtttttttttttttttttt', request.POST)
     if request.method == 'POST' and 'form_' in request.POST:
         form = ResumeForm(request.POST, request.FILES)
+        
         if form.is_valid():
-            # print('form is valid ******************************************************************************')
-            form_ = form.save()
-            prim_key = form_.candidate_id
+            print('form is valid ******************************************************************************')
+            resume = request.FILES['resume']
+            fs = FileSystemStorage()
+            resume_name = fs.save(resume.name, resume)
+            # uploaded_file_url = fs.url(resume_name)
+            # print(uploaded_file_url, '-=======================================')
+            # form_ = form.save()
+            # prim_key = form_.candidate_id
 
-        data = resumeparse.read_file(f'media/Resume/{form_.get_resume_name()}')
+        data = resumeparse.read_file(f'media/{resume_name}')
         full_name = data['name'].split(' ')
         f_name = ''
         m_name = ''
@@ -354,45 +363,38 @@ def add_candidate_view(request, *args, **kwargs):
                         'email': data['email'],
                         'mobile':data['phone'],
                        }
-
-        new_form = CandidateForm(initial={'registered_by': user,
-                                       'f_name' : f_name,
-                                       'm_name' : m_name,
-                                       'l_name' : l_name,
-                                       'email' : data['email'],
-                                       'mobile' : data['phone'][-10:],
-                            }
-                )
+        print(context)
+        with open(f'media/{resume_name}') as resume_file:
+            new_form = CandidateForm(initial={'registered_by': user,
+                                           'f_name' : f_name,
+                                           'm_name' : m_name,
+                                           'l_name' : l_name,
+                                           'email' : data['email'],
+                                           'mobile' : data['phone'][-10:],
+                                           'resume' : resume_file,
+                                 }
+                    )
         # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
         new_form.fields['registered_by'].disabled = True
-        return render(request, 'forms/add_candidate.html', {'form':new_form, 'prim_key':prim_key})
+        return render(request, 'forms/add_candidate.html', {'form':new_form, 'resume_name':resume_name})
 
-    elif request.method == 'POST' and 'form' in request.POST:
-        form = CandidateForm(request.POST, initial={'registered_by': user})
+    if request.method == 'POST' and 'email' in request.POST:
+        print('inside the request----------------------------')
+        resume_name = request.POST['resume_name']
+
+        # with open(f'media/{resume_name}') as resume_file:
+
+        os.remove(f'media/{resume_name}')
+
+        form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
         # form.fields['registered_by'].disabled = True
 
-        candidate_id = request.POST['candidate_id']
-        # print('--------------------------candidate_id------------------------', candidate_id)
-
         if form.is_valid():
-            candidate_obj = Candidate.objects.get(candidate_id=candidate_id)
-            # print(candidate_obj)
+            print('form valllllllllllllllllllllllllllllll')
+            candidate_obj = form.save()
+
             requisition_id = form.cleaned_data['requisition_id']
             candidate_email = form.cleaned_data['email']
-
-            candidate_obj.email = candidate_email
-            candidate_obj.f_name = form.cleaned_data['f_name']
-            candidate_obj.m_name = form.cleaned_data['m_name']
-            candidate_obj.registered_by = user
-            candidate_obj.l_name = form.cleaned_data['l_name']
-            candidate_obj.gender = form.cleaned_data['gender']
-            candidate_obj.college_name = form.cleaned_data['college_name']
-            candidate_obj.CGPA = form.cleaned_data['CGPA']
-            candidate_obj.mobile = form.cleaned_data['mobile']
-            candidate_obj.projects_link = form.cleaned_data['projects_link']
-            candidate_obj.notice_period = form.cleaned_data['notice_period']
-            candidate_obj.save()
-
             job_obj = Job.objects.get(requisition_id=requisition_id)
             Feedback.objects.create(
                 candidate_email=candidate_obj,
@@ -419,10 +421,10 @@ def add_candidate_view(request, *args, **kwargs):
             )
             # return redirect('../search_candidate/', )
             return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
-    else:
-        form_ = ResumeForm()
-        form = CandidateForm(initial={'registered_by': user})
-        form.fields['registered_by'].disabled = True
+
+    form_ = ResumeForm()
+    form = CandidateForm(initial={'registered_by': user})
+    form.fields['registered_by'].disabled = True
     context = {
         'form': form,
         'form_':form_,
@@ -430,14 +432,8 @@ def add_candidate_view(request, *args, **kwargs):
     return render(request, 'forms/add_candidate.html', context)
 
 
-def delete_temp_candidate(request, candidate_id):
-    if candidate_id == None:
-        return redirect('../../search_candidate/')
-
-    obj = Candidate.objects.get(pk=candidate_id)
-    resume_name = obj.get_resume_name()
-    obj.delete()
-    os.remove(f'media/Resume/{resume_name}')
+def delete_temp_candidate(request, resume_name):
+    os.remove(f'media/{resume_name}')
     return redirect('../../search_candidate/')
 
 def delete_temp(request):

@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 # from .models.Feedback import Field
 
-class ResumeForm(forms.ModelForm):
+class ResumeForm(forms.Form):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
@@ -36,16 +36,6 @@ class EditCandidateForm(forms.ModelForm):
         allowed_extensions=['pdf', 'doc', 'docx']
     )
     resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
-    # notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',max_digits=5, decimal_places=2,
-    #                         validators=[
-    #                             validators.MinValueValidator(0),
-    #                         ]
-    #                 )
-    # experience = forms.DecimalField(label='*Experience (in Years.Months)',max_digits=5, decimal_places=2,
-    #                         validators=[
-    #                             validators.MinValueValidator(0),
-    #                         ]
-    # )
     notice_period = forms.CharField(label='*Notice Period (in Months.Days)',
                         widget = forms.TextInput(
                             attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
@@ -127,8 +117,8 @@ class CandidateForm(forms.ModelForm):
                 )
     class Meta:
         model = Candidate
-        # fields = '__all__'
-        fields = ['f_name', 'm_name', 'l_name', 'email', 'registered_by', 'gender', 'college_name', 'projects_link', 'CGPA', 'experience', 'mobile', 'notice_period']
+        fields = '__all__'
+        # fields = ['f_name', 'm_name', 'l_name', 'email', 'registered_by', 'gender', 'college_name', 'projects_link', 'CGPA', 'experience', 'mobile', 'notice_period']
         # exclude = ['DOB']
         labels = {
             'f_name': '*First Name',
@@ -172,7 +162,7 @@ class UploadJobForm(forms.ModelForm):
             'total_positions': '*Total Positions',
             'open_to_internal': 'Open To Internal',
         }
-    
+
     def clean_total_positions(self):
         cleaned_data = self.cleaned_data
         total_positions = cleaned_data['total_positions']

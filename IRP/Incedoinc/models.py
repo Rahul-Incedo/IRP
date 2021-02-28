@@ -57,12 +57,12 @@ class Job(models.Model):
         return (self.total_positions-len(RequisitionCandidate.objects.filter(requisition_id=self, candidate_status='offered')))
 
 class Candidate(models.Model):
-    candidate_id = models.AutoField(primary_key=True)
+    # candidate_id = models.AutoField(primary_key=True)
     registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE, blank=True)
     f_name = models.CharField(max_length=64, blank=True)
     m_name = models.CharField(max_length=64, null=True, blank=True)
     l_name = models.CharField(max_length=64, blank=True)
-    email = models.EmailField(max_length=254, unique=True, blank=True)
+    email = models.EmailField(max_length=254, primary_key=True)
     gender_choice = [('M', 'Male'),
                     ('F', 'Female'),
                     ('O', 'Other')]
