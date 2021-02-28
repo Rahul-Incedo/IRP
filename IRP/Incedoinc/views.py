@@ -209,7 +209,15 @@ def manage_job_view(request, *args, **kwargs):
                 query_set = None
                 msg = 'Enter something to search'
             else:
-                query_set = Job.objects.filter( Q(requisition_id__icontains=search_query)
+                open_to_list = ['yes', 'no']
+                if 'open_to_internal' in request.POST:
+                    open_to_list = ['yes']
+
+                status_list = request.POST.getlist('requisition_status')
+
+                query_set = Job.objects.filter(Q(requisition_status__in=status_list)
+                                            , Q(open_to_internal__in=open_to_list)
+                                            , Q(requisition_id__icontains=search_query)
                                             | Q(jd__jd_name__icontains=search_query)
                                             | Q(requisitioncandidate__candidate_email__f_name__icontains=search_query)
                                             | Q(position_owner_id__full_name__icontains=search_query)
@@ -223,7 +231,16 @@ def manage_job_view(request, *args, **kwargs):
             }
             return render(request, 'manage_job.html', context)
         elif 'list_all_button' in request.POST:
-            query_set = Job.objects.all()
+            print('------------list all-----------')
+            print(request.POST)
+            print('------------------------------------')
+
+            open_to_list = ['yes', 'no']
+            if 'open_to_internal' in request.POST:
+                open_to_list = ['yes']
+
+            status_list = request.POST.getlist('requisition_status')
+            query_set = Job.objects.filter(requisition_status__in=status_list, open_to_internal__in=open_to_list)
             context = {
                 'query_set': query_set,
             }
