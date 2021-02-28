@@ -39,7 +39,6 @@ urlpatterns = [
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/<str:field_name><int:del_level>/', views.delete_field, name = 'delete_field'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/Download/', views.download_report, name = "download_report"),
 
-    path('delete_temp_candidate/<str:resume_name>/', views.delete_temp_candidate, name = 'delete_temp_candidate'),
     path('delete_temp/', views.delete_temp, name = 'delete_temp'),
     path("search_candidate/<str:candidate_email>", views.search_candidate, name = 'search_candidate_email'),
     path("edit_candidate/<str:candidate_email>/", views.edit_candidate, name = 'edit_candidate'),

@@ -15,11 +15,7 @@
   <input type = 'hidden' name ='resume_name' value = {{resume_name}}>
   <button type="submit" name = 'form'>Add Candidate</button><br><br>
 </form>
-{% if resume_name == None %}
-  <a href='../delete_temp/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
-{% else %}
-  <a href='../delete_temp_candidate/{{resume_name}}/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
-{% endif %}
+<a href='../delete_temp/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
 
 <!-- <center><a href='/search_candidate' ><button class='button-close' type="submit">Close</button></a></center> -->
 {% endblock %}

@@ -27,6 +27,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 UserModel = get_user_model()
 from .forms import SignUpForm
 import os
+import shutil
 import pdfkit
 from datetime import date as date_
 from resume_parser import resumeparse
@@ -39,6 +40,9 @@ from .models import TestModel
 #include forms
 from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm
 from .forms import TestForm
+
+import warnings
+warnings.filterwarnings('ignore')
 
 # Create your views here.
 def test_view(request, **kwargs):
@@ -336,7 +340,9 @@ def add_candidate_view(request, *args, **kwargs):
             print('form is valid ******************************************************************************')
             resume = request.FILES['resume']
             fs = FileSystemStorage()
-            resume_name = fs.save(resume.name, resume)
+            # resume_name = str(resume.name)
+            resume_name = fs.save(f'temp/{resume.name}', resume)
+
             # uploaded_file_url = fs.url(resume_name)
             # print(uploaded_file_url, '-=======================================')
             # form_ = form.save()
@@ -427,7 +433,10 @@ def add_candidate_view(request, *args, **kwargs):
         #     django_file = File(resume_file)
         #     candidate_obj.resume.save() = File(resume_file)
             # candidate_obj.save()
-        os.remove(f'media/{resume_name}')
+        # os.remove(f'media/{resume_name}')
+        if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
+            shutil.rmtree('media/temp')
+
         return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
 
     form_ = ResumeForm()
@@ -440,11 +449,9 @@ def add_candidate_view(request, *args, **kwargs):
     return render(request, 'forms/add_candidate.html', context)
 
 
-def delete_temp_candidate(request, resume_name):
-    os.remove(f'media/{resume_name}')
-    return redirect('../../search_candidate/')
-
 def delete_temp(request):
+    if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
+        shutil.rmtree('media/temp')
     return redirect('search_candidate')
 
 def dashboard(request):
