@@ -299,7 +299,7 @@
                   {% for obj in sub_query_set %}
                   <tr>
                     <td class="table-cell">{{ forloop.counter }}</td>
-                    <td class="table-cell">{{ obj.candidate_email }}</td>
+                    <td class="table-cell">{{ obj.candidate_email.full_name }}</td>
                     <td class="table-cell">{{ obj.candidate_status }}</td>
                     <td class="table-cell">{{ obj.expected_doj }}</td>
                     <td class="table-cell">{{ obj.actual_doj }}</td>

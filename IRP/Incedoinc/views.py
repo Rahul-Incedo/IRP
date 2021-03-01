@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings('ignore')
+
 from django.core.exceptions import ValidationError
 from django.db.models import query , Q
 from django.shortcuts import redirect, render
@@ -41,8 +44,7 @@ from .models import TestModel
 from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm
 from .forms import TestForm
 
-import warnings
-warnings.filterwarnings('ignore')
+
 
 # Create your views here.
 def test_view(request, **kwargs):
@@ -150,7 +152,7 @@ def manage_jd_view(request, *args, **kwargs):
             return redirect('home_page')
         elif 'search_button' in request.POST:
             search_query = request.POST['search_query']
-            if search_query is '':
+            if search_query == '':
                 query_set = None
                 msg = 'Enter something to search'
             else:
@@ -209,7 +211,7 @@ def manage_job_view(request, *args, **kwargs):
             return redirect('home_page')
         if 'search_button' in request.POST:
             search_query = request.POST['search_query']
-            if search_query is '':
+            if search_query == '':
                 query_set = None
                 msg = 'Enter something to search'
             else:
