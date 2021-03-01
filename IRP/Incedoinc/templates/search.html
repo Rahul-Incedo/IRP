@@ -196,7 +196,7 @@
           padding: 14px 16px;
           text-decoration: none;
         }
-
+      
     </style>
 </head>
 <body>
@@ -256,7 +256,8 @@
     <tr>
       <td>{{key}}</td>
       <td>{{value.req_id}}</td>
-      <td>{{value.email}}<a href="../view_candidate/{{value.email}}"><button>View</button></a></td>
+      <td><a href="../view_candidate/{{value.email}}/?prev_url=search_candidate/"><input type="submit" class="view-btn" value="{{ value.email }}"></a></td>  
+      <!-- <td>{{value.email}}<a href="../view_candidate/{{value.email}}"><button>View</button></a></td> -->
       <td><a href='{{ value.resume.url }}'><button>download</button></a></td>
         <td>
           {% if value.1 == "pending" %}

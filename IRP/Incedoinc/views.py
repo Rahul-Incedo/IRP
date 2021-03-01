@@ -41,7 +41,7 @@ from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCa
 from .models import TestModel
 
 #include forms
-from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm
+from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm, EditCandidateForm
 from .forms import TestForm
 
 
@@ -184,6 +184,7 @@ def manage_jd_view(request, *args, **kwargs):
 def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
+    request.session['prev_url'] = 'manage-job/'
     if request.method == 'GET' and 'requisition_id' in request.GET:
         search_query = request.GET['requisition_id']
         query_set = Job.objects.filter(requisition_id = search_query)
@@ -501,10 +502,12 @@ def edit_candidate(request,candidate_email):
     }
     return render(request, 'edit_candidate.html', context)
 
-def view_candidate(request,candidate_email):
+def view_candidate(request, candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
-
+    prev_url = request.session['prev_url']
+    if request.method == 'GET' and 'prev_url' in request.GET:
+        prev_url = request.GET['prev_url']
     if request.method == 'POST':
 
         candidate_obj=Candidate.objects.filter(email=candidate_email)
@@ -588,6 +591,7 @@ def view_candidate(request,candidate_email):
         'resume_url':resume_url,
         'resume_name':resume_name,
         'timestamp':timestamp,
+        'prev_url':prev_url,
     }
 
     return render(request,'view_candidate.html',context)
@@ -595,6 +599,7 @@ def view_candidate(request,candidate_email):
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
+    request.session['prev_url'] = 'search_candidate/'
     if (request.GET and request.GET is not {}) or request.method == 'POST':
         context={}
         result=[]
