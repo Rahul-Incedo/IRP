@@ -7,17 +7,6 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 # from .models.Feedback import Field
-
-class ResumeForm(forms.Form):
-    pdf_validator = validators.FileExtensionValidator(
-        allowed_extensions=['pdf', 'doc', 'docx']
-    )
-    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
-
-    class Meta:
-        model = Candidate
-        fields = ['resume']
-
 class EditCandidateForm(forms.ModelForm):
     CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
                             validators=[
@@ -35,7 +24,17 @@ class EditCandidateForm(forms.ModelForm):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
-    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator], required=False)
+    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    # notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',max_digits=5, decimal_places=2,
+    #                         validators=[
+    #                             validators.MinValueValidator(0),
+    #                         ]
+    #                 )
+    # experience = forms.DecimalField(label='*Experience (in Years.Months)',max_digits=5, decimal_places=2,
+    #                         validators=[
+    #                             validators.MinValueValidator(0),
+    #                         ]
+    # )
     notice_period = forms.CharField(label='*Notice Period (in Months.Days)',
                         widget = forms.TextInput(
                             attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
@@ -91,7 +90,7 @@ class CandidateForm(forms.ModelForm):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
-    # resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
     requisition_id = forms.ModelChoiceField(Job.objects.all(), label='*Requisition ID')
     # notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',
     #                                     widget = forms.TextInput(
@@ -118,7 +117,6 @@ class CandidateForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = '__all__'
-        # fields = ['f_name', 'm_name', 'l_name', 'email', 'registered_by', 'gender', 'college_name', 'projects_link', 'CGPA', 'experience', 'mobile', 'notice_period']
         # exclude = ['DOB']
         labels = {
             'f_name': '*First Name',
@@ -131,7 +129,7 @@ class CandidateForm(forms.ModelForm):
             'experience': '*Experience (in months)',
             'mobile': '*10-digit Mobile No.',
             # 'DOB': 'Date of Birth',
-            # 'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
+            'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
             'notice_period': '*Notice Period (in months)',
         }
 
@@ -162,7 +160,7 @@ class UploadJobForm(forms.ModelForm):
             'total_positions': '*Total Positions',
             'open_to_internal': 'Open To Internal',
         }
-
+    
     def clean_total_positions(self):
         cleaned_data = self.cleaned_data
         total_positions = cleaned_data['total_positions']
@@ -238,7 +236,7 @@ class FieldForm(forms.ModelForm):
     field_name = forms.CharField(max_length = 64, widget=forms.TextInput(attrs={'placeholder': 'Enter the field name'}))
     rating = forms.IntegerField(label = 'Rating (Out Of 5)', min_value=1, max_value=5)
 
-
+    
 
     class Meta:
         model = Field

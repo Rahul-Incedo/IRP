@@ -27,10 +27,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 UserModel = get_user_model()
 from .forms import SignUpForm
 import os
-import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
 # Vaishnavi changed authentication
 
 #include models
@@ -38,11 +36,8 @@ from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCa
 from .models import TestModel
 
 #include forms
-from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm
+from .forms import CandidateForm, UploadJdForm, UploadJobForm , EditCandidateForm
 from .forms import TestForm
-
-import warnings
-warnings.filterwarnings('ignore')
 
 # Create your views here.
 def test_view(request, **kwargs):
@@ -52,7 +47,6 @@ def test_view(request, **kwargs):
         return render(request, 'test.html', {'delete_signal': 'true'})
     return render(request, 'test.html', {})
     return HttpResponse('<h1> test page </h>')
-
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -213,15 +207,7 @@ def manage_job_view(request, *args, **kwargs):
                 query_set = None
                 msg = 'Enter something to search'
             else:
-                open_to_list = ['yes', 'no']
-                if 'open_to_internal' in request.POST:
-                    open_to_list = ['yes']
-
-                status_list = request.POST.getlist('requisition_status')
-
-                query_set = Job.objects.filter(Q(requisition_status__in=status_list)
-                                            , Q(open_to_internal__in=open_to_list)
-                                            , Q(requisition_id__icontains=search_query)
+                query_set = Job.objects.filter( Q(requisition_id__icontains=search_query)
                                             | Q(jd__jd_name__icontains=search_query)
                                             | Q(requisitioncandidate__candidate_email__f_name__icontains=search_query)
                                             | Q(position_owner_id__full_name__icontains=search_query)
@@ -235,16 +221,7 @@ def manage_job_view(request, *args, **kwargs):
             }
             return render(request, 'manage_job.html', context)
         elif 'list_all_button' in request.POST:
-            print('------------list all-----------')
-            print(request.POST)
-            print('------------------------------------')
-
-            open_to_list = ['yes', 'no']
-            if 'open_to_internal' in request.POST:
-                open_to_list = ['yes']
-
-            status_list = request.POST.getlist('requisition_status')
-            query_set = Job.objects.filter(requisition_status__in=status_list, open_to_internal__in=open_to_list)
+            query_set = Job.objects.all()
             context = {
                 'query_set': query_set,
             }
@@ -341,85 +318,22 @@ def home_view(request):
             return Http404('Page Not Exist')
     return render(request,'home.html')
 
-from django.core.files.storage import FileSystemStorage
-from django.core.files import File
 
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
 
     user = Employee.objects.get(email=request.user.username)
-    print('request.POSTtttttttttttttttttt', request.POST)
-    if request.method == 'POST' and 'form_' in request.POST:
-        form = ResumeForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            print('form is valid ******************************************************************************')
-            resume = request.FILES['resume']
-            fs = FileSystemStorage()
-            # resume_name = str(resume.name)
-            resume_name = fs.save(f'temp/{resume.name}', resume)
-
-            # uploaded_file_url = fs.url(resume_name)
-            # print(uploaded_file_url, '-=======================================')
-            # form_ = form.save()
-            # prim_key = form_.candidate_id
-
-        data = resumeparse.read_file(f'media/{resume_name}')
-        print(data)
-        full_name = data['name'].split(' ')
-        f_name = ''
-        m_name = ''
-        l_name = ''
-        if len(full_name) == 1:
-            f_name = full_name[0]
-        elif len(full_name) == 2:
-            f_name = full_name[0]
-            l_name = full_name[1]
-        else:
-            f_name = full_name[0]
-            l_name = full_name[len(full_name)-1]
-            m_name = full_name[1]
-
-        context = {'f_name': f_name,
-                        'm_name': m_name,
-                        'l_name' : l_name,
-                        'email': data['email'],
-                        'mobile':data['phone'],
-                       }
-        print(context)
-        with open(f'media/{resume_name}') as resume_file:
-            new_form = CandidateForm(initial={'registered_by': user,
-                                           'f_name' : f_name,
-                                           'm_name' : m_name,
-                                           'l_name' : l_name,
-                                           'email' : data['email'],
-                                           'mobile' : data['phone'][-10:],
-                                           # 'resume' : f'settings.media/{resume_name}',
-                                           'experience' : data['total_exp'],
-                                           # 'college_name' : data['university'][0],
-                                 }
-                    )
-        # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
-        new_form.fields['registered_by'].disabled = True
-        return render(request, 'forms/add_candidate.html', {'form':new_form, 'resume_name':resume_name})
-
-    if request.method == 'POST' and 'email' in request.POST:
-        print('inside the request----------------------------')
-        resume_name = request.POST['resume_name']
-
-        # with open(f'media/{resume_name}') as resume_file:
-
-
+    if request.method == 'POST':
         form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
-        # form.fields['registered_by'].disabled = True
+        form.fields['registered_by'].disabled = True
 
         if form.is_valid():
-            print('form valllllllllllllllllllllllllllllll')
             candidate_obj = form.save()
-
             requisition_id = form.cleaned_data['requisition_id']
+
             candidate_email = form.cleaned_data['email']
+
             job_obj = Job.objects.get(requisition_id=requisition_id)
             Feedback.objects.create(
                 candidate_email=candidate_obj,
@@ -445,31 +359,41 @@ def add_candidate_view(request, *args, **kwargs):
                 candidate_status = 'in_progress',
             )
             # return redirect('../search_candidate/', )
-        #
-        # with open(f'media/{resume_name}') as resume_file:
-        #     django_file = File(resume_file)
-        #     candidate_obj.resume.save() = File(resume_file)
-            # candidate_obj.save()
-        # os.remove(f'media/{resume_name}')
-        if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
-            shutil.rmtree('media/temp')
-
-        return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
-
-    form_ = ResumeForm()
-    form = CandidateForm(initial={'registered_by': user})
-    form.fields['registered_by'].disabled = True
+            return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
+    else:
+        form = CandidateForm(initial={'registered_by': user})
+        form.fields['registered_by'].disabled = True
     context = {
-        'form': form,
-        'form_':form_,
+        'form': form
     }
     return render(request, 'forms/add_candidate.html', context)
+########################################################################################3
 
 
-def delete_temp(request):
-    if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
-        shutil.rmtree('media/temp')
-    return redirect('search_candidate')
+
+
+
+
+
+
+
+#
+# def login_view(request):
+  #  username = request.POST['username']
+ #   password = request.POST['password']
+  #  print(username)
+
+  #  user = authenticate(request, username=username, password=password)
+  #  if user is not None:
+   #     login(request, user)
+  #      return HttpResponseRedirect(reverse('index'))
+    #else:
+ #       return render(request, "users/login.html", {"message":"Invalid credential"})
+
+
+
+
+
 
 def dashboard(request):
     return render(request, "Signup_Login/dashboard.html")

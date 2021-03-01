@@ -57,27 +57,26 @@ class Job(models.Model):
         return (self.total_positions-len(RequisitionCandidate.objects.filter(requisition_id=self, candidate_status='offered')))
 
 class Candidate(models.Model):
-    # candidate_id = models.AutoField(primary_key=True)
-    registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE, blank=True)
-    f_name = models.CharField(max_length=64, blank=True)
+    registered_by = models.ForeignKey(Employee, null =True, on_delete = models.CASCADE )
+    f_name = models.CharField(max_length=64)
     m_name = models.CharField(max_length=64, null=True, blank=True)
-    l_name = models.CharField(max_length=64, blank=True)
+    l_name = models.CharField(max_length=64)
     email = models.EmailField(max_length=254, primary_key=True)
     gender_choice = [('M', 'Male'),
                     ('F', 'Female'),
                     ('O', 'Other')]
     gender = models.CharField(max_length=1,
-                            choices= gender_choice, blank=True)
+                            choices= gender_choice)
 
     college_name = models.CharField(max_length = 254, null=True, blank=True)
-    CGPA = models.DecimalField(null=True, max_digits=5, decimal_places=3, blank=True)
-    experience = models.CharField(max_length=5, blank=True)
-    mobile = models.CharField(max_length=10, blank=True)
+    CGPA = models.DecimalField(null=True, max_digits=5, decimal_places=3)
+    experience = models.CharField(max_length=5)
+    mobile = models.CharField(max_length=10)
     # DOB = models.DateField(null=True, blank=True)
     projects_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to='Resume/')
-    notice_period = models.CharField(max_length=5, blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True, blank=True)
+    notice_period = models.CharField(max_length=5)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     @property
     def full_name(self):
