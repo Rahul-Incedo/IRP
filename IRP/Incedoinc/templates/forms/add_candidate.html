@@ -3,6 +3,9 @@
 <div class='title'>
   <h1>ENTER CANDIDATE DETAILS</h1>
 </div>
+{% if signal == False %}
+  <h3 style="margin-left:200px"> candidate already exists </h3>
+{% endif %}
 <form method ='POST' name = 'resume_file' enctype="multipart/form-data" action = '{% url "add_candidate_page" %}'>
   {% csrf_token %}
   {{form_.as_p}}

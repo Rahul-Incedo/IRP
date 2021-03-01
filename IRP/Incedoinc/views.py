@@ -349,6 +349,16 @@ def add_candidate_view(request, *args, **kwargs):
         return redirect('login')
 
     user = Employee.objects.get(email=request.user.username)
+    form_ = ResumeForm()
+    form = CandidateForm(initial={'registered_by': user})
+    form.fields['registered_by'].disabled = True
+    signal = None
+    context = {
+        'form': form,
+        'form_':form_,
+        'signal' : signal,
+    }
+
     print('request.POSTtttttttttttttttttt', request.POST)
     if request.method == 'POST' and 'form_' in request.POST:
         form = ResumeForm(request.POST, request.FILES)
@@ -412,12 +422,11 @@ def add_candidate_view(request, *args, **kwargs):
 
 
         form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
+        context['signal'] = False
         # form.fields['registered_by'].disabled = True
-
         if form.is_valid():
-            print('form valllllllllllllllllllllllllllllll')
             candidate_obj = form.save()
-
+            context['signal'] = True
             requisition_id = form.cleaned_data['requisition_id']
             candidate_email = form.cleaned_data['email']
             job_obj = Job.objects.get(requisition_id=requisition_id)
@@ -445,24 +454,18 @@ def add_candidate_view(request, *args, **kwargs):
                 candidate_status = 'in_progress',
             )
             # return redirect('../search_candidate/', )
-        #
-        # with open(f'media/{resume_name}') as resume_file:
-        #     django_file = File(resume_file)
-        #     candidate_obj.resume.save() = File(resume_file)
-            # candidate_obj.save()
-        # os.remove(f'media/{resume_name}')
-        if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
-            shutil.rmtree('media/temp')
+            #
+            # with open(f'media/{resume_name}') as resume_file:
+            #     django_file = File(resume_file)
+            #     candidate_obj.resume.save() = File(resume_file)
+                # candidate_obj.save()
+            # os.remove(f'media/{resume_name}')
+            if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
+                shutil.rmtree('media/temp')
 
-        return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
+            return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
 
-    form_ = ResumeForm()
-    form = CandidateForm(initial={'registered_by': user})
-    form.fields['registered_by'].disabled = True
-    context = {
-        'form': form,
-        'form_':form_,
-    }
+
     return render(request, 'forms/add_candidate.html', context)
 
 
