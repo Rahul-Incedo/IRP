@@ -23,6 +23,14 @@
           border-radius: 15px;
 
         }
+      input[type=submit]#view {
+        border: none;
+        background-color: transparent;
+        color: black;
+      }
+      input[type=submit]#view:hover {
+        text-decoration: underline;
+      }
         select
         {
           border: none;
@@ -256,7 +264,7 @@
     <tr>
       <td>{{key}}</td>
       <td>{{value.req_id}}</td>
-      <td><a href="../view_candidate/{{value.email}}/?prev_url=search_candidate/"><input type="submit" class="view-btn" value="{{ value.email }}"></a></td>  
+      <td><a href="../view_candidate/{{value.email}}/?prev_url=search_candidate/"><input id='view' type="submit" class="view-btn" value="{{ value.email }}"></a></td>  
       <!-- <td>{{value.email}}<a href="../view_candidate/{{value.email}}"><button>View</button></a></td> -->
       <td><a href="{% url 'file_view' value.resume.url %}" target="_blank"><button>download</button></a></td>
         <td>

@@ -33,7 +33,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 # Vaishnavi changed authentication
 
 #include models
