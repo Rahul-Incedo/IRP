@@ -43,6 +43,7 @@ urlpatterns = [
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/Download/', views.download_report, name = "download_report"),
 
     path('delete_temp/', views.delete_temp, name = 'delete_temp'),
+    path('delete_resume/media/Resume/<str:resume_name>', views.delete_resume, name="delete_temp_resume"),
     path("search_candidate/<str:candidate_email>", views.search_candidate, name = 'search_candidate_email'),
     path("edit_candidate/<str:candidate_email>/", views.edit_candidate, name = 'edit_candidate'),
     path("view_candidate/<str:candidate_email>/", views.view_candidate, name = 'view_candidate'),

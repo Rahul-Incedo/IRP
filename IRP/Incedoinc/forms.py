@@ -117,9 +117,9 @@ class CandidateForm(forms.ModelForm):
                 )
     class Meta:
         model = Candidate
-        fields = '__all__'
+        # fields = '__all__'
         # fields = ['f_name', 'm_name', 'l_name', 'email', 'registered_by', 'gender', 'college_name', 'projects_link', 'CGPA', 'experience', 'mobile', 'notice_period']
-        # exclude = ['DOB']
+        exclude = ['resume']
         labels = {
             'f_name': '*First Name',
             'm_name': 'Middle Name',
