@@ -75,7 +75,7 @@ class Candidate(models.Model):
     mobile = models.CharField(max_length=10, blank=True)
     # DOB = models.DateField(null=True, blank=True)
     projects_link = models.URLField(null=True, blank=True)
-    resume = models.FileField(upload_to='Resume/')
+    resume = models.FileField()
     notice_period = models.CharField(max_length=5, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, blank=True)
 
