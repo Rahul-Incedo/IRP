@@ -39,7 +39,9 @@ from .models import TestModel
 from .forms import CandidateForm, UploadJdForm, UploadJobForm , EditCandidateForm
 from .forms import TestForm
 
-# Create your views here.
+from django.conf import settings
+
+# Create ur views here.
 def test_view(request, **kwargs):
     print(request.GET)
     if 'delete_button' in request.GET:
@@ -1171,6 +1173,25 @@ def refer_candidate_view(request,requisition_id):
                 
             })
             to_email = "vaishnavi.s@incedoinc.com"
+            email = EmailMessage(
+                mail_subject, message, to=[to_email]
+            )
+            file_url = candidate_obj.resume.url
+            full_path = os.path.join(settings.BASE_DIR, file_url[1:])
+            file = open(full_path, 'rb')
+
+            email.attach(candidate_obj.get_resume_name(), file.read(), 'application/pdf/')
+            email.send()
+     ##############   To Candidate #######################
+            mail_subject = 'Successfully Applied'
+            message = render_to_string('successfully_applied.html', {
+                'req_id': job_obj[0],
+                # 'candidate_email': candidate_obj,
+                'referred_by':Employee.objects.get(email=request.user.username),
+                
+                
+            })
+            to_email = candidate_obj.email
             email = EmailMessage(
                 mail_subject, message, to=[to_email]
             )
