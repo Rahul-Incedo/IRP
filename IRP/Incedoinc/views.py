@@ -1160,6 +1160,21 @@ def refer_candidate_view(request,requisition_id):
                 requisition_id=job_obj[0],
                 status='pending',
             )
+            ########Vaishnavi###########
+            
+            mail_subject = 'New Candidate Referred'
+            message = render_to_string('new_candidate_referred.html', {
+                'req_id': job_obj[0],
+                'candidate_email': candidate_obj,
+                'referred_by':Employee.objects.get(email=request.user.username),
+                
+                
+            })
+            to_email = "vaishnavi.s@incedoinc.com"
+            email = EmailMessage(
+                mail_subject, message, to=[to_email]
+            )
+            email.send()
             # print("asdasdsa")
         if 'refer_this_candidate' in request.POST:
             confirmation_candidate_obj=(Candidate.objects.filter(email=request.POST['refer_this_candidate']))[0]
