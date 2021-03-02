@@ -33,7 +33,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 # Vaishnavi changed authentication
 
 #include models
@@ -44,16 +44,27 @@ from .models import TestModel
 from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm, EditCandidateForm
 from .forms import TestForm
 
+from django.conf import settings
 
 
-# Create your views here.
-def test_view(request, **kwargs):
-    print(request.GET)
-    if 'delete_button' in request.GET:
-        print('delete_signal')
-        return render(request, 'test.html', {'delete_signal': 'true'})
-    return render(request, 'test.html', {})
-    return HttpResponse('<h1> test page </h>')
+from django.http import FileResponse
+def file_view(request, file_url):
+    print('-----------------------------file-view----------------------------')
+    full_path = os.path.join(settings.BASE_DIR, file_url[1:])
+    file_name = file_url.split('/')[-1]
+    file_extension = file_name.split('.')[-1].lower()
+    print('file_url:', file_url)
+    print('file_name:', file_name)
+    print('full_path:', full_path)
+    print('file_extension:', file_extension)
+    print('------------------------------------------------------------------')
+    if file_extension == 'pdf':
+        with open(full_path, 'rb') as pdf:
+            response = HttpResponse(pdf.read(),content_type='application/pdf')
+            response['Content-Disposition'] = 'filename='+file_name
+            return response
+    else:
+        return FileResponse(open(full_path, 'rb'))
 
 def index(request):
     if not request.user.is_authenticated:

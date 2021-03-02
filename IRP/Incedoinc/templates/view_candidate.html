@@ -261,7 +261,8 @@
           <th><label >Resume </label></th>
 
           <!-- <td>: <a href='{{ candidate_obj.resume.url }}'><label >{{candidate_obj.get_resume_name}}</label></a></td> -->
-          <td>: <a href='{{ resume_url }}'><label >{{resume_name}}</label></a></td>
+          <!-- <td>: <a href='{{ resume_url }}'><label >{{resume_name}}</label></a></td> -->
+          <td>: <a href="{% url 'file_view' resume_url %}" target="_blank"><label >{{resume_name}}</label></a></td>
       </tr>
       <!-- <tr>
           <th><label >Timestamp </label></th>

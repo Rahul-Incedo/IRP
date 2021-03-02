@@ -126,7 +126,8 @@
       <td>{{value.req_id}}</td>
       <td>
         {{value.email}}
-        <a href='{{ value.resume.url }}'><button>Resume</button></a>
+        <!-- <a href='{{ value.resume.url }}'><button>Resume</button></a> -->
+        <a href="{% url 'file_view' value.resume.url %}" target="_blank"><button>Resume</button></a>
       </td>
 
         <td>

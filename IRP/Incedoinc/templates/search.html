@@ -258,7 +258,7 @@
       <td>{{value.req_id}}</td>
       <td><a href="../view_candidate/{{value.email}}/?prev_url=search_candidate/"><input type="submit" class="view-btn" value="{{ value.email }}"></a></td>  
       <!-- <td>{{value.email}}<a href="../view_candidate/{{value.email}}"><button>View</button></a></td> -->
-      <td><a href='{{ value.resume.url }}' target="_new"><button>download</button></a></td>
+      <td><a href="{% url 'file_view' value.resume.url %}" target="_blank"><button>download</button></a></td>
         <td>
           {% if value.1 == "pending" %}
           <a href="feedback/{{value.req_id}}/{{value.email}}1/"><button>Fill Feedback</button></a>

@@ -212,7 +212,10 @@
             <td class='table-cell'>{{ forloop.counter }}</td>
             <td class='table-cell'><a href="{% url 'view_jd' obj.pk %}"><button type='submit' class='button-table'>{{obj.jd_name}}</button></a></td>
             <td class='table-cell'>{{ obj.uploaded_by_employee }}</td>
-            <td class='table-cell'><a href="{{ obj.jd_file.url }}/" target="_new">{{ obj.get_file_name}}</a></td>
+
+            <td class='table-cell'><a href="{% url 'file_view' obj.jd_file.url %}" target="_blank">{{ obj.get_file_name}}</a></td>
+            <!-- <td class='table-cell'><a href="/test/?file_url={{obj.jd_file.url}}" target="_blank">{{ obj.get_file_name}}</a></td> -->
+            <!-- <td class='table-cell'><a href="{{ obj.jd_file.url }}/" target="_blank">{{ obj.get_file_name}}</a></td> -->
             <!-- <td><a href="{% url 'delete_jd' obj.pk %}" ><input type="button" value="Delete"></a></td> -->
             <td class="table-cell"><a href="#" data-href="{% url 'delete_jd' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td>
           </tr>

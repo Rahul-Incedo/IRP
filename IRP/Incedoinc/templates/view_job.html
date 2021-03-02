@@ -180,7 +180,7 @@
             </tr>
             <tr>
                 <th><label>Job Description</label></th>
-                <td><label>{{obj.jd.jd_name}}</label></td>
+                <td><a href="{% url 'file_view' obj.jd.jd_file.url %}" target="_blank" ><label>{{obj.jd.jd_name}}</label></a></td>
             </tr>
             
             <tr>

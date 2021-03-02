@@ -280,7 +280,7 @@
               </td>
               <td class="table-cell">{{ obj.raised_by_employee }}</td>
               <td class="table-cell">{{ obj.position_owner_id }}</td>
-              <td class="table-cell"><a href="{{obj.jd.jd_file.url}}/" target="_new">{{ obj.jd.jd_name }}</a></td>
+              <td class="table-cell"><a href="{% url 'file_view' obj.jd.jd_file.url %}" target="_blank">{{ obj.jd.jd_name }}</a></td>
               <td class="table-cell">{{ obj.requisition_status }}</td>
               <td class="table-cell">{{ obj.total_positions }}</td>
               <td class="table-cell">{{ obj.get_open_positions }}</td>

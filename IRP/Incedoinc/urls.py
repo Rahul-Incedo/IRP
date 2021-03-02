@@ -8,7 +8,8 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    path("test/", views.test_view, name='test_page'),
+    # url(r'^test/(?P<file_url>.*)/$', views.test_view, name='test_page'),
+
     #pulkit-kartikeyan
     #path("", views.index, name='home'),
     path("home/",views.home_view, name='home_page'),
@@ -19,6 +20,8 @@ urlpatterns = [
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
 
     #view objects
+    url(r'^files(?P<file_url>.*)/$', views.file_view, name='file_view'),
+
     url(r'^jd/(?P<jd_pk>.*)/view/$', views.view_jd_view, name='view_jd'),
     url(r'^job/(?P<job_pk>.*)/view/$', views.view_job_view, name='view_job'),
 

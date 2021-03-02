@@ -172,7 +172,7 @@
         </tr>
         <tr>
             <th><label>File Name</label></th>
-            <td><label>{{obj.get_file_name}}</label></td>
+            <td><a href="{% url 'file_view' obj.jd_file.url %}" target="_blank" ><label>{{obj.get_file_name}}</label></a></td>
         </tr>
         <tr>
             <th><label>Uploaded By</label></th>
