@@ -10,7 +10,7 @@ from django.urls import reverse
 
 from datetime import datetime
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import LoginForm, SignUpForm, FieldForm
+from .forms import LoginForm, SignUpForm, FieldForm, EditCandidateForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 
@@ -409,6 +409,8 @@ def add_candidate_view(request, *args, **kwargs):
                 candidate_obj.resume = file_obj
                 candidate_obj.save()
 
+            if os.path.exists('media/media'):
+                shutil.rmtree('media/media')
             context['signal'] = True
             requisition_id = form.cleaned_data['requisition_id']
             candidate_email = form.cleaned_data['email']
