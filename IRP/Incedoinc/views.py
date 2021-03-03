@@ -451,7 +451,7 @@ def add_candidate_view(request, *args, **kwargs):
             RequisitionCandidate.objects.create(
                 requisition_id = job_obj,
                 candidate_email = candidate_obj,
-                candidate_status = 'in_progress',
+                candidate_status = 'In-Progress',
             )
             # return redirect('../search_candidate/', )
             #
@@ -516,28 +516,26 @@ def view_candidate(request, candidate_email):
     if request.method == 'GET' and 'prev_url' in request.GET:
         prev_url = request.GET['prev_url']
     if request.method == 'POST':
-
-    if 'home_button' in request.POST:
-        return redirect('home_page')
-    if 'go_back' in request.POST:
-            if request.GET:
-                print("get request : ")
-                if 'previous' in request.GET:
-                    print(request.GET['previous'])
-                    previous_url_values=request.GET['previous'].split('_connector_of_2_values_')
-                    # print(l)
-                    return redirect('../../referrals/'+previous_url_values[0]+'/'+previous_url_values[1])
-            else:
-                # <a href= "../../search_candidate/?candidate_email={{email}}"
-                return redirect('../../search_candidate/?candidate_email='+str(candidate_email))
-            print("goback")
-            # return redirect('referrals_page')
-    if 'edit_details' in request.POST:
-        candidate_obj=Candidate.objects.filter(email=candidate_email)
-        print(candidate_email)
-
-        print("sdfsdfsdfsd------------------------------")
-        return redirect('../../edit_candidate/'+str(candidate_email))
+        if 'home_button' in request.POST:
+            return redirect('home_page')
+        if 'go_back' in request.POST:
+                if request.GET:
+                    print("get request : ")
+                    if 'previous' in request.GET:
+                        print(request.GET['previous'])
+                        previous_url_values=request.GET['previous'].split('_connector_of_2_values_')
+                        # print(l)
+                        return redirect('../../referrals/'+previous_url_values[0]+'/'+previous_url_values[1])
+                else:
+                    # <a href= "../../search_candidate/?candidate_email={{email}}"
+                    return redirect('../../search_candidate/?candidate_email='+str(candidate_email))
+                print("goback")
+                # return redirect('referrals_page')
+        if 'edit_details' in request.POST:
+            candidate_obj=Candidate.objects.filter(email=candidate_email)
+            print(candidate_email)
+            print("sdfsdfsdfsd------------------------------")
+            return redirect('../../edit_candidate/'+str(candidate_email))
 
     candidate_obj=Candidate.objects.filter(email=candidate_email)
     if len(candidate_obj)==0 :
@@ -1142,10 +1140,10 @@ def referrals_view(request):
         elif 'my_referrals' in request.POST:
             return redirect('../referrals/my_referrals/%s' %Employee.objects.get(email=request.user.username).employee_id)
         elif 'listallopen' in request.POST:
-            open_to_internal_list=['yes','no']
+            open_to_internal_list=['Yes','No']
             if 'open_to_internal' in request.POST:
                 open_to_internal_list=request.POST.getlist('open_to_internal')
-            requisition_status_list=['open','onhold']
+            requisition_status_list=['Open','On-hold']
             if 'requisition_status' in request.POST:
                 requisition_status_list=request.POST.getlist('requisition_status')
             temp_list_tuple = list(set(Job.objects.filter(open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list)))
@@ -1162,10 +1160,10 @@ def referrals_view(request):
             if(len(search_element)==0):
                 return render(request, 'referrals.html',{'error_message':'Please Enter Something'})
             # print(search_element,"-----------------")
-            open_to_internal_list=['yes','no']
+            open_to_internal_list=['Yes','No']
             if 'open_to_internal' in request.POST:
                 open_to_internal_list=request.POST.getlist('open_to_internal')
-            requisition_status_list=['open','onhold']
+            requisition_status_list=['Open','On-hold']
             if 'requisition_status' in request.POST:
                 requisition_status_list=request.POST.getlist('requisition_status')
             temp_list_tuple = list(set(Job.objects.filter(Q(requisition_id__contains=search_element , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list) | Q(jd__in=JD.objects.filter(jd_name__contains=search_element) , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list))))
@@ -1222,7 +1220,7 @@ def refer_candidate_view(request,requisition_id):
                 requisition_id=job_obj[0],
                 candidate_email=candidate_obj,
                 referred_by=Employee.objects.get(email=request.user.username),
-                candidate_status='in_progress',
+                candidate_status='In-Progress',
                 referred_date=date_.today()
             )
 
