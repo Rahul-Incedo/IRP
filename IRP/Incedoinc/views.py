@@ -33,7 +33,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -221,12 +221,12 @@ def manage_job_view(request, *args, **kwargs):
                 query_set = None
                 msg = 'Enter something to search'
             else:
-                open_to_list = ['yes', 'no']
+                open_to_list = ['Yes', 'No']
                 if 'open_to_internal' in request.POST:
-                    open_to_list = ['yes']
+                    open_to_list = ['Yes']
 
                 status_list = request.POST.getlist('requisition_status')
-
+                print(status_list)
                 query_set = Job.objects.filter(Q(requisition_status__in=status_list)
                                             , Q(open_to_internal__in=open_to_list)
                                             , Q(requisition_id__icontains=search_query)
@@ -243,9 +243,9 @@ def manage_job_view(request, *args, **kwargs):
             }
             return render(request, 'manage_job.html', context)
         elif 'list_all_button' in request.POST:
-            open_to_list = ['yes', 'no']
+            open_to_list = ['Yes', 'No']
             if 'open_to_internal' in request.POST:
-                open_to_list = ['yes']
+                open_to_list = ['Yes']
 
             status_list = request.POST.getlist('requisition_status')
             query_set = Job.objects.filter(requisition_status__in=status_list, open_to_internal__in=open_to_list)
