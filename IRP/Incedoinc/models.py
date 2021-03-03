@@ -40,7 +40,7 @@ class Job(models.Model):
     timestamp_updated = models.DateTimeField(blank=True, null=True)
     requisition_choices = [('Open', 'Open'),
                             ('Offered', 'Offered'),
-                            ('On-hold', 'On-hold'),
+                            ('On-Hold', 'On-Hold'),
                             ('Closed', 'Closed')]
     requisition_status = models.CharField(choices = requisition_choices, max_length=20, default='Open')
     internal_choices  = [('Yes', 'Yes'),
@@ -129,7 +129,7 @@ class RequisitionCandidate(models.Model):
     actual_doj = models.DateField(null=True, blank=True)
     status_choices = [('Selected', 'Selected'),
                         ('Rejected', 'Rejected'),
-                        ('On-hold', 'On-hold'),
+                        ('On-Hold', 'On-Hold'),
                         ('Offered', 'Offered'),
                         ('Joined', 'Joined'),
                         ('In-Progress', 'In-Progress')]
