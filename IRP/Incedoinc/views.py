@@ -1155,12 +1155,12 @@ def referrals_view(request):
                     initial_elements['initial_open_internal_yes']='Yes'
                 if 'No' in open_to_internal_list:
                     initial_elements['initial_open_internal_no']='No'
-            requisition_status_list=['Open','On-hold']
+            requisition_status_list=['Open','On-Hold']
             if 'requisition_status' in request.POST:
                 requisition_status_list=request.POST.getlist('requisition_status')
                 if 'Open' in requisition_status_list:
                     initial_elements['initial_req_status_open']=True
-                if 'On_Hold' in requisition_status_list:
+                if 'On-Hold' in requisition_status_list:
                     initial_elements['initial_req_status_onhold']=True
             temp_list_tuple=()
             if 'listallopen' in request.POST:

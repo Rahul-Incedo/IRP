@@ -308,7 +308,7 @@
     {% if value.requisition_candidate_obj  %}
     <td>already applied/referred by : {{value.requisition_candidate_obj.referred_by}}</td>
     {% else %}
-    <td><button type="submit" name="refer_this_candidate" value="{{value.candidate_obj.email}}">Refer This Candidate</button></td>
+    <td><button type="submit" name="refer_this_candidate" value="{{value.candidate_obj.email}}">Refer Candidate</button></td>
     {%endif %}
     </tr>
   {% endfor %}
