@@ -1,0 +1,30 @@
+{% extends 'forms/base_form.html' %}
+{% block content %}
+<div class='title'>
+  <h1>ENTER CANDIDATE DETAILS</h1>
+</div>
+{% if signal == False %}
+  <h3 style="margin-left:200px"> candidate already exists </h3>
+{% endif %}
+<form method ='POST' name = 'resume_file' enctype="multipart/form-data" action = '{% url "add_candidate_page" %}'>
+  {% csrf_token %}
+  {{form_.as_p}}
+  {% if form_ is not None %}
+  <input style='margin-left:20px; width:60px; float:left' name = 'form_' type='submit' value = 'upload'>
+  {% endif %}
+</form>
+<form method='POST' name = 'details' enctype="multipart/form-data" action = '{% url "add_candidate_page" %}'> {% csrf_token %}
+  {{ form.as_p }}
+  <input type = 'hidden' name ='resume_name' value = {{resume_name}}><br>
+  <h4>please confirm, you checked all the details of the form <input type='checkbox' name = 'confirm' required></h4>
+  <button type="submit" name = 'form'>Add Candidate And REFER</button><br><br>
+</form>
+<a href='../delete_temp/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
+
+<!-- {% if resume_name == None %}
+  <a href='../delete_temp/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
+{% else %}
+<a href='../delete_resume{{resume_name}}/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
+{% endif %} -->
+<!-- <center><a href='/search_candidate' ><button class='button-close' type="submit">Close</button></a></center> -->
+{% endblock %}
