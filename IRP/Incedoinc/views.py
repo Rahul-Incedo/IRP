@@ -517,7 +517,26 @@ def view_candidate(request, candidate_email):
         prev_url = request.GET['prev_url']
     if request.method == 'POST':
 
+    if 'home_button' in request.POST:
+        return redirect('home_page')
+    if 'go_back' in request.POST:
+            if request.GET:
+                print("get request : ")
+                if 'previous' in request.GET:
+                    print(request.GET['previous'])
+                    previous_url_values=request.GET['previous'].split('_connector_of_2_values_')
+                    # print(l)
+                    return redirect('../../referrals/'+previous_url_values[0]+'/'+previous_url_values[1])
+            else:
+                # <a href= "../../search_candidate/?candidate_email={{email}}"
+                return redirect('../../search_candidate/?candidate_email='+str(candidate_email))
+            print("goback")
+            # return redirect('referrals_page')
+    if 'edit_details' in request.POST:
         candidate_obj=Candidate.objects.filter(email=candidate_email)
+        print(candidate_email)
+
+        print("sdfsdfsdfsd------------------------------")
         return redirect('../../edit_candidate/'+str(candidate_email))
 
     candidate_obj=Candidate.objects.filter(email=candidate_email)
@@ -579,6 +598,13 @@ def view_candidate(request, candidate_email):
     if timestamp==None:
         timestamp=""
 
+    requisition_candidate_temp_list_tuple = list(set(RequisitionCandidate.objects.filter(candidate_email=Candidate.objects.get(email=candidate_email))))
+    # if len(requisition_candidate_temp_list_tuple)==0:
+    #     return render(request, 'my_referrals.html',{'error_message':'Something Went Wrong'})
+    requisition_candidate_context={}
+    for x in range(len(requisition_candidate_temp_list_tuple)):
+        requisition_candidate_context[x+1]=requisition_candidate_temp_list_tuple[x]
+
     context={
         'f_name':f_name,
         'm_name':m_name,
@@ -595,7 +621,9 @@ def view_candidate(request, candidate_email):
         'resume_url':resume_url,
         'resume_name':resume_name,
         'timestamp':timestamp,
+        'requisition_candidate_context':requisition_candidate_context,
         'prev_url':prev_url,
+
     }
 
     return render(request,'view_candidate.html',context)
@@ -616,6 +644,8 @@ def search_candidate(request, *args, **kwargs):
                 temp_candidate_list.sort()
                 if len(temp_candidate_list)==0:
                     return render(request, 'search.html',{'error_message':'Oops :(   No Candidate Yet'})
+                print(temp_candidate_list,"--------------")
+                # result=[]
                 for candidate in temp_candidate_list:
                     temp_req_id_list_tuple = list(set(Feedback.objects.filter(candidate_email=candidate).values_list('requisition_id')))
                     temp_req_id_list=[x[0] for x in temp_req_id_list_tuple]
@@ -1166,7 +1196,9 @@ def my_referrals_view(request,employee_id):
     for x in range(len(temp_list_tuple)):
         context[x+1]=temp_list_tuple[x]
     # print(context,"asdfdsfsdfsdfsd")
-    return render(request, 'my_referrals.html',{'context':context})
+    return render(request, 'my_referrals.html',{'context':context , 'employee_id':employee_id})
+
+    print(employee_id,"{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}")
 
 
 def refer_candidate_view(request,requisition_id):
@@ -1183,18 +1215,54 @@ def refer_candidate_view(request,requisition_id):
     context={}
     requisition_candidate_obj_dict={}
     if request.method=='POST':
-        # print(request.POST)
+        print(request.POST)
         if 'yes' in request.POST:
+            candidate_obj=Candidate.objects.filter(email=request.POST['yes'])[0]
             RequisitionCandidate.objects.create(
                 requisition_id=job_obj[0],
-                candidate_email=Candidate.objects.filter(email=request.POST['yes'])[0],
+                candidate_email=candidate_obj,
                 referred_by=Employee.objects.get(email=request.user.username),
-                candidate_status='in_progress'
+                candidate_status='in_progress',
+                referred_date=date_.today()
             )
+
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=1,
+                requisition_id=job_obj[0],
+                status='pending',
+            )
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=2,
+                requisition_id=job_obj[0],
+                status='pending',
+            )
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=3,
+                requisition_id=job_obj[0],
+                status='pending',
+            )
+            ########Vaishnavi###########
+
+            mail_subject = 'New Candidate Referred'
+            message = render_to_string('new_candidate_referred.html', {
+                'req_id': job_obj[0],
+                'candidate_email': candidate_obj,
+                'referred_by':Employee.objects.get(email=request.user.username),
+
+
+            })
+            to_email = "kartikey.raut@incedoinc.com"
+            email = EmailMessage(
+                mail_subject, message, to=[to_email]
+            )
+            email.send()
             # print("asdasdsa")
         if 'refer_this_candidate' in request.POST:
             confirmation_candidate_obj=(Candidate.objects.filter(email=request.POST['refer_this_candidate']))[0]
-            # print("asdasdasd-----",type(confirmation_candidate_obj))
+            print("asdasdasd-----",type(confirmation_candidate_obj))
             return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmation_candidate_obj':confirmation_candidate_obj})
         if 'search' in request.POST:
             if len(request.POST['search_element'])==0:
@@ -1212,7 +1280,7 @@ def refer_candidate_view(request,requisition_id):
                     temp_dict['requisition_candidate_obj']=requisition_candidate_obj[0]
                 context[x+1]=temp_dict
 
-            # print("context[[[[[[]]]]]]",context)
+            print("context[[[[[[]]]]]]",context)
 
 
 

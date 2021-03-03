@@ -300,7 +300,7 @@
 
     <td >{{key}}</td>
     <td >{{value.candidate_obj.f_name}}</td>
-    <td >{{value.candidate_obj.email}}</td>
+    <td ><a href="../../../view_candidate/{{value.candidate_obj.email}}/?previous=refer_candidate_connector_of_2_values_{{job_obj.requisition_id}}">{{value.candidate_obj.email}}</td>
     {% if value.requisition_candidate_obj  %}
     <td>already applied/referred by : {{value.requisition_candidate_obj.referred_by}}</td>
     {% else %}
