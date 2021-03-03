@@ -84,6 +84,7 @@
         margin-left: auto;
         margin-right: auto;
         table-layout : fixed;
+
     }
     table.table1 th
     {
@@ -108,6 +109,7 @@
         text-align: left;
         margin-left: auto;
         margin-right: auto;
+        border: 1px solid black;
     }
 
 
@@ -116,6 +118,7 @@
         background-color: #588c7e;
         color: yellow;
         padding: 5px;
+        border: 1px solid black;
     }
     table.table2 th.search_bar
     {
@@ -132,6 +135,7 @@
     {
         background-color: #f2f2f2;
         padding: 5px;
+        border: 1px solid black;
 
     }
 
@@ -289,7 +293,7 @@
     <th >Name</th>
     <th >Email</th>
 
-    <th >Refer</th>
+    <th >Referral Status</th>
 
   </tr>
 
@@ -306,7 +310,7 @@
     {% else %}
     <td><button type="submit" name="refer_this_candidate" value="{{value.candidate_obj.email}}">Refer This Candidate</button></td>
     {%endif %}
-  </tr>
+    </tr>
   {% endfor %}
 
 </table>

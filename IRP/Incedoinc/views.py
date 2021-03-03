@@ -1130,6 +1130,14 @@ def report_view(request, req_id, email_id, level):
 def referrals_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
+    initial_elements={
+    'initial_search_element':None,
+    'initial_open_internal_yes':None,
+    'initial_open_internal_no':None,
+    'initial_req_status_open':None,
+    'initial_req_status_onhold':None,
+    }
+
     if request.method == 'POST':
         # print(type(request.POST))
         # print(request.POST)
@@ -1139,46 +1147,40 @@ def referrals_view(request):
             return redirect('../referrals/refer_candidate/%s' %request.POST['refer_candidate'])
         elif 'my_referrals' in request.POST:
             return redirect('../referrals/my_referrals/%s' %Employee.objects.get(email=request.user.username).employee_id)
-        elif 'listallopen' in request.POST:
+        elif 'listallopen' in request.POST or 'search' in request.POST:
             open_to_internal_list=['Yes','No']
             if 'open_to_internal' in request.POST:
                 open_to_internal_list=request.POST.getlist('open_to_internal')
+                if 'Yes' in open_to_internal_list:
+                    initial_elements['initial_open_internal_yes']='Yes'
+                if 'No' in open_to_internal_list:
+                    initial_elements['initial_open_internal_no']='No'
             requisition_status_list=['Open','On-hold']
             if 'requisition_status' in request.POST:
                 requisition_status_list=request.POST.getlist('requisition_status')
-            temp_list_tuple = list(set(Job.objects.filter(open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list)))
+                if 'Open' in requisition_status_list:
+                    initial_elements['initial_req_status_open']=True
+                if 'On_Hold' in requisition_status_list:
+                    initial_elements['initial_req_status_onhold']=True
+            temp_list_tuple=()
+            if 'listallopen' in request.POST:
+                temp_list_tuple = list(set(Job.objects.filter(open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list)))
+            elif 'search' in request.POST:
+                search_element=request.POST['search_element']
+                if(len(search_element)==0):
+                    return render(request, 'referrals.html',{'error_message':'Please Enter Something','initial_elements':initial_elements})
+                initial_elements['initial_search_element']=search_element
+                temp_list_tuple = list(set(Job.objects.filter(Q(requisition_id__contains=search_element , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list) | Q(jd__in=JD.objects.filter(jd_name__contains=search_element) , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list))))
             if len(temp_list_tuple)==0:
-                return render(request, 'referrals.html',{'error_message':'Oops :( So Empty'})
+                return render(request, 'referrals.html',{'error_message':'Oops :( So Empty','initial_elements':initial_elements})
             context={}
             for x in range(len(temp_list_tuple)):
                 context[x+1]=temp_list_tuple[x]
             # print(context,"asdfdsfsdfsdfsd")
-            return render(request, 'referrals.html',{'context':context})
-        elif 'search' in request.POST:
-            search_element=request.POST['search_element']
-
-            if(len(search_element)==0):
-                return render(request, 'referrals.html',{'error_message':'Please Enter Something'})
-            # print(search_element,"-----------------")
-            open_to_internal_list=['Yes','No']
-            if 'open_to_internal' in request.POST:
-                open_to_internal_list=request.POST.getlist('open_to_internal')
-            requisition_status_list=['Open','On-hold']
-            if 'requisition_status' in request.POST:
-                requisition_status_list=request.POST.getlist('requisition_status')
-            temp_list_tuple = list(set(Job.objects.filter(Q(requisition_id__contains=search_element , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list) | Q(jd__in=JD.objects.filter(jd_name__contains=search_element) , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list))))
-            # print(open_to_internal_list)
-            # print(len(temp_list_tuple))
-            if len(temp_list_tuple)==0:
-                return render(request, 'referrals.html',{'error_message':'No Matching results'})
-            context={}
-            for x in range(len(temp_list_tuple)):
-                context[x+1]=temp_list_tuple[x]
-            # print(context,"asdfdsfsdfsdfsd")
-            return render(request, 'referrals.html',{'context':context})
+            return render(request, 'referrals.html',{'context':context,'initial_elements':initial_elements})
 
 
-    return render(request, 'referrals.html')
+    return render(request, 'referrals.html',{'initial_elements':initial_elements})
 
 def my_referrals_view(request,employee_id):
     if not request.user.is_authenticated:
@@ -1257,6 +1259,7 @@ def refer_candidate_view(request,requisition_id):
                 mail_subject, message, to=[to_email]
             )
             email.send()
+            return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmation_candidate_obj':confirmation_candidate_obj})
             # print("asdasdsa")
         if 'refer_this_candidate' in request.POST:
             confirmation_candidate_obj=(Candidate.objects.filter(email=request.POST['refer_this_candidate']))[0]

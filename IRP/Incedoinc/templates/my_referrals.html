@@ -132,6 +132,7 @@
             text-align: left;
             margin-left: auto;
             margin-right: auto;
+            border: 1px solid black;
         }
 
 
@@ -140,6 +141,7 @@
             background-color: #588c7e;
             color: yellow;
             padding: 5px;
+            border: 1px solid black;
         }
         .search_bar
         {
@@ -156,7 +158,7 @@
         {
             background-color: #f2f2f2;
             padding: 5px;
-
+border: 1px solid black;
         }
 
         input[type=submit] {
@@ -268,7 +270,7 @@
         <td>{{key}}</td>
         <td>{{value.candidate_email.f_name}}</td>
         <td><a href="../../../view_candidate/{{value.candidate_email.email}}/?previous=my_referrals_connector_of_2_values_{{employee_id}}">{{value.candidate_email.email}}</a></td>
-        <td>[ {{value.requisition_id}} ] [ {{value.requisition_id.jd}} ]</td>
+        <td>{{value.requisition_id}}</td>
         <td>{{value.referred_date}}</td>
         <td>{{value.candidate_status}}</td>
 

@@ -128,6 +128,7 @@
             text-align: left;
             margin-left: auto;
             margin-right: auto;
+            border: 1px solid black;
         }
 
 
@@ -136,12 +137,14 @@
             background-color: #588c7e;
             color: yellow;
             padding: 5px;
+            border: 1px solid black;
         }
         .search_bar
         {
           background-color: white;
           color: black;
           padding: 5px;
+          border: 0px solid black;
         }
         td
         {
@@ -152,6 +155,7 @@
         {
             background-color: #f2f2f2;
             padding: 5px;
+            border: 1px solid black;
 
         }
 
@@ -246,7 +250,7 @@
         <form action=""  method="post" enctype="multipart/form-data">{% csrf_token %}
         <th class='search_bar'>
           <button class="home_button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
-          <input type="text" placeholder="Search Requition Id or JD" name="search_element">
+          <input type="text" placeholder="Search Requition Id or JD" {% if initial_elements.initial_search_element %} value={{initial_elements.initial_search_element}} {% endif %} name="search_element">
           <input type="submit" value="Search" name="search">
           <input type="submit" value="List All" name="listallopen">
           <button type="submit" name="my_referrals" value="{{value.requisition_id}}" style="float:right">My Referrals</button>
@@ -257,16 +261,16 @@
         <th class='search_bar'>
         <h4>
         <label>1)Open To Internal? :</label>
-        <input type="checkbox" name="open_to_internal" value="Yes">
+        <input type="checkbox" name="open_to_internal" value="Yes" {% if initial_elements.initial_open_internal_yes %} checked {% endif %}>
         <label for="Yes">Yes</label>
-        <input type="checkbox" name="open_to_internal" value="No">
+        <input type="checkbox" name="open_to_internal" value="No" {% if initial_elements.initial_open_internal_no %} checked {% endif %}>
         <label for="No">No</label>
         </h4>
         <h4>
         <label>2)Status</label>
-        <input type="checkbox" name="requisition_status" value="Open">
+        <input type="checkbox" name="requisition_status" value="Open" {% if initial_elements.initial_req_status_open %} checked {% endif %}>
         <label for="Open">Open</label>
-        <input type="checkbox" name="requisition_status" value="On-hold">
+        <input type="checkbox" name="requisition_status" value="On-hold" {% if initial_elements.initial_req_status_onhold %} checked {% endif %}>
         <label for="On-hold">On-hold</label>
         </h4>
         </th>
@@ -299,7 +303,7 @@
         <td>{{value.get_open_positions}}</td>
         <td>{{value.requisition_status}}</td>
         <td>{{value.open_to_internal}}</td>
-        <td><button type="submit" name="refer_candidate" value="{{value.requisition_id}}">Refer A Candidate</button>
+        <td><button type="submit" name="refer_candidate" value="{{value.requisition_id}}">Refer Candidate</button>
           <!-- <input type="submit" value="Refer A Candidate" name="{{value.requisition_id}}"> -->
         </td>
       </tr>
