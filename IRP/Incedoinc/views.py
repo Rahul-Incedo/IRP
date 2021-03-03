@@ -351,6 +351,9 @@ def add_candidate_view(request, *args, **kwargs):
     form_ = ResumeForm()
     form = CandidateForm(initial={'registered_by': user})
     form.fields['registered_by'].disabled = True
+
+    for field in form.fields:
+        form.fields[field].disabled = True
     signal = None
     context = {
         'form': form,
@@ -424,8 +427,8 @@ def add_candidate_view(request, *args, **kwargs):
                 candidate_obj.resume = file_obj
                 candidate_obj.save()
 
-            if os.path.exists('media/media'):
-                shutil.rmtree('media/media')
+            if os.path.exists('media/Resume'):
+                shutil.rmtree('media/Resume')
             context['signal'] = True
             requisition_id = form.cleaned_data['requisition_id']
             candidate_email = form.cleaned_data['email']
