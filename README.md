@@ -32,6 +32,9 @@ pip install resume-parser
 pip install spacy==2.3.5
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
 ```
+
+#Note This is for JD files:
+Only PDF file can be view in the browser iteself.Doc and Docx are downloadable
 ### Running the code 
 Just make sure you are in IRP directory and type in terminal 
 ```
