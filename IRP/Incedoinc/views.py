@@ -33,7 +33,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -590,7 +590,7 @@ def view_candidate(request, candidate_email):
         notice_period=""
 
     resume_url=candidate_obj[0].resume.url
-    resume_name=candidate_obj[0].resume.name[7:]
+    resume_name=candidate_obj[0].resume.name.split('/')[-1]
 
     timestamp=candidate_obj[0].timestamp
     if timestamp==None:
