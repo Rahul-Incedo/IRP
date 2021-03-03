@@ -1143,7 +1143,7 @@ def referrals_view(request):
             open_to_internal_list=['Yes','No']
             if 'open_to_internal' in request.POST:
                 open_to_internal_list=request.POST.getlist('open_to_internal')
-            requisition_status_list=['Open','On-hold']
+            requisition_status_list=['Open','On-Hold']
             if 'requisition_status' in request.POST:
                 requisition_status_list=request.POST.getlist('requisition_status')
             temp_list_tuple = list(set(Job.objects.filter(open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list)))
@@ -1163,7 +1163,7 @@ def referrals_view(request):
             open_to_internal_list=['Yes','No']
             if 'open_to_internal' in request.POST:
                 open_to_internal_list=request.POST.getlist('open_to_internal')
-            requisition_status_list=['Open','On-hold']
+            requisition_status_list=['Open','On-Hold']
             if 'requisition_status' in request.POST:
                 requisition_status_list=request.POST.getlist('requisition_status')
             temp_list_tuple = list(set(Job.objects.filter(Q(requisition_id__contains=search_element , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list) | Q(jd__in=JD.objects.filter(jd_name__contains=search_element) , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list))))
