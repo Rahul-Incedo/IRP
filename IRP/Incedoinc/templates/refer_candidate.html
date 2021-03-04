@@ -84,6 +84,7 @@
         margin-left: auto;
         margin-right: auto;
         table-layout : fixed;
+
     }
     table.table1 th
     {
@@ -108,6 +109,7 @@
         text-align: left;
         margin-left: auto;
         margin-right: auto;
+        border: 1px solid black;
     }
 
 
@@ -116,6 +118,7 @@
         background-color: #588c7e;
         color: yellow;
         padding: 5px;
+        border: 1px solid black;
     }
     table.table2 th.search_bar
     {
@@ -132,6 +135,7 @@
     {
         background-color: #f2f2f2;
         padding: 5px;
+        border: 1px solid black;
 
     }
 
@@ -261,6 +265,25 @@
     <strong>
 
 {% endif %}
+{% if confirmed_message_obj %}
+
+  <strong>
+    <center>
+      <button class="confirm" disabled>
+        You have successfully Referred below Candidate</br></br>
+        NAME : {{confirmed_message_obj.f_name}}</br>
+        EMAIL : {{confirmed_message_obj.email}}</br></br>
+        An E-Mail has been send to Hr team :)<br>
+      </button>
+    </center>
+    <center>
+      <button type="submit" name="ok" value="{{confirmation_message_obj.email}}">Ok</button>
+
+
+    </center>
+    <strong>
+
+{% endif %}
 </br>
 <table class="table1">
   <tr>
@@ -289,7 +312,7 @@
     <th >Name</th>
     <th >Email</th>
 
-    <th >Refer</th>
+    <th >Referral Status</th>
 
   </tr>
 
@@ -300,13 +323,13 @@
 
     <td >{{key}}</td>
     <td >{{value.candidate_obj.f_name}}</td>
-    <td >{{value.candidate_obj.email}}</td>
+    <td ><a href="../../../view_candidate/{{value.candidate_obj.email}}/?previous=refer_candidate_connector_of_2_values_{{job_obj.requisition_id}}" target="_blank">{{value.candidate_obj.email}}</td>
     {% if value.requisition_candidate_obj  %}
     <td>already applied/referred by : {{value.requisition_candidate_obj.referred_by}}</td>
     {% else %}
-    <td><button type="submit" name="refer_this_candidate" value="{{value.candidate_obj.email}}">Refer This Candidate</button></td>
+    <td><button type="submit" name="refer_this_candidate" value="{{value.candidate_obj.email}}">Refer Candidate</button></td>
     {%endif %}
-  </tr>
+    </tr>
   {% endfor %}
 
 </table>

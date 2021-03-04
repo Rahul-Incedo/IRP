@@ -12,7 +12,7 @@ class ResumeForm(forms.Form):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
-    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    resume = forms.FileField(label='*Upload Resume (pdf and docx extensions are supported)', validators = [pdf_validator])
 
     class Meta:
         model = Candidate
@@ -125,7 +125,7 @@ class CandidateForm(forms.ModelForm):
             'm_name': 'Middle Name',
             'l_name': '*Last Name',
             'email': '*Email',
-            'gender': '*Gender',
+            'gender': 'Gender',
             'college_name': 'College Name',
             'CGPA': 'CGPA(out of 10)',
             'experience': '*Experience (in months)',
@@ -135,6 +135,66 @@ class CandidateForm(forms.ModelForm):
             'notice_period': '*Notice Period (in months)',
         }
 
+class CandidateAndReferForm(forms.ModelForm):
+    CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
+                            validators=[
+                                validators.MinValueValidator(0),
+                                validators.MaxValueValidator(10.0),
+                            ]
+    )
+    mobile = forms.CharField(label='*Mobile Number (10 digits)', required=True,
+                            validators=[
+                                validators.RegexValidator('^[0-9]{10}$',
+                                    message='Mobile Number must be 10 digits'
+                                )
+                            ]
+    )
+    pdf_validator = validators.FileExtensionValidator(
+        allowed_extensions=['pdf', 'doc', 'docx']
+    )
+    # resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    # requisition_id = forms.ModelChoiceField(Job.objects.all(), label='*Requisition ID')
+    # notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',
+    #                                     widget = forms.TextInput(
+    #                                         attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
+    #                                     )
+    #                 )
+    notice_period = forms.CharField(label='*Notice Period (in Months.Days)',
+                        widget = forms.TextInput(
+                            attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
+                        ),
+                        validators = [
+                            validators.RegexValidator(r'^[0-9]*(\.([0-9]|[1-2][0-9]))?$'),
+                        ]
+                    )
+
+    experience = forms.CharField(label='*Experience (in Years.Months)',
+                        widget = forms.TextInput(
+                            attrs={'placeholder':'(1.10) represents 1 Year 10 Months'},
+                        ),
+                        validators = [
+                            validators.RegexValidator(r'^[0-9]*(\.([0-9]|[1][0-1]))?$'),
+                        ]
+                )
+    class Meta:
+        model = Candidate
+        # fields = '__all__'
+        # fields = ['f_name', 'm_name', 'l_name', 'email', 'registered_by', 'gender', 'college_name', 'projects_link', 'CGPA', 'experience', 'mobile', 'notice_period']
+        exclude = ['resume']
+        labels = {
+            'f_name': '*First Name',
+            'm_name': 'Middle Name',
+            'l_name': '*Last Name',
+            'email': '*Email',
+            'gender': '*Gender',
+            'college_name': 'College Name',
+            'CGPA': 'CGPA(out of 10)',
+            'experience': '*Experience (in months)',
+            'mobile': '*10-digit Mobile No.',
+            # 'DOB': 'Date of Birth',
+            # 'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
+            'notice_period': '*Notice Period (in months)',
+        }
 
 
 class UploadJdForm(forms.ModelForm):

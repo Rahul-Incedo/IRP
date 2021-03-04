@@ -5,7 +5,6 @@
     <title>IRS</title>
 
     <style>
-
       body {
         margin:0px;
         padding:0px;
@@ -188,6 +187,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
   </head>
+
+
   <body>
     <header>
       <ul class = 'main'  style="background-color: black">
@@ -198,6 +199,8 @@
         <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
       </ul>
     </header>
+
+    <!-- DELETE POP-UP -->
     <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
           <div class="modal-content">
@@ -221,6 +224,8 @@
           </div>
       </div>
     </div>
+    
+    <!-- FILTERS AND BUTTONS -->
     <center><span class="heading">MANAGE REQUISITION</span></center>
     <div class='my_inputs'>
       <form method="post"> {% csrf_token %}
@@ -237,21 +242,24 @@
             </span>
             <span class="filters">
             <label>Status  :</label>
-            <input type="checkbox" id="open" name="requisition_status" value="open" checked>
-            <label for="internal">open</label>
-            <input type="checkbox" id="closed" name="requisition_status" value="closed" checked>
-            <label for="internal">closed</label>
-            <input type="checkbox" id="onhold" name="requisition_status" value="onhold" checked>
-            <label for="internal">onhold</label>
-            <input type="checkbox" id="offered" name="requisition_status" value="offered" checked>
-            <label for="internal">offered</label>
+            <input type="checkbox" id="open" name="requisition_status" value="Open" checked>
+            <label for="internal">Open</label>
+            <input type="checkbox" id="closed" name="requisition_status" value="Closed" checked>
+            <label for="internal">Closed</label>
+            <input type="checkbox" id="onhold" name="requisition_status" value="On-Hold" checked>
+            <label for="internal">On-Hold</label>
+            <input type="checkbox" id="offered" name="requisition_status" value="Offered" checked>
+            <label for="internal">Offered</label>
             </span>
           </div>
       </form>
     </div>
+
+    <!-- REQUISITION TABLE -->
     {% if msg %}
     <center><h2>{{ msg }}</h2></center>
     {% endif %}
+
     {% if query_set is not None %}
       <div class="my_class">
         <table>
@@ -271,16 +279,16 @@
                 </tr>
               </table>
             </th>
-
-            <th class="table-head">Open to Internal</th>
+            <th class="table-head">Open For Internal Employee</th>
             <!-- <th class="table-head">Delete</th> -->
           </thead>
+          
           {% for obj in query_set %}
             <tr>
               <td class="table-cell">{{ forloop.counter }}</td>
               <td class="table-cell">
                 <a href="./?expand_token={{obj.requisition_id}}"><input type='submit' value='+' class='expand-button'></a>
-                <a href="{% url 'view_job' obj.pk %}"><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a>
+                <a href="{% url 'view_job' obj.pk %}" target="_blank" ><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a>
               </td>
               <td class="table-cell">{{ obj.raised_by_employee }}</td>
               <td class="table-cell">{{ obj.position_owner_id }}</td>
@@ -291,32 +299,34 @@
               <td class="table-cell">{{ obj.open_to_internal }}</td>
               <!-- <td class="table-cell"><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td> -->
             </tr>
-
+            
+            <!-- CANDIDATE TABLE -->
             {% if expand_token == obj.requisition_id %}
-            <tr>
-              <td colspan='9'>
-                <table class='sub-table'>
-                  <thead>
-                    <th class="table-head">Sr.</th>
-                    <th class="table-head">Candidate</th>
-                    <th class="table-head">Status</th>
-                    <th class="table-head">Expected DOJ</th>
-                    <th class="table-head">Actual DOJ</th>
-                  </thead>
-                  {% for obj in sub_query_set %}
-                  <tr>
-                    <td class="table-cell">{{ forloop.counter }}</td>
-                    <td class="table-cell"><a href="/view_candidate/{{ obj.candidate_email.email }}/?prev_url=manage-job/" ><input id="view" type="submit" value="{{ obj.candidate_email.full_name }}"></a></td>
-                    <td class="table-cell">{{ obj.candidate_status }}</td>
-                    <td class="table-cell">{{ obj.expected_doj }}</td>
-                    <td class="table-cell">{{ obj.actual_doj }}</td>
-                  </tr>
-                  {% endfor %}
-                </table>
-              </td>
-            </tr>
-            {% endif %}
+              <tr>
+                <td colspan='9'>
+                  <table class='sub-table'>
+                    <thead>
+                      <th class="table-head">Sr.</th>
+                      <th class="table-head">Candidate Name</th>
+                      <th class="table-head">Current Status</th>
+                      <th class="table-head">Expected DOJ</th>
+                      <th class="table-head">Actual DOJ</th>
+                    </thead>
 
+                    {% for obj in sub_query_set %}
+                      <tr>
+                        <td class="table-cell">{{ forloop.counter }}</td>
+                        <td class="table-cell"><a href="{% url 'view_candidate' obj.candidate_email.email %}" target="_blank"><input id="view" type="submit" value="{{ obj.candidate_email.full_name }}"></a></td>
+                        <td class="table-cell">{{ obj.candidate_status }}</td>
+                        <td class="table-cell">{{ obj.expected_doj }}</td>
+                        <td class="table-cell">{{ obj.actual_doj }}</td>
+                      </tr>
+                    {% endfor %}
+
+                  </table>
+                </td>
+              </tr>
+            {% endif %}
 
           {% endfor %}
 
@@ -324,6 +334,7 @@
       </div>
     {% endif %}
 
+    <!-- JAVASCRIPT -->
     <script>
       $('#confirm-delete').on('show.bs.modal', function(e) {
           $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));

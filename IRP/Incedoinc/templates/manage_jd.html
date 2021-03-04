@@ -146,35 +146,11 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+    
   </head>
-
+  
+  
   <body>
-    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
-                </div>
-            
-                <div class="modal-body">
-                    <p>You are about to delete this Job Description.</p>
-                    <p>This will delete all the requisition created on this jd.</p>
-                    <p>Do you want to proceed?</p>
-                    <!-- <p class="debug-url"></p> -->
-                </div>
-                
-                <div class="modal-footer">
-                  <center>
-                    <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
-                    <a class="btn btn-danger btn-ok">Confirm Delete</a>
-                  </center> 
-                </div>
-            </div>
-        </div>
-    </div>
     <header>
       <ul class='main' style="background-color: black">
         <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
@@ -184,19 +160,51 @@
         <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
       </ul>
     </header>
+
+    
+    <!-- DELETE POPUP -->
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+        
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+          </div>
+      
+          <div class="modal-body">
+            <p>You are about to delete this Job Description.</p>
+            <p>This will delete all the requisition created on this jd.</p>
+            <p>Do you want to proceed?</p>
+            <!-- <p class="debug-url"></p> -->
+          </div>
+            
+          <div class="modal-footer">
+            <center>
+              <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
+              <a class="btn btn-danger btn-ok">Confirm Delete</a>
+            </center> 
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- FILTER AND SEARCH BUTTONS -->
     <center><span class="heading">MANAGE JOB DESCRIPTION</span></center>
     <div class='my_inputs'>
       <form method="post"> {% csrf_token %}
           <button class="button-home glyphicon glyphicon-home" type="submit" name="home_button" aria-hidden="true"> Home</button>
-          <input type="text" placeholder="Search JobDescription" name='search_query'>
+          <input type="text" placeholder="Search Query" name='search_query'>
           <button type="submit" name="search_button">Search</button>
           <button type="submit" name="list_all_button">List All</button>
           <button type="submit"  class='button-2' name="upload_jd_button">Upload JD</button>
       </form>
     </div>
+
     {% if msg %}
     <center><h1>{{ msg }}</h1></center>
     {% endif %}
+
     {% if query_set is not None %}
       <div class="my_class">
         <table>
@@ -207,22 +215,25 @@
             <th class='table-head'>Download File</th>
             <th class='table-head'>Delete</th>
           </thead>
-          {% for obj in query_set %}
-          <tr>
-            <td class='table-cell'>{{ forloop.counter }}</td>
-            <td class='table-cell'><a href="{% url 'view_jd' obj.pk %}"><button type='submit' class='button-table'>{{obj.jd_name}}</button></a></td>
-            <td class='table-cell'>{{ obj.uploaded_by_employee }}</td>
 
-            <td class='table-cell'><a href="{% url 'file_view' obj.jd_file.url %}" target="_blank">{{ obj.get_file_name}}</a></td>
-            <!-- <td class='table-cell'><a href="/test/?file_url={{obj.jd_file.url}}" target="_blank">{{ obj.get_file_name}}</a></td> -->
-            <!-- <td class='table-cell'><a href="{{ obj.jd_file.url }}/" target="_blank">{{ obj.get_file_name}}</a></td> -->
-            <!-- <td><a href="{% url 'delete_jd' obj.pk %}" ><input type="button" value="Delete"></a></td> -->
-            <td class="table-cell"><a href="#" data-href="{% url 'delete_jd' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td>
-          </tr>
+          {% for obj in query_set %}
+            <tr>
+              <td class='table-cell'>{{ forloop.counter }}</td>
+              <td class='table-cell'><a href="{% url 'view_jd' obj.pk %}" target="_blank"><button type='submit' class='button-table'>{{obj.jd_name}}</button></a></td>
+              <td class='table-cell'>{{ obj.uploaded_by_employee }}</td>
+
+              <td class='table-cell'><a href="{% url 'file_view' obj.jd_file.url %}" target="_blank">{{ obj.get_file_name}}</a></td>
+              <!-- <td class='table-cell'><a href="/test/?file_url={{obj.jd_file.url}}" target="_blank">{{ obj.get_file_name}}</a></td> -->
+              <!-- <td class='table-cell'><a href="{{ obj.jd_file.url }}/" target="_blank">{{ obj.get_file_name}}</a></td> -->
+              <!-- <td><a href="{% url 'delete_jd' obj.pk %}" ><input type="button" value="Delete"></a></td> -->
+              <td class="table-cell"><a href="#" data-href="{% url 'delete_jd' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td>
+            </tr>
           {% endfor %}
+
         </table>
       </div>
     {% endif %}
+
     <script>
         $('#confirm-delete').on('show.bs.modal', function(e) {
             $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
