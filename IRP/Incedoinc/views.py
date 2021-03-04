@@ -359,10 +359,10 @@ def add_candidate_view(request, *args, **kwargs):
         'form_':form_,
         'signal' : signal,
     }
-
+    uploaded_file_url=None
     if request.method == 'POST' and 'form_' in request.POST:
         form = ResumeForm(request.POST, request.FILES)
-
+        context['form_']=form
         if form.is_valid():
             resume = request.FILES['resume']
             fs = FileSystemStorage()
@@ -372,36 +372,39 @@ def add_candidate_view(request, *args, **kwargs):
             print(resume_name, '-=======================================')
             # form_ = form.save()
             # prim_key = form_.candidate_id
-
-        data = resumeparse.read_file(f'media/{resume_name}')
-        full_name = data['name'].split(' ')
-        f_name = ''
-        m_name = ''
-        l_name = ''
-        if len(full_name) == 1:
-            f_name = full_name[0]
-        elif len(full_name) == 2:
-            f_name = full_name[0]
-            l_name = full_name[1]
         else:
-            f_name = full_name[0]
-            l_name = full_name[len(full_name)-1]
-            m_name = full_name[1]
+            return render(request, 'forms/add_candidate.html', context)
+        try:
+            data = resumeparse.read_file(f'media/{resume_name}')
+            full_name = data['name'].split(' ')
+            f_name = ''
+            m_name = ''
+            l_name = ''
+            if len(full_name) == 1:
+                f_name = full_name[0]
+            elif len(full_name) == 2:
+                f_name = full_name[0]
+                l_name = full_name[1]
+            else:
+                f_name = full_name[0]
+                l_name = full_name[len(full_name)-1]
+                m_name = full_name[1]
 
-        # with open(f'media/{resume_name}', 'rb') as resume_file:
-            # file_obj = File(resume_file)
-        new_form = CandidateForm(initial={'registered_by': user,
-                                       'f_name' : f_name,
-                                       'm_name' : m_name,
-                                       'l_name' : l_name,
-                                       'email' : data['email'],
-                                       'mobile' : data['phone'][-10:],
-                                       # 'resume' : file_obj,
-                                       'experience' : data['total_exp'],
-                                       # 'college_name' : data['university'][0],
-                                       }
-                                )
-
+            # with open(f'media/{resume_name}', 'rb') as resume_file:
+                # file_obj = File(resume_file)
+            new_form = CandidateForm(initial={'registered_by': user,
+                                           'f_name' : f_name,
+                                           'm_name' : m_name,
+                                           'l_name' : l_name,
+                                           'email' : data['email'],
+                                           'mobile' : data['phone'][-10:],
+                                           # 'resume' : file_obj,
+                                           'experience' : data['total_exp'],
+                                           # 'college_name' : data['university'][0],
+                                           }
+                                    )
+        except:
+            new_form = CandidateForm(initial={'registered_by': user})
         # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
         new_form.fields['registered_by'].disabled = True
         return render(request, 'forms/add_candidate.html', {'form':new_form, 'resume_name':uploaded_file_url})
@@ -415,12 +418,15 @@ def add_candidate_view(request, *args, **kwargs):
         # with open(f'media/{resume_name}') as resume_file:
 
 
-        form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
+        form2 = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
+        form2.fields['registered_by'].disabled = True
+        context['form_']=None
+        context['form']=form2
         # form.registered_by=user.full_name
         context['signal'] = False
         # form.fields['registered_by'].disabled = True
-        if form.is_valid():
-            candidate_obj = form.save()
+        if form2.is_valid():
+            candidate_obj = form2.save()
 
             with open(f'{resume_name}', "rb") as file_name:
                 file_obj = File(file_name)
@@ -431,8 +437,8 @@ def add_candidate_view(request, *args, **kwargs):
             if os.path.exists('media/Resume'):
                 shutil.rmtree('media/Resume')
             context['signal'] = True
-            requisition_id = form.cleaned_data['requisition_id']
-            candidate_email = form.cleaned_data['email']
+            requisition_id = form2.cleaned_data['requisition_id']
+            candidate_email = form2.cleaned_data['email']
             job_obj = Job.objects.get(requisition_id=requisition_id)
             Feedback.objects.create(
                 candidate_email=candidate_obj,
@@ -468,7 +474,9 @@ def add_candidate_view(request, *args, **kwargs):
             #     shutil.rmtree('media/temp')
 
             return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
-
+        else:
+            print("else:::::::::::::::::::")
+            return render(request, 'forms/add_candidate.html', {'form':form2, 'resume_name':request.POST['resume_name']})
 
     return render(request, 'forms/add_candidate.html', context)
 
@@ -1333,10 +1341,10 @@ def add_and_refer_new_candidate_view(request,requisition_id):
         'signal' : signal,
         'requisition_id_obj': requisition_id_obj[0]
     }
-
+    uploaded_file_url=None
     if request.method == 'POST' and 'form_' in request.POST:
         form = ResumeForm(request.POST, request.FILES)
-
+        context['form_']=form
         if form.is_valid():
             resume = request.FILES['resume']
             fs = FileSystemStorage()
@@ -1346,37 +1354,40 @@ def add_and_refer_new_candidate_view(request,requisition_id):
             print(resume_name, '-=======================================')
             # form_ = form.save()
             # prim_key = form_.candidate_id
-
-        data = resumeparse.read_file(f'media/{resume_name}')
-        full_name = data['name'].split(' ')
-        f_name = ''
-        m_name = ''
-        l_name = ''
-        if len(full_name) == 1:
-            f_name = full_name[0]
-        elif len(full_name) == 2:
-            f_name = full_name[0]
-            l_name = full_name[1]
         else:
-            f_name = full_name[0]
-            l_name = full_name[len(full_name)-1]
-            m_name = full_name[1]
+            return render(request, 'add_and_refer_new_candidate.html', context)
+        try:
+            data = resumeparse.read_file(f'media/{resume_name}')
+            full_name = data['name'].split(' ')
+            f_name = ''
+            m_name = ''
+            l_name = ''
+            if len(full_name) == 1:
+                f_name = full_name[0]
+            elif len(full_name) == 2:
+                f_name = full_name[0]
+                l_name = full_name[1]
+            else:
+                f_name = full_name[0]
+                l_name = full_name[len(full_name)-1]
+                m_name = full_name[1]
 
-        # with open(f'media/{resume_name}', 'rb') as resume_file:
-            # file_obj = File(resume_file)
-        new_form = CandidateAndReferForm(initial={'registered_by': user,
-                                       'f_name' : f_name,
-                                       'm_name' : m_name,
-                                       'l_name' : l_name,
-                                       'email' : data['email'],
-                                       'mobile' : data['phone'][-10:],
-                                       # 'resume' : file_obj,
-                                       'experience' : data['total_exp'],
-                                       # 'requisition_id':requisition_id_obj[0],
-                                       # 'college_name' : data['university'][0],
-                                       }
-                                )
-
+            # with open(f'media/{resume_name}', 'rb') as resume_file:
+                # file_obj = File(resume_file)
+            new_form = CandidateAndReferForm(initial={'registered_by': user,
+                                           'f_name' : f_name,
+                                           'm_name' : m_name,
+                                           'l_name' : l_name,
+                                           'email' : data['email'],
+                                           'mobile' : data['phone'][-10:],
+                                           # 'resume' : file_obj,
+                                           'experience' : data['total_exp'],
+                                           # 'requisition_id':requisition_id_obj[0],
+                                           # 'college_name' : data['university'][0],
+                                           }
+                                    )
+        except:
+            new_form = CandidateForm(initial={'registered_by': user})
         # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
         new_form.fields['registered_by'].disabled = True
         # new_form.fields['requisition_id'].disabled = True
@@ -1391,16 +1402,19 @@ def add_and_refer_new_candidate_view(request,requisition_id):
         # with open(f'media/{resume_name}') as resume_file:
 
 
-        form = CandidateAndReferForm(request.POST, request.FILES, initial={'registered_by': user})
+        form2 = CandidateAndReferForm(request.POST, request.FILES, initial={'registered_by': user})
+        form2.fields['registered_by'].disabled = True
+        context['form_']=None
+        context['form']=form2
         context['signal'] = False
         # form.fields['registered_by'].disabled = True
         # form.fields['requisition_id'].disabled = True
-        print("before _ valid ")
-        print(form.errors)
-        if form.is_valid():
+        # print("before _ valid ")
+        # print(form.errors)
+        if form2.is_valid():
 
             print("after _ valid ")
-            candidate_obj = form.save()
+            candidate_obj = form2.save()
 
             with open(f'{resume_name}', "rb") as file_name:
                 file_obj = File(file_name)
@@ -1412,7 +1426,7 @@ def add_and_refer_new_candidate_view(request,requisition_id):
                 shutil.rmtree('media/Resume')
             context['signal'] = True
             # requisition_id = form.cleaned_data['requisition_id']
-            candidate_email = form.cleaned_data['email']
+            candidate_email = form2.cleaned_data['email']
             job_obj = Job.objects.get(requisition_id=requisition_id)
             Feedback.objects.create(
                 candidate_email=candidate_obj,
@@ -1469,7 +1483,9 @@ def add_and_refer_new_candidate_view(request,requisition_id):
             return redirect('../../../'+'referrals/refer_candidate/'+str(requisition_id)+'/?confirmed='+str(candidate_obj.email))
             # return render(request, 'refer_candidate', context)
             # return render(request, 'refer_candidate.html',{'job_obj':job_obj})
-
+        else:
+            # print("else:::::::::::::::::::")
+            return render(request, 'add_and_refer_new_candidate.html', {'form':form2, 'resume_name':request.POST['resume_name'],'requisition_id_obj': requisition_id_obj[0]})
     return render(request, 'add_and_refer_new_candidate.html', context)
 
 
