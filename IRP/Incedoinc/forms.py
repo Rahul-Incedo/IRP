@@ -12,7 +12,7 @@ class ResumeForm(forms.Form):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
-    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    resume = forms.FileField(label='*Upload Resume (pdf and docx extensions are supported)', validators = [pdf_validator])
 
     class Meta:
         model = Candidate
