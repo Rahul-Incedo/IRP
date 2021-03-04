@@ -3,9 +3,9 @@
 <div class='title'>
   <h1>ENTER CANDIDATE DETAILS</h1>
 </div>
-{% if signal == False %}
+<!-- {% if signal == False %}
   <h3 style="margin-left:200px"> candidate already exists </h3>
-{% endif %}
+{% endif %} -->
 <form method ='POST' name = 'resume_file' enctype="multipart/form-data" action = '{% url "add_candidate_page" %}'>
   {% csrf_token %}
   {{form_.as_p}}
@@ -31,6 +31,7 @@
     <input id="agree" type='checkbox' name ='confirm' style="width: auto;" required disabled >
     <label for="agree">I have verified all the details.</label>
   </h4> -->
+  kkkkkkk
   <button type="submit" name = 'form' disabled>Add Candidate</button><br><br>
   {% endif %}
 
