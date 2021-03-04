@@ -250,7 +250,7 @@
         <form action=""  method="post" enctype="multipart/form-data">{% csrf_token %}
         <th class='search_bar'>
           <button class="home_button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
-          <input type="text" placeholder="Search Requition Id or JD" {% if initial_elements.initial_search_element %} value={{initial_elements.initial_search_element}} {% endif %} name="search_element">
+          <input type="text" placeholder="Enter Here To Search" {% if initial_elements.initial_search_element %} value={{initial_elements.initial_search_element}} {% endif %} name="search_element">
           <input type="submit" value="Search" name="search">
           <input type="submit" value="List All" name="listallopen">
           <button type="submit" name="my_referrals" value="{{value.requisition_id}}" style="float:right">My Referrals</button>
