@@ -16,8 +16,14 @@
 <form method='POST' name = 'details' enctype="multipart/form-data" action = '{% url "add_candidate_page" %}'> {% csrf_token %}
   {{ form.as_p }}
   <input type = 'hidden' name ='resume_name' value = {{resume_name}}><br>
+  {% if resume_name != None %}
   <h4>please confirm, you checked all the details of the form <input type='checkbox' name = 'confirm' required></h4>
   <button type="submit" name = 'form'>Add Candidate</button><br><br>
+  {% else %}
+  <h4>please confirm, you checked all the details of the form <input type='checkbox' name = 'confirm' required disabled></h4>
+  <button type="submit" name = 'form' disabled>Add Candidate</button><br><br>
+  {% endif %}
+
 </form>
 <a href='../delete_temp/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
 

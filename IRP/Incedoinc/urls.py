@@ -49,9 +49,11 @@ urlpatterns = [
     path("view_candidate/<str:candidate_email>/", views.view_candidate, name = 'view_candidate'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/report/', views.report_view, name = "report_view"),
 
+    path('delete_temp_for_add_and_refer/<str:requisition_id>', views.delete_temp_for_add_and_refer, name = 'delete_temp_for_add_and_refer'),
     path('referrals/', views.referrals_view, name = "referrals_page"),
     path('referrals/refer_candidate/<str:requisition_id>/', views.refer_candidate_view, name = "refer_candidate_page"),
-    path('referrals/my_referrals/<str:employee_id>/', views.my_referrals_view, name = "my_referrals_page")
+    path('referrals/my_referrals/<str:employee_id>/', views.my_referrals_view, name = "my_referrals_page"),
+    path('referrals/add_and_refer_new_candidate/<str:requisition_id>/', views.add_and_refer_new_candidate_view, name = "add_and_refer_new_candidate_page")
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

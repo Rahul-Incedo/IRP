@@ -40,7 +40,7 @@ from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCa
 from .models import TestModel
 
 #include forms
-from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm, EditCandidateForm
+from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm, EditCandidateForm , CandidateAndReferForm
 from .forms import TestForm
 
 from django.conf import settings
@@ -346,11 +346,14 @@ from django.core.files import File
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
-
+    # print(request.session['prev_url_for_add_candidate'])
     user = Employee.objects.get(email=request.user.username)
     form_ = ResumeForm()
     form = CandidateForm(initial={'registered_by': user})
     form.fields['registered_by'].disabled = True
+
+    for field in form.fields:
+        form.fields[field].disabled = True
     signal = None
     context = {
         'form': form,
@@ -414,6 +417,7 @@ def add_candidate_view(request, *args, **kwargs):
 
 
         form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
+        # form.registered_by=user.full_name
         context['signal'] = False
         # form.fields['registered_by'].disabled = True
         if form.is_valid():
@@ -422,10 +426,11 @@ def add_candidate_view(request, *args, **kwargs):
             with open(f'{resume_name}', "rb") as file_name:
                 file_obj = File(file_name)
                 candidate_obj.resume = file_obj
+                candidate_obj.registered_by=user
                 candidate_obj.save()
 
-            if os.path.exists('media/media'):
-                shutil.rmtree('media/media')
+            if os.path.exists('media/Resume'):
+                shutil.rmtree('media/Resume')
             context['signal'] = True
             requisition_id = form.cleaned_data['requisition_id']
             candidate_email = form.cleaned_data['email']
@@ -476,6 +481,17 @@ def delete_temp(request):
     except:
         return redirect('search_candidate')
     return redirect('search_candidate')
+
+def delete_temp_for_add_and_refer(request,requisition_id):
+    try:
+        if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
+            shutil.rmtree('media/temp')
+    except:
+        return redirect('../referrals/refer_candidate/%s' %str(requisition_id))
+        # return redirect('search_candidate')
+
+    return redirect('../referrals/refer_candidate/%s' %str(requisition_id))
+    # return redirect('search_candidate')
 
 def delete_resume(request, resume_name):
     resume_name = resume_name.replace('%20', ' ')
@@ -1214,8 +1230,13 @@ def refer_candidate_view(request,requisition_id):
         return render(request, 'refer_candidate.html',{'error_message':'Oops , Something went wrong!'})
     context={}
     requisition_candidate_obj_dict={}
+    
+
     if request.method=='POST':
         print(request.POST)
+        if 'ok' in request.POST:
+            return redirect('../../../referrals/refer_candidate/%s' %str(requisition_id))
+
         if 'yes' in request.POST:
             candidate_obj=Candidate.objects.filter(email=request.POST['yes'])[0]
             RequisitionCandidate.objects.create(
@@ -1246,29 +1267,33 @@ def refer_candidate_view(request,requisition_id):
             )
             ########Vaishnavi###########
 
-            mail_subject = 'New Candidate Referred'
-            message = render_to_string('new_candidate_referred.html', {
-                'req_id': job_obj[0],
-                'candidate_email': candidate_obj,
-                'referred_by':Employee.objects.get(email=request.user.username),
-
-
-            })
-            to_email = "kartikey.raut@incedoinc.com"
-            email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            email.send()
-            return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmation_candidate_obj':confirmation_candidate_obj})
+            # mail_subject = 'New Candidate Referred'
+            # message = render_to_string('new_candidate_referred.html', {
+            #     'req_id': job_obj[0],
+            #     'candidate_email': candidate_obj,
+            #     'referred_by':Employee.objects.get(email=request.user.username),
+            #
+            #
+            # })
+            # to_email = "kartikey.raut@incedoinc.com"
+            # email = EmailMessage(
+            #     mail_subject, message, to=[to_email]
+            # )
+            # email.send()
+            return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmed_message_obj':candidate_obj})
             # print("asdasdsa")
+        if 'add_new_refer' in request.POST:
+            return redirect('../../add_and_refer_new_candidate/%s' %str(requisition_id))
         if 'refer_this_candidate' in request.POST:
             confirmation_candidate_obj=(Candidate.objects.filter(email=request.POST['refer_this_candidate']))[0]
             print("asdasdasd-----",type(confirmation_candidate_obj))
             return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmation_candidate_obj':confirmation_candidate_obj})
         if 'search' in request.POST:
             if len(request.POST['search_element'])==0:
-                return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'error_message_2':'Please Enter Something'})
-            candidate_obj=Candidate.objects.filter(Q(f_name__contains=request.POST['search_element']) | Q(email__contains=request.POST['search_element']))
+                candidate_obj=Candidate.objects.all()
+            else:
+                # return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'error_message_2':'Please Enter Something'})
+                candidate_obj=Candidate.objects.filter(Q(f_name__contains=request.POST['search_element']) | Q(email__contains=request.POST['search_element']))
             if(len(candidate_obj)==0):
                 return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'error_message_2':'No Matching results'})
             for x in range(len(candidate_obj)):
@@ -1283,6 +1308,299 @@ def refer_candidate_view(request,requisition_id):
 
             print("context[[[[[[]]]]]]",context)
 
-
-
+    elif request.method=='GET':
+        if 'confirmed' in request.GET:
+            candidate_obj=Candidate.objects.filter(email=request.GET['confirmed'])[0]
+            return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmed_message_obj':candidate_obj})
     return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'context':context,'requisition_candidate_obj_dict':requisition_candidate_obj_dict})
+
+
+
+def add_and_refer_new_candidate_view(request,requisition_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    user = Employee.objects.get(email=request.user.username)
+    requisition_id_obj=Job.objects.filter(requisition_id=requisition_id)
+    form_ = ResumeForm()
+    form = CandidateAndReferForm(initial={'registered_by': user})
+    form.fields['registered_by'].disabled = True
+    # form.fields['requisition_id'].disabled = True
+    for field in form.fields:
+        form.fields[field].disabled = True
+    signal = None
+    context = {
+        'form': form,
+        'form_':form_,
+        'signal' : signal,
+        'requisition_id_obj': requisition_id_obj[0]
+    }
+
+    if request.method == 'POST' and 'form_' in request.POST:
+        form = ResumeForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            resume = request.FILES['resume']
+            fs = FileSystemStorage()
+            resume_name = fs.save(f'Resume/{resume.name}', resume)
+            uploaded_file_url = fs.url(resume_name)
+            print(uploaded_file_url, '-=======================================')
+            print(resume_name, '-=======================================')
+            # form_ = form.save()
+            # prim_key = form_.candidate_id
+
+        data = resumeparse.read_file(f'media/{resume_name}')
+        full_name = data['name'].split(' ')
+        f_name = ''
+        m_name = ''
+        l_name = ''
+        if len(full_name) == 1:
+            f_name = full_name[0]
+        elif len(full_name) == 2:
+            f_name = full_name[0]
+            l_name = full_name[1]
+        else:
+            f_name = full_name[0]
+            l_name = full_name[len(full_name)-1]
+            m_name = full_name[1]
+
+        # with open(f'media/{resume_name}', 'rb') as resume_file:
+            # file_obj = File(resume_file)
+        new_form = CandidateAndReferForm(initial={'registered_by': user,
+                                       'f_name' : f_name,
+                                       'm_name' : m_name,
+                                       'l_name' : l_name,
+                                       'email' : data['email'],
+                                       'mobile' : data['phone'][-10:],
+                                       # 'resume' : file_obj,
+                                       'experience' : data['total_exp'],
+                                       # 'requisition_id':requisition_id_obj[0],
+                                       # 'college_name' : data['university'][0],
+                                       }
+                                )
+
+        # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
+        new_form.fields['registered_by'].disabled = True
+        # new_form.fields['requisition_id'].disabled = True
+        return render(request, 'add_and_refer_new_candidate.html', {'form':new_form, 'resume_name':uploaded_file_url,'requisition_id_obj': requisition_id_obj[0]})
+
+    if request.method == 'POST' and 'email' in request.POST:
+        resume_name = request.POST['resume_name']
+        resume_name = resume_name.lstrip('/')
+        resume_name = resume_name.replace('%20', ' ')
+        print(resume_name, '========================================')
+
+        # with open(f'media/{resume_name}') as resume_file:
+
+
+        form = CandidateAndReferForm(request.POST, request.FILES, initial={'registered_by': user})
+        context['signal'] = False
+        # form.fields['registered_by'].disabled = True
+        # form.fields['requisition_id'].disabled = True
+        print("before _ valid ")
+        print(form.errors)
+        if form.is_valid():
+
+            print("after _ valid ")
+            candidate_obj = form.save()
+
+            with open(f'{resume_name}', "rb") as file_name:
+                file_obj = File(file_name)
+                candidate_obj.resume = file_obj
+                candidate_obj.registered_by=user
+                candidate_obj.save()
+
+            if os.path.exists('media/Resume'):
+                shutil.rmtree('media/Resume')
+            context['signal'] = True
+            # requisition_id = form.cleaned_data['requisition_id']
+            candidate_email = form.cleaned_data['email']
+            job_obj = Job.objects.get(requisition_id=requisition_id)
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=1,
+                requisition_id=job_obj,
+                status='pending',
+            )
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=2,
+                requisition_id=job_obj,
+                status='pending',
+            )
+            Feedback.objects.create(
+                candidate_email=candidate_obj,
+                level=3,
+                requisition_id=job_obj,
+                status='pending',
+            )
+            RequisitionCandidate.objects.create(
+                requisition_id = job_obj,
+                candidate_email = candidate_obj,
+                candidate_status = 'In-Progress',
+                referred_by=user,
+                referred_date=date_.today()
+            )
+            ########Vaishnavi###########
+            #
+            # mail_subject = 'New Candidate Referred'
+            # message = render_to_string('new_candidate_referred.html', {
+            #     'req_id': job_obj[0],
+            #     'candidate_email': candidate_obj,
+            #     'referred_by':Employee.objects.get(email=request.user.username),
+            #
+            #
+            # })
+            # to_email = "kartikey.raut@incedoinc.com"
+            # email = EmailMessage(
+            #     mail_subject, message, to=[to_email]
+            # )
+            # email.send()
+
+            # return redirect('../search_candidate/', )
+            #
+            # with open(f'media/{resume_name}') as resume_file:
+            #     django_file = File(resume_file)
+            #     candidate_obj.resume.save() = File(resume_file)
+                # candidate_obj.save()
+            # os.remove(f'media/{resume_name}')
+            # if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
+            #     shutil.rmtree('media/temp')
+            #
+            # return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
+            return redirect('../../../'+'referrals/refer_candidate/'+str(requisition_id)+'/?confirmed='+str(candidate_obj.email))
+            # return render(request, 'refer_candidate', context)
+            # return render(request, 'refer_candidate.html',{'job_obj':job_obj})
+
+    return render(request, 'add_and_refer_new_candidate.html', context)
+
+
+##################
+
+
+#
+# if not request.user.is_authenticated:
+#     return redirect('login')
+# print(request.session['prev_url_for_add_candidate'])
+# user = Employee.objects.get(email=request.user.username)
+# form_ = ResumeForm()
+# form = CandidateForm(initial={'registered_by': user})
+# form.fields['registered_by'].disabled = True
+#
+# for field in form.fields:
+#     form.fields[field].disabled = True
+# signal = None
+# context = {
+#     'form': form,
+#     'form_':form_,
+#     'signal' : signal,
+# }
+#
+# if request.method == 'POST' and 'form_' in request.POST:
+#     form = ResumeForm(request.POST, request.FILES)
+#
+#     if form.is_valid():
+#         resume = request.FILES['resume']
+#         fs = FileSystemStorage()
+#         resume_name = fs.save(f'Resume/{resume.name}', resume)
+#         uploaded_file_url = fs.url(resume_name)
+#         print(uploaded_file_url, '-=======================================')
+#         print(resume_name, '-=======================================')
+#         # form_ = form.save()
+#         # prim_key = form_.candidate_id
+#
+#     data = resumeparse.read_file(f'media/{resume_name}')
+#     full_name = data['name'].split(' ')
+#     f_name = ''
+#     m_name = ''
+#     l_name = ''
+#     if len(full_name) == 1:
+#         f_name = full_name[0]
+#     elif len(full_name) == 2:
+#         f_name = full_name[0]
+#         l_name = full_name[1]
+#     else:
+#         f_name = full_name[0]
+#         l_name = full_name[len(full_name)-1]
+#         m_name = full_name[1]
+#
+#     # with open(f'media/{resume_name}', 'rb') as resume_file:
+#         # file_obj = File(resume_file)
+#     new_form = CandidateForm(initial={'registered_by': user,
+#                                    'f_name' : f_name,
+#                                    'm_name' : m_name,
+#                                    'l_name' : l_name,
+#                                    'email' : data['email'],
+#                                    'mobile' : data['phone'][-10:],
+#                                    # 'resume' : file_obj,
+#                                    'experience' : data['total_exp'],
+#                                    # 'college_name' : data['university'][0],
+#                                    }
+#                             )
+#
+#     # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
+#     new_form.fields['registered_by'].disabled = True
+#     return render(request, 'forms/add_candidate.html', {'form':new_form, 'resume_name':uploaded_file_url})
+#
+# if request.method == 'POST' and 'email' in request.POST:
+#     resume_name = request.POST['resume_name']
+#     resume_name = resume_name.lstrip('/')
+#     resume_name = resume_name.replace('%20', ' ')
+#     print(resume_name, '========================================')
+#
+#     # with open(f'media/{resume_name}') as resume_file:
+#
+#
+#     form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
+#     context['signal'] = False
+#     # form.fields['registered_by'].disabled = True
+#     if form.is_valid():
+#         candidate_obj = form.save()
+#
+#         with open(f'{resume_name}', "rb") as file_name:
+#             file_obj = File(file_name)
+#             candidate_obj.resume = file_obj
+#             candidate_obj.save()
+#
+#         if os.path.exists('media/Resume'):
+#             shutil.rmtree('media/Resume')
+#         context['signal'] = True
+#         requisition_id = form.cleaned_data['requisition_id']
+#         candidate_email = form.cleaned_data['email']
+#         job_obj = Job.objects.get(requisition_id=requisition_id)
+#         Feedback.objects.create(
+#             candidate_email=candidate_obj,
+#             level=1,
+#             requisition_id=job_obj,
+#             status='pending',
+#         )
+#         Feedback.objects.create(
+#             candidate_email=candidate_obj,
+#             level=2,
+#             requisition_id=job_obj,
+#             status='pending',
+#         )
+#         Feedback.objects.create(
+#             candidate_email=candidate_obj,
+#             level=3,
+#             requisition_id=job_obj,
+#             status='pending',
+#         )
+#         RequisitionCandidate.objects.create(
+#             requisition_id = job_obj,
+#             candidate_email = candidate_obj,
+#             candidate_status = 'In-Progress',
+#         )
+#         # return redirect('../search_candidate/', )
+#         #
+#         # with open(f'media/{resume_name}') as resume_file:
+#         #     django_file = File(resume_file)
+#         #     candidate_obj.resume.save() = File(resume_file)
+#             # candidate_obj.save()
+#         # os.remove(f'media/{resume_name}')
+#         # if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
+#         #     shutil.rmtree('media/temp')
+#
+#         return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
+#
+#
+# return render(request, 'forms/add_candidate.html', context)
