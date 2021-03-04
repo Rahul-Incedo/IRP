@@ -1186,7 +1186,7 @@ def referrals_view(request):
                 if(len(search_element)==0):
                     return render(request, 'referrals.html',{'error_message':'Please Enter Something','initial_elements':initial_elements})
                 initial_elements['initial_search_element']=search_element
-                temp_list_tuple = list(set(Job.objects.filter(Q(requisition_id__contains=search_element , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list) | Q(jd__in=JD.objects.filter(jd_name__contains=search_element) , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list))))
+                temp_list_tuple = list(set(Job.objects.filter(Q(requisition_id__contains=search_element , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list) | Q(jd__in=JD.objects.filter(jd_name__contains=search_element) , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list) | Q(position_owner_id__in=Employee.objects.filter(full_name__contains=search_element) , open_to_internal__in=open_to_internal_list ,requisition_status__in=requisition_status_list))))
             if len(temp_list_tuple)==0:
                 return render(request, 'referrals.html',{'error_message':'Oops :( So Empty','initial_elements':initial_elements})
             context={}
@@ -1230,7 +1230,7 @@ def refer_candidate_view(request,requisition_id):
         return render(request, 'refer_candidate.html',{'error_message':'Oops , Something went wrong!'})
     context={}
     requisition_candidate_obj_dict={}
-    
+
 
     if request.method=='POST':
         print(request.POST)
