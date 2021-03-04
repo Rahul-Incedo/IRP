@@ -125,7 +125,7 @@ class CandidateForm(forms.ModelForm):
             'm_name': 'Middle Name',
             'l_name': '*Last Name',
             'email': '*Email',
-            'gender': '*Gender',
+            'gender': 'Gender',
             'college_name': 'College Name',
             'CGPA': 'CGPA(out of 10)',
             'experience': '*Experience (in months)',
