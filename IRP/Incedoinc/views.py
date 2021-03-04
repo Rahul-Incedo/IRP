@@ -376,35 +376,39 @@ def add_candidate_view(request, *args, **kwargs):
             print(resume_name, '-=======================================')
             # form_ = form.save()
             # prim_key = form_.candidate_id
+            try:
+                data = resumeparse.read_file(f'media/{resume_name}')
+                full_name = data['name'].split(' ')
+                f_name = ''
+                m_name = ''
+                l_name = ''
+                if len(full_name) == 1:
+                    f_name = full_name[0]
+                elif len(full_name) == 2:
+                    f_name = full_name[0]
+                    l_name = full_name[1]
+                else:
+                    f_name = full_name[0]
+                    l_name = full_name[len(full_name)-1]
+                    m_name = full_name[1]
 
-            data = resumeparse.read_file(f'media/{resume_name}')
-            full_name = data['name'].split(' ')
-            f_name = ''
-            m_name = ''
-            l_name = ''
-            if len(full_name) == 1:
-                f_name = full_name[0]
-            elif len(full_name) == 2:
-                f_name = full_name[0]
-                l_name = full_name[1]
-            else:
-                f_name = full_name[0]
-                l_name = full_name[len(full_name)-1]
-                m_name = full_name[1]
-
-            # with open(f'media/{resume_name}', 'rb') as resume_file:
-                # file_obj = File(resume_file)
-            form = CandidateForm(initial={'registered_by': user,
-                                        'f_name' : f_name,
-                                        'm_name' : m_name,
-                                        'l_name' : l_name,
-                                        'email' : data['email'],
-                                        'mobile' : data['phone'][-10:],
-                                        # 'resume' : file_obj,
-                                        'experience' : data['total_exp'],
-                                        # 'college_name' : data['university'][0],
-                                        }
-                    )
+                # with open(f'media/{resume_name}', 'rb') as resume_file:
+                    # file_obj = File(resume_file)
+                form = CandidateForm(initial={'registered_by': user,
+                                            'f_name' : f_name,
+                                            'm_name' : m_name,
+                                            'l_name' : l_name,
+                                            'email' : data['email'],
+                                            'mobile' : data['phone'][-10:],
+                                            # 'resume' : file_obj,
+                                            'experience' : data['total_exp'],
+                                            # 'college_name' : data['university'][0],
+                                            }
+                        )
+            except:
+                form = CandidateForm(initial={'registered_by': user})
+                form.fields['registered_by'].disabled
+                
             form_ = None
         # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
         # form.fields['registered_by'].disabled = True
