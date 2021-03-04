@@ -1387,7 +1387,7 @@ def add_and_refer_new_candidate_view(request,requisition_id):
                                            }
                                     )
         except:
-            new_form = CandidateForm(initial={'registered_by': user})
+            new_form = CandidateAndReferForm(initial={'registered_by': user})
         # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
         new_form.fields['registered_by'].disabled = True
         # new_form.fields['requisition_id'].disabled = True
@@ -1404,6 +1404,7 @@ def add_and_refer_new_candidate_view(request,requisition_id):
 
         form2 = CandidateAndReferForm(request.POST, request.FILES, initial={'registered_by': user})
         form2.fields['registered_by'].disabled = True
+        # form2.fields['requisition_id'].disabled = True
         context['form_']=None
         context['form']=form2
         context['signal'] = False
