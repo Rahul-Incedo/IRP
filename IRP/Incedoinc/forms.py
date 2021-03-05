@@ -136,6 +136,8 @@ class CandidateForm(forms.ModelForm):
         }
 
 class CandidateAndReferForm(forms.ModelForm):
+    f_name = forms.CharField(label="*First Name", required=True)
+    l_name = forms.CharField(label="*Last Name", required=True)
     CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
                             validators=[
                                 validators.MinValueValidator(0),
@@ -152,13 +154,6 @@ class CandidateAndReferForm(forms.ModelForm):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
-    # resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
-    # requisition_id = forms.ModelChoiceField(Job.objects.all(), label='*Requisition ID')
-    # notice_period = forms.DecimalField(label='*Notice Period (in Months.Days)',
-    #                                     widget = forms.TextInput(
-    #                                         attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
-    #                                     )
-    #                 )
     notice_period = forms.CharField(label='*Notice Period (in Months.Days)',
                         widget = forms.TextInput(
                             attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
