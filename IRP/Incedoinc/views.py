@@ -538,7 +538,6 @@ def edit_candidate(request,candidate_email):
 def view_candidate(request, candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
-    prev_url = request.session['prev_url']
     if request.method == 'GET' and 'prev_url' in request.GET:
         prev_url = request.GET['prev_url']
     if request.method == 'POST':
@@ -646,8 +645,6 @@ def view_candidate(request, candidate_email):
         'resume_name':resume_name,
         'timestamp':timestamp,
         'requisition_candidate_context':requisition_candidate_context,
-        'prev_url':prev_url,
-
     }
 
     return render(request,'view_candidate.html',context)

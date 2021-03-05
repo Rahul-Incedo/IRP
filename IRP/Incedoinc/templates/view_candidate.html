@@ -167,6 +167,7 @@
             text-align: left;
             margin-left: auto;
             margin-right: auto;
+            border: 1px solid black;
         }
 
 
@@ -175,12 +176,14 @@
             background-color: #588c7e;
             color: yellow;
             padding: 5px;
+            border: 1px solid black;
         }
         table.table2 th.search_bar
         {
           background-color: white;
           color: black;
           padding: 5px;
+          border: 1px solid black;
         }
         table.table2 td
         {
@@ -191,6 +194,7 @@
         {
             background-color: #f2f2f2;
             padding: 5px;
+            border: 1px solid black;
 
         }
 
@@ -331,6 +335,8 @@
             <th>JD</th>
             <th>Referred By</th>
             <th>Status Of Candidate</th>
+            <th>Expected DOJ</th>
+            <th>Actual DOJ</th>
 
           </tr>
           {%for key , value in requisition_candidate_context.items %}
@@ -340,6 +346,8 @@
             <td>{{value.requisition_id.jd}}</td>
             <td>{{value.referred_by}}</td>
             <td>{{value.candidate_status}}</td>
+            <td>{{value.expected_doj}}</td>
+            <td>{{value.actual_doj}}</td>
           </tr>
           {% endfor %}
 
@@ -347,7 +355,7 @@
 
         <!-- <center><button type="submit" name="go_back" value="" >Go Back</button></center> -->
       </form>
-        
+
         <!-- <center><a href= "/{{ prev_url }}?candidate_email={{email}}"><button class="goback">Go Back</button></a></center> -->
         <!-- <center><a href= "/{{ prev_url }}?candidate_email={{email}}"><button class="goback">Go Back</button></a></center> -->
       </br>
