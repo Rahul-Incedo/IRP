@@ -43,7 +43,7 @@ from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm, EditC
 from .forms import TestForm
 
 from django.conf import settings
-
+from urllib.parse import unquote
 
 from django.http import FileResponse
 def file_view(request, file_url):
@@ -412,7 +412,10 @@ def add_candidate_view(request, *args, **kwargs):
     if request.method == 'POST' and 'email' in request.POST:
         resume_name = request.POST['resume_name']
         resume_name = resume_name.lstrip('/')
-        resume_name = resume_name.replace('%20', ' ')
+        resume_name=unquote(resume_name)
+        # resume_name = resume_name.replace('%20', ' ')
+        # resume_name = resume_name.replace('%5B', '[')
+        # resume_name = resume_name.replace('%5D', ']')
         print(resume_name, '========================================')
 
         # with open(f'media/{resume_name}') as resume_file:
@@ -1396,7 +1399,7 @@ def add_and_refer_new_candidate_view(request,requisition_id):
     if request.method == 'POST' and 'email' in request.POST:
         resume_name = request.POST['resume_name']
         resume_name = resume_name.lstrip('/')
-        resume_name = resume_name.replace('%20', ' ')
+        resume_name=unquote(resume_name)
         print(resume_name, '========================================')
 
         # with open(f'media/{resume_name}') as resume_file:
