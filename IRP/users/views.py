@@ -60,7 +60,10 @@ def signup_view(request):
             email = EmailMessage(
                 mail_subject, message, to=[to_email]
             )
-            email.send()
+            try:
+                email.send()
+            except:
+                print("you reached smtp limits")
 
             ###### creating employee ######
             Employee.objects.create(

@@ -10,7 +10,7 @@ from django.urls import reverse
 
 from datetime import datetime
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import LoginForm, SignUpForm, FieldForm, EditCandidateForm
+from .forms import LoginForm, SignUpForm, FieldForm, EditCandidateForm, RequisitionCandidateForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 
@@ -32,7 +32,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -645,6 +645,7 @@ def view_candidate(request, candidate_email):
         'resume_name':resume_name,
         'timestamp':timestamp,
         'requisition_candidate_context':requisition_candidate_context,
+        'form_rc': RequisitionCandidateForm(),
     }
 
     return render(request,'view_candidate.html',context)
