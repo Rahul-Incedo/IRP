@@ -650,7 +650,7 @@ def view_candidate(request, candidate_email):
     return render(request,'view_candidate.html',context)
 
 def search_candidate(request, *args, **kwargs):
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated: 
         return redirect('login')
     request.session['prev_url'] = 'search_candidate/'
     if (request.GET and request.GET is not {}) or request.method == 'POST':

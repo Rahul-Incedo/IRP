@@ -204,7 +204,7 @@
           padding: 14px 16px;
           text-decoration: none;
         }
-      
+
     </style>
 </head>
 <body>
@@ -248,12 +248,13 @@
     <tr>
       <th>Sr.No</th>
       <th>Req Id</th>
-      <th>Candidate E-mail</th>
+      <th>Candidate Name</th>
 
       <th>Resume</th>
       <th>Level 1</th>
       <th>Level 2</th>
       <th>Level 3</th>
+      <th>Final Status</th>
       <th>Report</th>
     </tr>
 
@@ -264,7 +265,7 @@
     <tr>
       <td>{{key}}</td>
       <td>{{value.req_id}}</td>
-      <td><a href="../view_candidate/{{value.email}}/" target="_blank"><input id='view' type="submit" class="view-btn" value="{{ value.email }}" ></a></td>  
+      <td><a href="../view_candidate/{{value.email}}/" target="_blank"><input id='view' type="submit" class="view-btn" value="{{ value.email }}" ></a></td>
       <!-- <td>{{value.email}}<a href="../view_candidate/{{value.email}}"><button>View</button></a></td> -->
       <td><a href="{% url 'file_view' value.resume.url %}" target="_blank"><button>download</button></a></td>
         <td>
@@ -307,6 +308,7 @@
           {% endif %}
 
         </td>
+        <td></td>
         <td><a href = "feedback/{{value.req_id}}/{{value.email}}{{level_}}/report"><button>View Report</button></a></td>
     </tr>
     {% endfor %}
