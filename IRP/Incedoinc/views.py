@@ -538,12 +538,6 @@ def edit_candidate(request,candidate_email):
 def view_candidate(request, candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
-
-    print('----------------------view candidate------------------')
-    print('post')
-    if request.method == 'POST':
-        print(request.POST)
-
     if request.method == 'GET' and 'prev_url' in request.GET:
         prev_url = request.GET['prev_url']
     if request.method == 'POST':
