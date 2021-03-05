@@ -1,361 +1,327 @@
+<!DOCTYPE html>
 <html>
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style type="text/css">
-        body
-        {
-          margin:0px;
-          padding:0px;
-          width:100%;
-          height:100%;
-          margin-left:auto;
-          margin-right:auto;
-        }
+      body
+      {
+        margin: 0px;
+        margin-bottom: 80px;
+        padding:0px;
+        width:100%;
+        height:100%;
+        margin-left:auto;
+        margin-right:auto;
+      }
 
-        input[type=text] , input[type=number], input[type=url] ,input[type=email] , input[type=date]
-        {
-          border: none;
-          text-decoration: none;
-          font-size: 16px;
-          margin: 4px 2px;
-          border-radius: 15px;
-          size :50%;
+      input[type=text] , input[type=number], input[type=url] ,input[type=email] , input[type=date]
+      {
+        border: none;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 4px 2px;
+        border-radius: 15px;
+        size :50%;
 
-          background-color:white;
-        }
-        select
-        {
-          border: none;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 16px;
-          margin: 4px 2px;
-          cursor: pointer;
-          border-radius: 15px;
-        }
-        option
-        {
-          border: none;
-          text-align: center;
-          text-decoration: none;
-          font-size: 16px;
-          margin: 4px 2px;
-          cursor: pointer;
+        background-color:white;
+      }
+      select
+      {
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 15px;
+      }
+      option
+      {
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
 
-        }
-        input[type=submit] {
-          border: none;
-          color: white;
+      }
+      input[type=submit] {
+        border: none;
+        color: white;
 
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 16px;
-          margin: 4px 2px;
-          cursor: pointer;
-          border-radius: 15px;
-          background-color: #fd511c;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 15px;
+        background-color: #fd511c;
 
-        }
-        h1
-        {
-            color:black;
-            text-align:center;
-        }
-        h3
-        {
-            font-size: 20px;
-        }
-        #title h2
-        {
-            text-align:center;
-            color:white;
-        }
-        table.table1
-        {
-            border-collapse: collapse;
-            width : 100%;
-            color: #588c7e;
-            font-family: monospace;
-            font-size: 16px;
-            text-align: left;
-            margin-left: auto;
-            margin-right: auto;
-            table-layout : fixed;
-        }
-        table.table1 th
-        {
-            background-color: #f0f8ff;
-            text-align: right;
-            padding: 5px;
-        }
-        table.table1 td
-        {
-          background-color: #f0f8ff;
-          padding: 5px;
-          color:black;
-        }
+      }
+      h1
+      {
+        color:black;
+        text-align:center;
+      }
+      h3
+      {
+        font-size: 20px;
+      }
+      #title h2
+      {
+        text-align:center;
+        color:white;
+      }
 
-
-        button
-        {
-          border: none;
-          color: white;
-          text-align: center;
-
-          text-decoration: none;
-          display: inline-block;
-          font-size: 16px;
-          margin: 4px 2px;
-          cursor: pointer;
-          border-radius: 15px;
-          background-color: #fd511c;
-        }
-        .heading
-        {
-          border: none;
-          color: white;
-          width:50%;
-          text-align: center;
-          overflow: hidden;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 20px;
-          margin: 10px 8px;
-          border-radius: 15px;
-          background-color: #008B8B;
-        }
-        .goback
-        {
-
-        }
-
-        ul
-        {
-          list-style-type: none;
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-          background-color: #40423f;
-          color: #b6b8b5;
-        }
-
-        li
-        {
-          float: left;
-        }
-
-        li a
-        {
-          display: block;
-          color: white;
-          text-align: center;
-          padding: 14px 16px;
-          text-decoration: none;
-        }
+      table.table1
+      {
+        border-collapse: collapse;
+        width : 100%;
+        color: #588c7e;
+        font-family: monospace;
+        font-size: 16px;
+        text-align: left;
+        margin-left: auto;
+        margin-right: auto;
+        table-layout : fixed;
+      }
+      table.table1 th
+      {
+        background-color: #f0f8ff;
+        text-align: right;
+        padding: 5px;
+      }
+      table.table1 td
+      {
+        background-color: #f0f8ff;
+        padding: 5px;
+        color:black;
+      }
 
 
-        table.table2
-        {
-            border-collapse: collapse;
-            width: 100%;
-            color: #588c7e;
-            font-family: monospace;
-            font-size: 20px;
-            text-align: left;
-            margin-left: auto;
-            margin-right: auto;
-        }
+      button
+      {
+        border: none;
+        color: white;
+        text-align: center;
+
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 15px;
+        background-color: #fd511c;
+      }
+      .heading
+      {
+        border: none;
+        color: white;
+        width:50%;
+        text-align: center;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 20px;
+        margin: 10px 8px;
+        border-radius: 15px;
+        background-color: #008B8B;
+      }
+      /* .goback
+      {
+
+      } */
+
+      ul
+      {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #40423f;
+        color: #b6b8b5;
+      }
+
+      li
+      {
+        float: left;
+      }
+
+      li a
+      {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
 
 
-        table.table2 th
-        {
-            background-color: #588c7e;
-            color: yellow;
-            padding: 5px;
-        }
-        table.table2 th.search_bar
-        {
-          background-color: white;
-          color: black;
-          padding: 5px;
-        }
-        table.table2 td
-        {
+      table.table2
+      {
+        border-collapse: collapse;
+        color: #588c7e;
+        font-family: monospace;
+        font-size: 18px;
+        text-align: left;
+        width: 90%;
+        /* margin: 20px 40px; */
+        margin: 20px auto;
+        border: 1px solid black;
+      }
+
+
+      table.table2 th
+      {
+        background-color: #588c7e;
+        color: yellow;
+        padding: 5px;
+        border: 1px solid black;
+      }
+      table.table2 th.search_bar
+      {
+        background-color: white;
+        color: black;
+        padding: 5px;
+        border: 1px solid black;
+      }
+      table.table2 td
+      {
+        padding: 5px;
+        border: 1px solid black;
+      }
+      table.table2 tr:nth-child(even)
+      {
+          background-color: #f2f2f2;
           padding: 5px;
           border: 1px solid black;
-        }
-        table.table2 tr:nth-child(even)
-        {
-            background-color: #f2f2f2;
-            padding: 5px;
 
-        }
-
+      }
     </style>
-</head>
-<body>
 
+  </head>
 
-  <header>
-    <ul class = 'main'  style="background-color: black">
-      <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
-      <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
-      <li style="float:right"><a href="{%url 'change_password_page'%}">Change Password</a></li>
-      <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
-      <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
-    </ul>
-  </header>
-  <form action=""  method="post">{% csrf_token %}
-  <center>
-    <button class="home_button" type="submit" name="home_button" style="float:left"><i class="fa fa-home"></i> Home</button>
-    <!-- <button type="submit" name="go_back" value="" style="float:right">Go Back</button> -->
-    <button name="go_back" value="" style="float:right" onclick="self.close()">Close</button>
+  <body>
+    <header>
+      <ul class = 'main'  style="background-color: black">
+        <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
+        <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
+        <li style="float:right"><a href="{%url 'change_password_page'%}">Change Password</a></li>
+        <li style="float:right"><a href="https://www.incedoinc.com/contact/">Contact</a></li>
+        <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
+      </ul>
+    </header>
 
-    <button class="heading">VIEW CANDIDATE DETAILS</button></center>
-  {% if error_msg %}
-    <center><h2>{{error_msg}}</h2></center>
-  {% else %}
+    <form action=""  method="post">{% csrf_token %}
+
+      <center>
+        <button class="home_button" type="submit" name="home_button" style="float:left"><i class="fa fa-home"></i> Home</button>
+        <!-- <button type="submit" name="go_back" value="" style="float:right">Go Back</button> -->
+        <button name="go_back" value="" style="float:right" onclick="self.close();">Close</button>
+
+        <button class="heading">VIEW CANDIDATE DETAILS</button>
+      </center>
+
+    {% if error_msg %}
+      <center><h2>{{error_msg}}</h2></center>
+    {% else %}
       <table class="table1">
 
-      <tr>
-        <th><label text-align="left">First Name </label></th>
-        <td>: <label >{{f_name}}</label></td>
-      </tr>
+        <tr>
+          <th><label text-align="left">First Name </label></th>
+          <td>: <label >{{f_name}}</label></td>
+        </tr>
+
+        <tr>
+          <th><label >Middle Name </label></th>
+          <td>: <label >{{m_name}}</label></td>
+        </tr>
+
+        <tr>
+          <th><label >Last Name </label></th>
+          <td>: <label >{{l_name}}</label></td>
+        </tr>
+
+        <tr>
+          <th><label >Registered By </label></th>
+          <td>: <label >{{registered_by}}</label></td>
+        </tr>
+
+        <tr>
+            <th><label >Email </label></th>
+            <td>: <label >{{email}}</label></td>
+        </tr>
+
+        <tr>
+            <th><label >Gender </label></th>
+            <td><label >: {{gender}}</label></td>
+        </tr>
+
+        <tr>
+            <th><label >CGPA </label></th>
+            <td>: <label >{{CGPA}}</label></td>
+        </tr>
+
+        <tr>
+            <th><label >College </label></th>
+            <td>: <label >{{college_name}}</label></td>
+        </tr>
+
+        <tr>
+            <th><label >(Years.Months) Experience</label></th>
+            <td>: <label >{{experience}}</label></td>
+        </tr>
+
+        <tr>
+            <th><label >Mobile </label></th>
+            <td>: <label >{{mobile}}</label></td>
+        </tr>
+        <tr>
+            <th><label >Projects </label></th>
+            <td>: <label >{{projects_link}}</label></td>
+        </tr>
+        <tr>
+            <th><label >(Months.Days) Notice Period</label></th>
+
+            <td>: <label >{{notice_period}}</label></td>
+        </tr>
+        <tr>
+            <th><label >Resume </label></th>
+            <td>: <a href="{% url 'file_view' resume_url %}" target="_blank"><label >{{resume_name}}</label></a></td>
+        </tr>
+      </table>
+
+      <center><input type="submit" name="edit_details" value="Edit Details"></center>
+    {% endif %}
+
+
+    <table class="table2" >
 
       <tr>
-        <th><label >Middle Name </label></th>
-
-        <td>: <label >{{m_name}}</label></td>
+        <th>Sr.No</th>
+        <th>Requition</th>
+        <th>JD</th>
+        <th>Referred By</th>
+        <th>Status Of Candidate</th>
+        <th>Expected DOJ</th>
+        <th>Actual DOJ</th>
       </tr>
 
-      <tr>
-        <th><label >Last Name </label></th>
-        <td>: <label >{{l_name}}</label></td>
-      </tr>
+      {%for key , value in requisition_candidate_context.items %}
+        <tr>
+          <td>{{key}}</td>
+          <td>{{value.requisition_id.requisition_id}}</td>
+          <td>{{value.requisition_id.jd}}</td>
+          <td>{{value.referred_by}}</td>
+          <td>{{value.candidate_status}}</td>
+          <td>{{value.expected_doj}}</td>
+          <td>{{value.actual_doj}}</td>
+        </tr>
+      {% endfor %}
+    </table>
 
-      <tr>
-        <th><label >Registered By </label></th>
-        <td>: <label >{{registered_by}}</label></td>
-
-
-      </tr>
-
-      <tr>
-          <th><label >Email </label></th>
-          <td>: <label >{{email}}</label></td>
-      </tr>
-
-      <tr>
-          <th><label >Gender </label></th>
-          <td><label >: {{gender}}</label></td>
-
-      </tr>
-
-      <tr>
-          <th><label >CGPA </label></th>
-          <td>: <label >{{CGPA}}</label></td>
-
-      </tr>
-
-      <tr>
-          <th><label >College </label></th>
-          <td>: <label >{{college_name}}</label></td>
-
-
-
-      </tr>
-
-      <tr>
-          <th><label >(Years.Months) Experience</label></th>
-          <td>: <label >{{experience}}</label></td>
-
-
-      </tr>
-
-      <tr>
-          <th><label >Mobile </label></th>
-          <td>: <label >{{mobile}}</label></td>
-
-
-
-      </tr>
-
-      <!-- <tr>
-          <th><label >DOB </label></th>
-
-          <td>: <label >{{DOB}}</label></td>
-
-      </tr> -->
-
-      <tr>
-          <th><label >Projects </label></th>
-
-
-          <td>: <label >{{projects_link}}</label></td>
-
-      </tr>
-
-      <tr>
-          <th><label >(Months.Days) Notice Period</label></th>
-
-          <td>: <label >{{notice_period}}</label></td>
-      </tr>
-      <tr>
-          <th><label >Resume </label></th>
-
-          <!-- <td>: <a href='{{ candidate_obj.resume.url }}'><label >{{candidate_obj.get_resume_name}}</label></a></td> -->
-          <!-- <td>: <a href='{{ resume_url }}'><label >{{resume_name}}</label></a></td> -->
-          <td>: <a href="{% url 'file_view' resume_url %}" target="_blank"><label >{{resume_name}}</label></a></td>
-      </tr>
-      <!-- <tr>
-          <th><label >Timestamp </label></th>
-
-          <td>: <label >{{timestamp}}</label></a></td>
-      </tr> -->
-  </table>
-  <br>
-  <center><input type="submit" name="edit_details" value="Edit Details"></center>
-        {% endif %}
-
-
-
-
-        <table class="table2">
-
-          <tr>
-            <th>Sr.No</th>
-            <th>Requition</th>
-            <th>JD</th>
-            <th>Referred By</th>
-            <th>Status Of Candidate</th>
-
-          </tr>
-          {%for key , value in requisition_candidate_context.items %}
-          <tr>
-            <td>{{key}}</td>
-            <td>{{value.requisition_id.requisition_id}}</td>
-            <td>{{value.requisition_id.jd}}</td>
-            <td>{{value.referred_by}}</td>
-            <td>{{value.candidate_status}}</td>
-          </tr>
-          {% endfor %}
-
-</table>
-
-        <!-- <center><button type="submit" name="go_back" value="" >Go Back</button></center> -->
-      </form>
-        
-        <!-- <center><a href= "/{{ prev_url }}?candidate_email={{email}}"><button class="goback">Go Back</button></a></center> -->
-        <!-- <center><a href= "/{{ prev_url }}?candidate_email={{email}}"><button class="goback">Go Back</button></a></center> -->
-      </br>
-    </br>
-  </br>
-</br>
-
-
-
-</body>
+  </body>
 </html>

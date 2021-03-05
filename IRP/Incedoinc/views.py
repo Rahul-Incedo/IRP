@@ -10,7 +10,7 @@ from django.urls import reverse
 
 from datetime import datetime
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import LoginForm, SignUpForm, FieldForm, EditCandidateForm
+from .forms import LoginForm, SignUpForm, FieldForm, EditCandidateForm, RequisitionCandidateForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 
@@ -32,7 +32,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -538,7 +538,12 @@ def edit_candidate(request,candidate_email):
 def view_candidate(request, candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
-    prev_url = request.session['prev_url']
+
+    print('----------------------view candidate------------------')
+    print('post')
+    if request.method == 'POST':
+        print(request.POST)
+
     if request.method == 'GET' and 'prev_url' in request.GET:
         prev_url = request.GET['prev_url']
     if request.method == 'POST':
@@ -646,8 +651,7 @@ def view_candidate(request, candidate_email):
         'resume_name':resume_name,
         'timestamp':timestamp,
         'requisition_candidate_context':requisition_candidate_context,
-        'prev_url':prev_url,
-
+        'form_rc': RequisitionCandidateForm(),
     }
 
     return render(request,'view_candidate.html',context)

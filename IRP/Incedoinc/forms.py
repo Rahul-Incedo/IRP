@@ -1,7 +1,7 @@
 from django.core import validators
 from django import forms
 from django.forms.fields import IntegerField
-from .models import Candidate, Job, TestModel, Employee, Feedback, Field, JD
+from .models import Candidate, Job, TestModel, Employee, Feedback, Field, JD, RequisitionCandidate
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
@@ -314,3 +314,8 @@ class FieldForm(forms.ModelForm):
         if field_name in field_names :
             raise forms.ValidationError("You have already reviewed this field")
         return field_name
+
+class RequisitionCandidateForm(forms.ModelForm):
+    class Meta:
+        model = RequisitionCandidate
+        fields = ['requisition_id', 'referred_by', 'expected_doj', 'actual_doj', 'candidate_status']
