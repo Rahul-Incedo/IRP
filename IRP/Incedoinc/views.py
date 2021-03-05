@@ -339,43 +339,40 @@ def home_view(request):
             return Http404('Page Not Exist')
     return render(request,'home.html')
 
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import FileSystemStorage, DefaultStorage
 from django.core.files import File
 
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
-    # print(request.session['prev_url_for_add_candidate'])
     user = Employee.objects.get(email=request.user.username)
+    
     form_ = ResumeForm()
     form = CandidateForm(initial={'registered_by': user})
     form.fields['registered_by'].disabled = True
-
-    for field in form.fields:
-        form.fields[field].disabled = True
-
-    # if request.method == 'GET':
-    #     context = {
-    #         'form': form,
-    #         'form_':form_,
-    #         'signal' : signal,
-    #     }
     context = {}
-    signal = None
-
+    
     if request.method == 'POST' and 'form_' in request.POST:
+        print('-----------------method=post|resume_form---------------------')
+        print(request.POST)
+        print(request.FILES)
+        print('-------------------------------------------------------------')
         form_ = ResumeForm(request.POST, request.FILES)
-        resume_name = None
-        uploaded_file_url = None
         if form_.is_valid():
+            print('----------form_ is valid-----------------')
             resume = request.FILES['resume']
             fs = FileSystemStorage()
-            resume_name = fs.save(f'Resume/{resume.name}', resume)
-            uploaded_file_url = fs.url(resume_name)
-            print(uploaded_file_url, '-=======================================')
-            print(resume_name, '-=======================================')
-            # form_ = form.save()
-            # prim_key = form_.candidate_id
+            resume_name = fs.save(f'temp_resume/{resume.name}', resume)
+            # uploaded_file_url = fs.url(resume_name)
+            uploaded_file_url = '/media/'+resume_name
+            # print('test url ', f'{fs.url(resume_name)}')
+            
+            request.session['resume_file_name'] = resume_name
+            request.session['resume_file_url'] = uploaded_file_url
+            print('---------------saved file details-----------------')
+            print('resume_name', resume_name)
+            print('uploaded_file_url', uploaded_file_url)
+            print('-----------------------------------------------')
             try:
                 data = resumeparse.read_file(f'media/{resume_name}')
                 full_name = data['name'].split(' ')
@@ -392,8 +389,6 @@ def add_candidate_view(request, *args, **kwargs):
                     l_name = full_name[len(full_name)-1]
                     m_name = full_name[1]
 
-                # with open(f'media/{resume_name}', 'rb') as resume_file:
-                    # file_obj = File(resume_file)
                 form = CandidateForm(initial={'registered_by': user,
                                             'f_name' : f_name,
                                             'm_name' : m_name,
@@ -405,40 +400,46 @@ def add_candidate_view(request, *args, **kwargs):
                                             # 'college_name' : data['university'][0],
                                             }
                         )
+                form.fields['registered_by'].disabled = True
             except:
-                form = CandidateForm(initial={'registered_by': user})
-                form.fields['registered_by'].disabled
-                
+                pass
+            
             form_ = None
-        # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
-        # form.fields['registered_by'].disabled = True
-        return render(request, 'forms/add_candidate.html', {'form':form, 'form_':form_, 'resume_name': uploaded_file_url})
+        # return render(request, 'forms/add_candidate.html', {'form':form, 'form_':form_, 'resume_name': uploaded_file_url})
 
     elif request.method == 'POST' and 'email' in request.POST:
-        resume_name = request.POST['resume_name']
-        resume_name = resume_name.lstrip('/')
-        resume_name = resume_name.replace('%20', ' ')
-        print(resume_name, '========================================')
-
+        # resume_name = request.POST['resume_name']
+        # resume_name = resume_name.lstrip('/')
+        # resume_name = resume_name.replace('%20', ' ')
+        # print(resume_name, '========================================')
         # with open(f'media/{resume_name}') as resume_file:
 
-
-        form = CandidateForm(request.POST, request.FILES, initial={'registered_by': user})
-        # form.registered_by=user.full_name
-        context['signal'] = False
-        # form.fields['registered_by'].disabled = True
+        resume_name = request.session['resume_file_name']
+        uploaded_file_url = request.session['resume_file_url']
+        form = CandidateForm(request.POST, initial={'registered_by': user})
+        form.fields['registered_by'].disabled = True
         if form.is_valid():
-            candidate_obj = form.save()
+            print('---------------Candidate Form is Valid------------------')
+            print('resume_name', resume_name)
+            print('uploaded_file_url', uploaded_file_url)
+            print('--------------------------------------------------------')
+            del request.session['resume_file_name']
+            del request.session['resume_file_url']
 
-            with open(f'{resume_name}', "rb") as file_name:
-                file_obj = File(file_name)
-                candidate_obj.resume = file_obj
-                candidate_obj.registered_by=user
-                candidate_obj.save()
+            candidate_obj = form.save(commit=False)
 
-            if os.path.exists('media/Resume'):
-                shutil.rmtree('media/Resume')
-            context['signal'] = True
+            with open(uploaded_file_url.lstrip('/'), "rb") as f:
+                candidate_obj.resume.save(uploaded_file_url.split('/')[-1], File(f))
+                print('--------------inside open-----------------')
+                print('f', f)
+                print('candidate_obj.file.name', candidate_obj.resume.name)
+                print('candidate_obj.file.url', candidate_obj.resume.url)
+                print('------------------------------------------')
+
+
+            if os.path.exists('media/temp_resume'):
+                shutil.rmtree('media/temp_resume')
+            
             requisition_id = form.cleaned_data['requisition_id']
             candidate_email = form.cleaned_data['email']
             job_obj = Job.objects.get(requisition_id=requisition_id)
@@ -465,34 +466,21 @@ def add_candidate_view(request, *args, **kwargs):
                 candidate_email = candidate_obj,
                 candidate_status = 'In-Progress',
             )
-            # return redirect('../search_candidate/', )
-            #
-            # with open(f'media/{resume_name}') as resume_file:
-            #     django_file = File(resume_file)
-            #     candidate_obj.resume.save() = File(resume_file)
-                # candidate_obj.save()
-            # os.remove(f'media/{resume_name}')
-            # if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
-            #     shutil.rmtree('media/temp')
 
             return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
 
         form_ = None
-        return render(request, 'forms/add_candidate.html', {'form':form, 'resume_name': request.POST['resume_name']})
-    # get request and details are not valid
+        # return render(request, 'forms/add_candidate.html', {'form':form, 'resume_name': request.POST['resume_name']})
+
     else:
-        form = CandidateForm()
-        form_ = ResumeForm()
         for field in form.fields:
             form.fields[field].disabled = True
     
-    signal = 'True'
+    form.fields['registered_by'].disabled = True
     context = {
         'form': form,
         'form_':form_,
-        'signal' : signal,
     }
-
     return render(request, 'forms/add_candidate.html', context)
 
 

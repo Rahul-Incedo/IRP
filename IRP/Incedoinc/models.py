@@ -75,7 +75,7 @@ class Candidate(models.Model):
     mobile = models.CharField(max_length=10, blank=True)
     # DOB = models.DateField(null=True, blank=True)
     projects_link = models.URLField(null=True, blank=True)
-    resume = models.FileField()
+    resume = models.FileField(upload_to='Resume/')
     notice_period = models.CharField(max_length=5, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, blank=True)
 
@@ -89,7 +89,7 @@ class Candidate(models.Model):
     def __str__(self):
         return f'{self.f_name} : {self.email}'
     def get_resume_name(self):
-        return self.resume.name.lstrip('Resume').lstrip('/')
+        return self.resume.name.split('/')[-1]
 
 class Feedback(models.Model):
     feedback_id = models.AutoField(primary_key=True)

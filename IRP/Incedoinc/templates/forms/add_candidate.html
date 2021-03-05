@@ -15,7 +15,7 @@
 </form>
 <form method='POST' name = 'details' enctype="multipart/form-data" action = '{% url "add_candidate_page" %}'> {% csrf_token %}
   {{ form.as_p }}
-  <input type = 'hidden' name ='resume_name' value = {{resume_name}}><br>
+  <!-- <input type = 'hidden' name ='resume_name' value = {{resume_name}}><br> -->
   <!-- {% if resume_name != None %} -->
   <!-- <h4>
     Please note that the details extracted from the resume file may not be 100% accurate, so please verify all the details before proceeding ahead.<br><br>
