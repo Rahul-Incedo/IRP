@@ -1,7 +1,7 @@
 {% extends 'forms/base_form.html' %}
 {% block content %}
 <div class='title'>
-  <h1>ENTER CANDIDATE DETAILS TO REFER FOR [{{requisition_id_obj.requisition_id}}]</h1>
+  <h1>ENTER CANDIDATE DETAILS TO REFER FOR <font color="orange">{{requisition_id_obj.requisition_id}}</font></h1>
 </div>
 {% if signal == False %}
   <h3 style="margin-left:200px"> candidate already exists </h3>
@@ -18,19 +18,20 @@
   <input type = 'hidden' name ='resume_name' value = {{resume_name}}><br>
   {% if resume_name != None %}
   <center>
-    <h2>Please confirm, you checked all the details of the form <br>
-      And You want to refer this candidate for : <br>
-      Requition Id - <u>{{requisition_id_obj.requisition_id}}</u><br>
-      Job Description - <u>{{requisition_id_obj.jd}}</u>
-    <input type='checkbox' name = 'confirm' required ></h2></center>
+
+      <h2>Please confirm, you checked all the details of the form <br>
+        And You want to refer this candidate for : <br>
+        Requition Id - <font color="red">{{requisition_id_obj.requisition_id}}</font><br>
+        Job Description - <font color="red">{{requisition_id_obj.jd}}</font><br><br>
+      <input type='checkbox' name = 'confirm' style="width: auto;" required>Yes I've Checked</h2></center>
   <button type="submit" name = 'form' >Add Candidate</button><br><br>
   {% else %}
   <center>
     <h2>Please confirm, you checked all the details of the form <br>
       And You want to refer this candidate for : <br>
-      Requition Id - <u>{{requisition_id_obj.requisition_id}}</u><br>
-      Job Description - <u>{{requisition_id_obj.jd}}</u>
-    <input type='checkbox' name = 'confirm' required disabled></h2></center>
+      Requition Id - <font color="red">{{requisition_id_obj.requisition_id}}</font><br>
+      Job Description - <font color="red">{{requisition_id_obj.jd}}</font><br><br>
+    <input type='checkbox' name = 'confirm' style="width: auto;" required disabled>Yes I've Checked</h2></center>
   <button type="submit" name = 'form' disabled>Add Candidate And Refer</button><br><br>
   {% endif %}
 
