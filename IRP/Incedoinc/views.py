@@ -1,6 +1,6 @@
 import warnings
 warnings.filterwarnings('ignore')
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import query , Q
 from django.shortcuts import redirect, render
 from decimal import Context
@@ -538,117 +538,164 @@ def edit_candidate(request,candidate_email):
 def view_candidate(request, candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
+
+    if request.method == 'GET':
+        print('-----------------view_candidate | GET REQUEST----------------------')
+        print(request.GET)
+        print('-----------------------------------------------------------------')
+
+    if request.method == 'POST':
+        print('-----------------view_candidate | POST REQUEST---------------------')
+        print(request.POST)
+        print('---------------------------------------------------------------')
+
+    editable_req_id = None
+    form_req_cand = None
+    try:
+        candidate_obj = Candidate.objects.get(email=candidate_email)
+    except ObjectDoesNotExist:
+        return render(request, 'view_candidate.html', {'error_msg':"Oops :( Candidate Doesn't Exist"})
+    except:
+        return render(request,'view_candidate.html', {'error_msg':"Oops ;( Something went wrong"})
+    
     if request.method == 'GET' and 'prev_url' in request.GET:
         prev_url = request.GET['prev_url']
     if request.method == 'POST':
         if 'home_button' in request.POST:
             return redirect('home_page')
-        if 'go_back' in request.POST:
-                if request.GET:
-                    print("get request : ")
-                    if 'previous' in request.GET:
-                        print(request.GET['previous'])
-                        previous_url_values=request.GET['previous'].split('_connector_of_2_values_')
-                        # print(l)
-                        return redirect('../../referrals/'+previous_url_values[0]+'/'+previous_url_values[1])
-                else:
-                    # <a href= "../../search_candidate/?candidate_email={{email}}"
-                    return redirect('../../search_candidate/?candidate_email='+str(candidate_email))
-                print("goback")
-                # return redirect('referrals_page')
-        if 'edit_details' in request.POST:
+
+        elif 'edit_details' in request.POST:
             candidate_obj=Candidate.objects.filter(email=candidate_email)
-            print(candidate_email)
-            print("sdfsdfsdfsd------------------------------")
             return redirect('../../edit_candidate/'+str(candidate_email))
 
-    candidate_obj=Candidate.objects.filter(email=candidate_email)
-    if len(candidate_obj)==0 :
-            return render(request,'view_candidate.html',{'error_msg':"Oops ;( Something went wrong"})
+        elif 'editable_req_id' in request.POST:
+            editable_req_id = request.POST['editable_req_id']
+            req_cand_obj = RequisitionCandidate.objects.get(candidate_email=candidate_obj, requisition_id__requisition_id=editable_req_id)
+            form_req_cand = RequisitionCandidateForm(instance=req_cand_obj)
+            form_req_cand.fields['requisition_id'].disabled = True
+            form_req_cand.fields['referred_by'].disabled = True
 
-    f_name = candidate_obj[0].f_name
-    if f_name==None:
-        f_name=""
+        elif 'save_status' in request.POST:
+            saved_req_id = request.POST['save_status']
+            req_cand_obj = RequisitionCandidate.objects.get(candidate_email=candidate_obj, requisition_id__requisition_id=saved_req_id)
+            form_req_cand = RequisitionCandidateForm(request.POST)
 
-    m_name = candidate_obj[0].m_name
-    if m_name==None:
-        m_name=""
+            if form_req_cand.is_valid():
+                req_cand_obj.candidate_status = request.POST['candidate_status']
 
-    l_name = candidate_obj[0].l_name
-    if l_name==None:
-        l_name=""
+                if request.POST['actual_doj'] != '':
+                    req_cand_obj.actual_doj = request.POST['actual_doj']
 
-    registered_by = candidate_obj[0].registered_by
-    if registered_by==None:
-        registered_by=""
+                if request.POST['expected_doj'] != '':
+                    req_cand_obj.expected_doj = request.POST['expected_doj']
 
-    email=candidate_obj[0].email
-    if email==None:
-        email=""
+                req_cand_obj.save()
+                print('--------------------obj-----------------------')
+                print('requisition_candidate_id', req_cand_obj.requisition_candidate_id)
+                print('requisition_id', req_cand_obj.requisition_id)
+                print('candidate_email', req_cand_obj.candidate_email)
+                print('referred_by', req_cand_obj.referred_by)
+                print('actual_doj', req_cand_obj.actual_doj)
+                print('candidate_status', req_cand_obj.candidate_status)
+                print('----------------------------obj saved-------------------------')
+    
+    query_set = RequisitionCandidate.objects.filter(candidate_email=candidate_obj)
 
-    gender=candidate_obj[0].gender
-    if gender==None:
-        gender=""
-
-    CGPA=candidate_obj[0].CGPA
-    if CGPA==None:
-        CGPA=""
-
-    college_name=candidate_obj[0].college_name
-    if college_name==None:
-        college_name=""
-
-    experience=candidate_obj[0].experience
-    if experience==None:
-        experience=""
-
-    mobile=candidate_obj[0].mobile
-    if mobile==None:
-        mobile=""
-
-    projects_link=candidate_obj[0].projects_link
-    if projects_link==None:
-        projects_link=""
-
-    notice_period=candidate_obj[0].notice_period
-    if notice_period==None:
-        notice_period=""
-
-    resume_url=candidate_obj[0].resume.url
-    resume_name=candidate_obj[0].resume.name.split('/')[-1]
-
-    timestamp=candidate_obj[0].timestamp
-    if timestamp==None:
-        timestamp=""
-
-    requisition_candidate_temp_list_tuple = list(set(RequisitionCandidate.objects.filter(candidate_email=Candidate.objects.get(email=candidate_email))))
-    # if len(requisition_candidate_temp_list_tuple)==0:
-    #     return render(request, 'my_referrals.html',{'error_message':'Something Went Wrong'})
-    requisition_candidate_context={}
-    for x in range(len(requisition_candidate_temp_list_tuple)):
-        requisition_candidate_context[x+1]=requisition_candidate_temp_list_tuple[x]
-
-    context={
-        'f_name':f_name,
-        'm_name':m_name,
-        'l_name':l_name,
-        'registered_by':registered_by,
-        'email':email,
-        'gender':gender,
-        'CGPA':CGPA,
-        'college_name':college_name,
-        'experience':experience,
-        'mobile':mobile,
-        'projects_link':projects_link,
-        'notice_period':notice_period,
-        'resume_url':resume_url,
-        'resume_name':resume_name,
-        'timestamp':timestamp,
-        'requisition_candidate_context':requisition_candidate_context,
-        'form_rc': RequisitionCandidateForm(),
+    context = {
+        'candidate_obj' : candidate_obj,
+        'query_set' : query_set,
+        'form_req_cand' : form_req_cand,
+        'editable_req_id' : editable_req_id,
     }
+    return render(request, 'view_candidate.html', context)
 
-    return render(request,'view_candidate.html',context)
+    # candidate_obj=Candidate.objects.filter(email=candidate_email)
+    # if len(candidate_obj)==0 :
+    #         return render(request,'view_candidate.html',{'error_msg':"Oops ;( Something went wrong"})
+
+    # f_name = candidate_obj[0].f_name
+    # if f_name==None:
+    #     f_name=""
+
+    # m_name = candidate_obj[0].m_name
+    # if m_name==None:
+    #     m_name=""
+
+    # l_name = candidate_obj[0].l_name
+    # if l_name==None:
+    #     l_name=""
+
+    # registered_by = candidate_obj[0].registered_by
+    # if registered_by==None:
+    #     registered_by=""
+
+    # email=candidate_obj[0].email
+    # if email==None:
+    #     email=""
+
+    # gender=candidate_obj[0].gender
+    # if gender==None:
+    #     gender=""
+
+    # CGPA=candidate_obj[0].CGPA
+    # if CGPA==None:
+    #     CGPA=""
+
+    # college_name=candidate_obj[0].college_name
+    # if college_name==None:
+    #     college_name=""
+
+    # experience=candidate_obj[0].experience
+    # if experience==None:
+    #     experience=""
+
+    # mobile=candidate_obj[0].mobile
+    # if mobile==None:
+    #     mobile=""
+
+    # projects_link=candidate_obj[0].projects_link
+    # if projects_link==None:
+    #     projects_link=""
+
+    # notice_period=candidate_obj[0].notice_period
+    # if notice_period==None:
+    #     notice_period=""
+
+    # resume_url=candidate_obj[0].resume.url
+    # resume_name=candidate_obj[0].resume.name.split('/')[-1]
+
+    # timestamp=candidate_obj[0].timestamp
+    # if timestamp==None:
+    #     timestamp=""
+
+    # requisition_candidate_temp_list_tuple = list(set(RequisitionCandidate.objects.filter(candidate_email=Candidate.objects.get(email=candidate_email))))
+    # # if len(requisition_candidate_temp_list_tuple)==0:
+    # #     return render(request, 'my_referrals.html',{'error_message':'Something Went Wrong'})
+    # requisition_candidate_context={}
+    # for x in range(len(requisition_candidate_temp_list_tuple)):
+    #     requisition_candidate_context[x+1]=requisition_candidate_temp_list_tuple[x]
+
+    # context={
+    #     'f_name':f_name,
+    #     'm_name':m_name,
+    #     'l_name':l_name,
+    #     'registered_by':registered_by,
+    #     'email':email,
+    #     'gender':gender,
+    #     'CGPA':CGPA,
+    #     'college_name':college_name,
+    #     'experience':experience,
+    #     'mobile':mobile,
+    #     'projects_link':projects_link,
+    #     'notice_period':notice_period,
+    #     'resume_url':resume_url,
+    #     'resume_name':resume_name,
+    #     'timestamp':timestamp,
+    #     'requisition_candidate_context':requisition_candidate_context,
+    #     'form_rc': RequisitionCandidateForm(),
+    # }
+
+    # return render(request,'view_candidate.html',context)
 
 def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
