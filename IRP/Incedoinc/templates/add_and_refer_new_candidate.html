@@ -3,10 +3,7 @@
 <div class='title'>
   <h1>ENTER CANDIDATE DETAILS TO REFER FOR <font color="orange">{{requisition_id_obj.requisition_id}}</font></h1>
 </div>
-{% if signal == False %}
-  <h3 style="margin-left:200px"> candidate already exists </h3>
-{% endif %}
-<form method ='POST' name = 'resume_file' enctype="multipart/form-data" action = "">
+<form method ='POST' name = 'resume_file' enctype="multipart/form-data" action =''>
   {% csrf_token %}
   {{form_.as_p}}
   {% if form_ is not None %}
@@ -16,14 +13,13 @@
 <form method='POST' name = 'details' enctype="multipart/form-data" action = ""> {% csrf_token %}
   {{ form.as_p }}
   <input type = 'hidden' name ='resume_name' value = {{resume_name}}><br>
-  {% if resume_name != None %}
+  {% if form_ is None %}
   <center>
-
       <h2>Please confirm, you checked all the details of the form <br>
         And You want to refer this candidate for : <br>
         Requition Id - <font color="red">{{requisition_id_obj.requisition_id}}</font><br>
         Job Description - <font color="red">{{requisition_id_obj.jd}}</font><br><br>
-      <input type='checkbox' name = 'confirm' style="width: auto;" required>Yes I've Checked</h2></center>
+      <input type='checkbox' name = 'confirm' style="width: auto;" required>Yes , I Acknowledge</h2></center>
   <button type="submit" name = 'form' >Add Candidate</button><br><br>
   {% else %}
   <center>
@@ -37,11 +33,4 @@
 
 </form>
 <a href='../../../delete_temp_for_add_and_refer/{{requisition_id_obj.requisition_id}}'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
-
-<!-- {% if resume_name == None %}
-  <a href='../delete_temp/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
-{% else %}
-<a href='../delete_resume{{resume_name}}/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
-{% endif %} -->
-<!-- <center><a href='/search_candidate' ><button class='button-close' type="submit">Close</button></a></center> -->
 {% endblock %}
