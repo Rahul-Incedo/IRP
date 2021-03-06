@@ -54,7 +54,7 @@ class Job(models.Model):
         return f'{self.requisition_id}'
 
     def get_open_positions(self):
-        return (self.total_positions-len(RequisitionCandidate.objects.filter(requisition_id=self, candidate_status='Offered')))
+        return (self.total_positions-len(RequisitionCandidate.objects.filter(requisition_id=self, candidate_status__in=['Offered','Joined'])))
 
 class Candidate(models.Model):
     # candidate_id = models.AutoField(primary_key=True)
