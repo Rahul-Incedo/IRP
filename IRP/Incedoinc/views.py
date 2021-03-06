@@ -1200,11 +1200,11 @@ def refer_candidate_view(request,requisition_id):
         if 'add_new_refer' in request.POST:
             return redirect('../../add_and_refer_new_candidate/%s' %str(requisition_id))
         if 'refer_this_candidate' in request.POST:
-            confirmation_candidate_obj=(Candidate.objects.filter(email=request.POST['refer_this_candidate']))[0]
+            confirmation_candidate_obj=(Candidate.objects.filter(email=request.POST['refer_this_candidate']))
             if len(confirmation_candidate_obj)==0:
-                return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmation_candidate_obj':confirmation_candidate_obj})
-            else:
                 return render(request, 'refer_candidate.html',{'job_obj':job_obj[0]})
+            else:
+                return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmation_candidate_obj':confirmation_candidate_obj[0]})
         if 'search' in request.POST:
             if len(request.POST['search_element'])==0:
                 candidate_obj=Candidate.objects.all()
