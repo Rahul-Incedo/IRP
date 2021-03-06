@@ -75,6 +75,8 @@ class EditCandidateForm(forms.ModelForm):
         }
 
 class CandidateForm(forms.ModelForm):
+    f_name = forms.CharField(label="*First Name", required=True)
+    l_name = forms.CharField(label="*Last Name", required=True)
     CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
                             validators=[
                                 validators.MinValueValidator(0),

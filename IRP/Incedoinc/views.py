@@ -32,7 +32,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-# from resume_parser import resumeparse
+from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -346,12 +346,12 @@ def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
     user = Employee.objects.get(email=request.user.username)
-    
+
     form_ = ResumeForm()
     form = CandidateForm(initial={'registered_by': user})
     form.fields['registered_by'].disabled = True
     context = {}
-    
+
     if request.method == 'POST' and 'form_' in request.POST:
         print('-----------------method=post|resume_form---------------------')
         print(request.POST)
@@ -366,7 +366,7 @@ def add_candidate_view(request, *args, **kwargs):
             # uploaded_file_url = fs.url(resume_name)
             uploaded_file_url = '/media/'+resume_name
             # print('test url ', f'{fs.url(resume_name)}')
-            
+
             request.session['resume_file_name'] = resume_name
             request.session['resume_file_url'] = uploaded_file_url
             print('---------------saved file details-----------------')
@@ -403,7 +403,7 @@ def add_candidate_view(request, *args, **kwargs):
                 form.fields['registered_by'].disabled = True
             except:
                 pass
-            
+
             form_ = None
         # return render(request, 'forms/add_candidate.html', {'form':form, 'form_':form_, 'resume_name': uploaded_file_url})
 
@@ -439,7 +439,7 @@ def add_candidate_view(request, *args, **kwargs):
 
             if os.path.exists('media/temp_resume'):
                 shutil.rmtree('media/temp_resume')
-            
+
             requisition_id = form.cleaned_data['requisition_id']
             candidate_email = form.cleaned_data['email']
             job_obj = Job.objects.get(requisition_id=requisition_id)
@@ -475,7 +475,7 @@ def add_candidate_view(request, *args, **kwargs):
     else:
         for field in form.fields:
             form.fields[field].disabled = True
-    
+
     form.fields['registered_by'].disabled = True
     context = {
         'form': form,
@@ -557,7 +557,7 @@ def view_candidate(request, candidate_email):
         return render(request, 'view_candidate.html', {'error_msg':"Oops :( Candidate Doesn't Exist"})
     except:
         return render(request,'view_candidate.html', {'error_msg':"Oops ;( Something went wrong"})
-    
+
     if request.method == 'GET' and 'prev_url' in request.GET:
         prev_url = request.GET['prev_url']
     if request.method == 'POST':
@@ -598,7 +598,7 @@ def view_candidate(request, candidate_email):
                 print('actual_doj', req_cand_obj.actual_doj)
                 print('candidate_status', req_cand_obj.candidate_status)
                 print('----------------------------obj saved-------------------------')
-    
+
     query_set = RequisitionCandidate.objects.filter(candidate_email=candidate_obj)
 
     context = {
