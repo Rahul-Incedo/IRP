@@ -32,7 +32,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -1140,7 +1140,7 @@ def refer_candidate_view(request,requisition_id):
         return render(request, 'refer_candidate.html',{'error_message':'Oops , Something went wrong!'})
     context={}
     requisition_candidate_obj_dict={}
-
+    initial_search_element=None
     if request.method=='POST':
         print(request.POST)
         if 'ok' in request.POST:
@@ -1190,18 +1190,23 @@ def refer_candidate_view(request,requisition_id):
             # )
             # email.send()
             return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmed_message_obj':candidate_obj})
-            # print("asdasdsa")
         if 'add_new_refer' in request.POST:
             return redirect('../../add_and_refer_new_candidate/%s' %str(requisition_id))
         if 'refer_this_candidate' in request.POST:
             confirmation_candidate_obj=(Candidate.objects.filter(email=request.POST['refer_this_candidate']))[0]
-            print("asdasdasd-----",type(confirmation_candidate_obj))
-            return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmation_candidate_obj':confirmation_candidate_obj})
+            if len(confirmation_candidate_obj)==0:
+                return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmation_candidate_obj':confirmation_candidate_obj})
+            else:
+                return render(request, 'refer_candidate.html',{'job_obj':job_obj[0]})
         if 'search' in request.POST:
             if len(request.POST['search_element'])==0:
                 candidate_obj=Candidate.objects.all()
             else:
-                candidate_obj=Candidate.objects.filter(Q(f_name__contains=request.POST['search_element']) | Q(email__contains=request.POST['search_element']))
+                initial_search_element=request.POST['search_element']
+                candidate_obj=Candidate.objects.filter(Q(f_name__contains=request.POST['search_element'])
+                                                     | Q(m_name__contains=request.POST['search_element'])
+                                                     | Q(l_name__contains=request.POST['search_element'])
+                                                     | Q(email__contains=request.POST['search_element']))
             if(len(candidate_obj)==0):
                 return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'error_message_2':'No Matching results'})
             for x in range(len(candidate_obj)):
@@ -1213,14 +1218,11 @@ def refer_candidate_view(request,requisition_id):
                 else:
                     temp_dict['requisition_candidate_obj']=requisition_candidate_obj[0]
                 context[x+1]=temp_dict
-
-            print("context[[[[[[]]]]]]",context)
-
     elif request.method=='GET':
         if 'confirmed' in request.GET:
             candidate_obj=Candidate.objects.filter(email=request.GET['confirmed'])[0]
             return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmed_message_obj':candidate_obj})
-    return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'context':context,'requisition_candidate_obj_dict':requisition_candidate_obj_dict})
+    return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'context':context,'requisition_candidate_obj_dict':requisition_candidate_obj_dict , 'initial_search_element':initial_search_element})
 
 
 def add_and_refer_new_candidate_view(request,requisition_id):

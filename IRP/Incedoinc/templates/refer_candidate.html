@@ -288,8 +288,7 @@
 <table class="table1">
   <tr>
     <th>
-
-    <input type="text" placeholder="Enter Name or Email" name="search_element">
+    <input type="text" placeholder="Enter Name or Email" {% if initial_search_element %} value={{initial_search_element}} {%  endif %}name="search_element">
     <input type="submit" value="Search" name="search">
   </th>
   <th>
@@ -309,9 +308,8 @@
 
   <tr >
     <th >Sr.No</th>
-    <th >Name</th>
+    <th >Full Name</th>
     <th >Email</th>
-
     <th >Referral Status</th>
 
   </tr>
@@ -323,7 +321,7 @@
 
     <td >{{key}}</td>
     <td >{{value.candidate_obj.full_name}}</td>
-    <td ><a href="../../../view_candidate/{{value.candidate_obj.email}}/?previous=refer_candidate_connector_of_2_values_{{job_obj.requisition_id}}" target="_blank">{{value.candidate_obj.email}}</td>
+    <td ><a href="../../../view_candidate/{{value.candidate_obj.email}}" target="_blank">{{value.candidate_obj.email}}</td>
     {% if value.requisition_candidate_obj  %}
     <td>Already applied/referred by : {{value.requisition_candidate_obj.referred_by}}</td>
     {% else %}
