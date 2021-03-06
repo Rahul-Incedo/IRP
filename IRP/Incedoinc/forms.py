@@ -312,9 +312,13 @@ class FieldForm(forms.ModelForm):
             raise forms.ValidationError("You have already reviewed this field")
         return field_name
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
 class RequisitionCandidateForm(forms.ModelForm):
     class Meta:
         model = RequisitionCandidate
+
         fields = ['requisition_candidate_id', 'requisition_id', 'referred_by', 'expected_doj', 'actual_doj', 'candidate_status']
 
     # def clean_candidate_status(self):
@@ -333,3 +337,20 @@ class RequisitionCandidateForm(forms.ModelForm):
     #     if curr_status != 'Offered' and new_status == 'Offered' and open_positions <= 0:
     #         raise ValidationError('No more open position to offer')
     #     return new_status
+
+        fields = ['requisition_id', 'referred_by', 'expected_doj', 'actual_doj', 'candidate_status']
+        widgets = {
+            'expected_doj': DateInput(),
+            'actual_doj': DateInput(),
+        }
+
+    def clean_candidate_status(self):
+        cleaned_data = self.cleaned_data
+
+        curr_status = self.instance.candidate_status
+        new_status = cleaned_data['candidate_status']
+        open_positions = self.instance.requisition_id.get_open_positions()
+        resources = ['Offered', 'Joined']
+        if open_positions <= 0 and curr_status not in resources and new_status in resources:
+            raise ValidationError('No more open position to offer')
+        return new_status

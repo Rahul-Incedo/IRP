@@ -535,6 +535,20 @@ def edit_candidate(request,candidate_email):
     }
     return render(request, 'edit_candidate.html', context)
 
+def print_obj(req_cand_obj):
+        print_obj(req_cand_obj)
+        print('--------------------obj prev-----------------------')
+        print('requisition_candidate_id', req_cand_obj.requisition_candidate_id)
+        print('requisition_id', req_cand_obj.requisition_id)
+        print('candidate_email' ,  req_cand_obj.candidate_email)
+        print('referred_by', req_cand_obj.referred_by)
+        print('referred_date', req_cand_obj.referred_date)
+        print('expected_doj', req_cand_obj.expected_doj)
+        print('actual_doj', req_cand_obj.actual_doj)
+        print('status_choices', req_cand_obj.status_choices)
+        print('candidate_status', req_cand_obj.candidate_status)
+        print('----------------------------obj saved-------------------------')
+
 def view_candidate(request, candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -578,26 +592,19 @@ def view_candidate(request, candidate_email):
         elif 'save_status' in request.POST:
             saved_req_id = request.POST['save_status']
             req_cand_obj = RequisitionCandidate.objects.get(candidate_email=candidate_obj, requisition_id__requisition_id=saved_req_id)
-            form_req_cand = RequisitionCandidateForm(request.POST)
-
+            form_req_cand = RequisitionCandidateForm(request.POST, instance=req_cand_obj)
+            form_req_cand.fields['requisition_id'].disabled = True
+            form_req_cand.fields['referred_by'].disabled = True
+            # form_req_cand['requisition_id'].initial = Job.objects.get(requisition_id=saved_req_id)
             if form_req_cand.is_valid():
-                req_cand_obj.candidate_status = request.POST['candidate_status']
-
-                if request.POST['actual_doj'] != '':
-                    req_cand_obj.actual_doj = request.POST['actual_doj']
-
-                if request.POST['expected_doj'] != '':
-                    req_cand_obj.expected_doj = request.POST['expected_doj']
-
+                req_cand_obj = form_req_cand.save(commit=False)
+                print(req_cand_obj)
+                req_cand_obj.requisition_id = Job.objects.get(requisition_id=saved_req_id)
                 req_cand_obj.save()
-                print('--------------------obj-----------------------')
-                print('requisition_candidate_id', req_cand_obj.requisition_candidate_id)
-                print('requisition_id', req_cand_obj.requisition_id)
-                print('candidate_email', req_cand_obj.candidate_email)
-                print('referred_by', req_cand_obj.referred_by)
-                print('actual_doj', req_cand_obj.actual_doj)
-                print('candidate_status', req_cand_obj.candidate_status)
-                print('----------------------------obj saved-------------------------')
+                print(req_cand_obj)
+
+            else:
+                editable_req_id = saved_req_id
 
     query_set = RequisitionCandidate.objects.filter(candidate_email=candidate_obj)
 
