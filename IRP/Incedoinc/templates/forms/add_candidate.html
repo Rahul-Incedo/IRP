@@ -8,6 +8,9 @@
 {% endif %}
 <form method ='POST' name = 'resume_file' enctype="multipart/form-data" action = '{% url "add_candidate_page" %}'>
   {% csrf_token %}
+  {% if signal_ == True %}
+    <h3 style="margin-left:200px; color:red">*upload the file with provide extension.</h3>
+  {% endif %}
   {{form_.as_p}}
   {% if form_ is not None %}
   <input style='margin-left:20px; width:60px; float:left' name = 'form_' type='submit' value = 'upload'>

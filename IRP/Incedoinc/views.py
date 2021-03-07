@@ -333,17 +333,12 @@ def add_candidate_view(request, *args, **kwargs):
         return redirect('login')
 
     user = Employee.objects.get(email=request.user.username)
-    form_ = ResumeForm()
-    form = CandidateForm(initial={'registered_by': user})
-    form.fields['registered_by'].disabled = True
 
-    for field in form.fields:
-        form.fields[field].disabled = True
     signal = None
+    signal_ = None
     context = {
-        'form': form,
-        'form_':form_,
         'signal' : signal,
+        'signal_' : signal_,
     }
 
     if request.method == 'POST' and 'form_' in request.POST:
@@ -358,35 +353,51 @@ def add_candidate_view(request, *args, **kwargs):
             print(resume_name, '-=======================================')
             # form_ = form.save()
             # prim_key = form_.candidate_id
-
-        data = resumeparse.read_file(f'media/{resume_name}')
-        full_name = data['name'].split(' ')
-        f_name = ''
-        m_name = ''
-        l_name = ''
-        if len(full_name) == 1:
-            f_name = full_name[0]
-        elif len(full_name) == 2:
-            f_name = full_name[0]
-            l_name = full_name[1]
         else:
-            f_name = full_name[0]
-            l_name = full_name[len(full_name)-1]
-            m_name = full_name[1]
+            context['signal_'] = True
+            form = CandidateForm(initial={'registered_by': user})
+            for field in form.fields:
+                form.fields[field].disabled = True
+            context['form'] = form
+            context['form_'] = ResumeForm()
+            return render(request, 'forms/add_candidate.html', context)
 
-        # with open(f'media/{resume_name}', 'rb') as resume_file:
-            # file_obj = File(resume_file)
-        new_form = CandidateForm(initial={'registered_by': user,
-                                       'f_name' : f_name,
-                                       'm_name' : m_name,
-                                       'l_name' : l_name,
-                                       'email' : data['email'],
-                                       'mobile' : data['phone'][-10:],
-                                       # 'resume' : file_obj,
-                                       'experience' : data['total_exp'],
-                                       # 'college_name' : data['university'][0],
-                                       }
-                                )
+        try:
+            data = resumeparse.read_file(f'media/{resume_name}')
+            full_name = data['name'].split(' ')
+            f_name = ''
+            m_name = ''
+            l_name = ''
+            if len(full_name) == 1:
+                f_name = full_name[0]
+            elif len(full_name) == 2:
+                f_name = full_name[0]
+                l_name = full_name[1]
+            else:
+                f_name = full_name[0]
+                l_name = full_name[len(full_name)-1]
+                m_name = full_name[1]
+
+            phone = None
+            if( data['phone'] != None):
+                phone = data['phone'][:-10]
+            # with open(f'media/{resume_name}', 'rb') as resume_file:
+                # file_obj = File(resume_file)
+            new_form = CandidateForm(initial={'registered_by': user,
+                                           'f_name' : None,
+                                           'm_name' : m_name,
+                                           'l_name' : l_name,
+                                           'email' : data['email'],
+                                           'mobile' : phone,
+                                           # 'resume' : file_obj,
+                                           'experience' : str(data['total_exp']),
+                                           # 'college_name' : data['university'][0],
+                                           }
+                                    )
+        except:
+            new_form = CandidateForm(initial={'registered_by': user})
+
+
 
         # form_ = ResumeForm(initial = {resume=f'media/Resume/{form_.get_resume_name()}'})
         new_form.fields['registered_by'].disabled = True
@@ -453,7 +464,13 @@ def add_candidate_view(request, *args, **kwargs):
 
             return redirect('../'+'search_candidate/?candidate_email='+str(candidate_email))
 
-
+    form_ = ResumeForm()
+    form = CandidateForm(initial={'registered_by': user})
+    for field in form.fields:
+        form.fields[field].disabled = True
+    context['form'] = form
+    context['form_'] = form_
+    form.fields['registered_by'].disabled = True
     return render(request, 'forms/add_candidate.html', context)
 
 
