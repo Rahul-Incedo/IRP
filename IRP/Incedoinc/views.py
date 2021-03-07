@@ -47,15 +47,15 @@ from urllib.parse import non_hierarchical, unquote
 
 from django.http import FileResponse
 def file_view(request, file_url):
-    print('-----------------------------file-view----------------------------')
     full_path = os.path.join(settings.BASE_DIR, file_url[1:])
     file_name = file_url.split('/')[-1]
     file_extension = file_name.split('.')[-1].lower()
-    print('file_url:', file_url)
-    print('file_name:', file_name)
-    print('full_path:', full_path)
-    print('file_extension:', file_extension)
-    print('------------------------------------------------------------------')
+    # print('-----------------------------file-view----------------------------')
+    # print('file_url:', file_url)
+    # print('file_name:', file_name)
+    # print('full_path:', full_path)
+    # print('file_extension:', file_extension)
+    # print('------------------------------------------------------------------')
     if file_extension == 'pdf':
         with open(full_path, 'rb') as pdf:
             response = HttpResponse(pdf.read(),content_type='application/pdf')
@@ -231,8 +231,8 @@ def manage_job_view(request, *args, **kwargs):
         context['msg'] = msg
 
     elif request.method == 'POST':
-        print('------------------------manage-job | post -------------------')
-        print(request.POST)
+        # print('------------------------manage-job | post -------------------')
+        # print(request.POST)
         request.session['open_to_internal'] = request.POST.get('open_to_internal', [])
         request.session['requisition_status'] = request.POST.get('requisition_status', [])
 
@@ -380,13 +380,13 @@ def add_candidate_view(request, *args, **kwargs):
     context = {}
 
     if request.method == 'POST' and 'form_' in request.POST:
-        print('-----------------method=post|resume_form---------------------')
-        print(request.POST)
-        print(request.FILES)
-        print('-------------------------------------------------------------')
+        # print('-----------------method=post|resume_form---------------------')
+        # print(request.POST)
+        # print(request.FILES)
+        # print('-------------------------------------------------------------')
         form_ = ResumeForm(request.POST, request.FILES)
         if form_.is_valid():
-            print('----------form_ is valid-----------------')
+            # print('----------form_ is valid-----------------')
             resume = request.FILES['resume']
             fs = FileSystemStorage()
             resume_name = fs.save(f'temp_resume/{resume.name}', resume)
@@ -396,10 +396,10 @@ def add_candidate_view(request, *args, **kwargs):
 
             request.session['resume_file_name'] = resume_name
             request.session['resume_file_url'] = uploaded_file_url
-            print('---------------saved file details-----------------')
-            print('resume_name', resume_name)
-            print('uploaded_file_url', uploaded_file_url)
-            print('-----------------------------------------------')
+            # print('---------------saved file details-----------------')
+            # print('resume_name', resume_name)
+            # print('uploaded_file_url', uploaded_file_url)
+            # print('-----------------------------------------------')
             try:
                 data = resumeparse.read_file(f'media/{resume_name}')
                 full_name = data['name'].split(' ')
@@ -446,10 +446,10 @@ def add_candidate_view(request, *args, **kwargs):
         form = CandidateForm(request.POST, initial={'registered_by': user})
         form.fields['registered_by'].disabled = True
         if form.is_valid():
-            print('---------------Candidate Form is Valid------------------')
-            print('resume_name', resume_name)
-            print('uploaded_file_url', uploaded_file_url)
-            print('--------------------------------------------------------')
+            # print('---------------Candidate Form is Valid------------------')
+            # print('resume_name', resume_name)
+            # print('uploaded_file_url', uploaded_file_url)
+            # print('--------------------------------------------------------')
             del request.session['resume_file_name']
             del request.session['resume_file_url']
 
@@ -457,11 +457,11 @@ def add_candidate_view(request, *args, **kwargs):
 
             with open(uploaded_file_url.lstrip('/'), "rb") as f:
                 candidate_obj.resume.save(uploaded_file_url.split('/')[-1], File(f))
-                print('--------------inside open-----------------')
-                print('f', f)
-                print('candidate_obj.file.name', candidate_obj.resume.name)
-                print('candidate_obj.file.url', candidate_obj.resume.url)
-                print('------------------------------------------')
+                # print('--------------inside open-----------------')
+                # print('f', f)
+                # print('candidate_obj.file.name', candidate_obj.resume.name)
+                # print('candidate_obj.file.url', candidate_obj.resume.url)
+                # print('------------------------------------------')
 
 
             if os.path.exists('media/temp_resume'):
@@ -580,15 +580,15 @@ def view_candidate(request, candidate_email):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    if request.method == 'GET':
-        print('-----------------view_candidate | GET REQUEST----------------------')
-        print(request.GET)
-        print('-----------------------------------------------------------------')
+    # if request.method == 'GET':
+    #     print('-----------------view_candidate | GET REQUEST----------------------')
+    #     print(request.GET)
+    #     print('-----------------------------------------------------------------')
 
-    if request.method == 'POST':
-        print('-----------------view_candidate | POST REQUEST---------------------')
-        print(request.POST)
-        print('---------------------------------------------------------------')
+    # if request.method == 'POST':
+    #     print('-----------------view_candidate | POST REQUEST---------------------')
+    #     print(request.POST)
+    #     print('---------------------------------------------------------------')
 
     editable_req_id = None
     form_req_cand = None
@@ -745,7 +745,7 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[2]='pass'
                         temp_dict[3]='pass'
             context[str(y)]=temp_dict
-        print(context)
+        # print(context)
         return render(request, 'search.html',{'context':context , 'level_':level_, 'level__':level__, 'l1_id':l1_id, 'l2_id':l2_id, 'l3_id':l3_id , 'search_query':search_query })
     else:
         return render(request, 'search.html', {'search_query': search_query})

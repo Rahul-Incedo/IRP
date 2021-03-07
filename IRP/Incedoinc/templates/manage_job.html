@@ -313,16 +313,16 @@
             </tr>
             {% load customfilters %}
             <!-- CANDIDATE TABLE -->
-            <tbody class="hideTr">
+            <tbody class="hideTr" style="display:none;">
               <td colspan='9'>
                 <table class='sub-table'>
                   <thead>
                     <th class="table-head">Sr.</th>
-                      <th class="table-head">Candidate Name</th>
-                      <th class="table-head">Current Status</th>
-                      <th class="table-head">Expected DOJ</th>
-                      <th class="table-head">Actual DOJ</th>
-                    </thead>
+                    <th class="table-head">Candidate Name</th>
+                    <th class="table-head">Current Status</th>
+                    <th class="table-head">Expected DOJ</th>
+                    <th class="table-head">Actual DOJ</th>
+                  </thead>
                     
                     {% for obj in req_cand_dict|get_value_from_dict:obj.requisition_id %}
                       <tr>
@@ -334,9 +334,9 @@
                       </tr>
                     {% endfor %}
 
-                  </table>
-                </td>
-              </tbody>
+                </table>
+              </td>
+            </tbody>
 
           {% endfor %}
 
@@ -356,21 +356,23 @@
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>  
    -->
     <script type="text/javascript">  
-        $(document).ready(function () {  
+        $(document).ready(function () { 
             debugger;  
-            $('.hideTr').slideUp(600);
-        $('[data-toggle="toggle"]').click(function () {  
+          $('.hideTr').slideUp(600);
+          $('[data-toggle="toggle"]').click(function () {  
             if ($(this).parents().next(".hideTr").is(':visible')) {  
-                $(this).parents().next('.hideTr').slideUp(100);  
+                $(this).parents().next('.hideTr').slideUp(100);
                 $(".plusminus" + $(this).children().children().attr("id")).text('+');
-              $(this).css('background-color', 'white');  
-                }  
-            else {  
+                $(this).children().children(".expand-button").val('+');
+                $(this).css('background-color', 'white');  
+              }  
+              else {  
                 $(this).parents().next('.hideTr').slideDown(100);  
                 $(".plusminus" + $(this).children().children().attr("id")).text('-');
-              $(this).css('background-color', '#c1eaff ');    
+                $(this).children().children(".expand-button").val('-');
+                $(this).css('background-color', '#c1eaff ');
             }  
-        });  
+          });  
         });  
     </script>
   </body>
