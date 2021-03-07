@@ -32,7 +32,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -222,8 +222,9 @@ def manage_job_view(request, *args, **kwargs):
         expand_token = request.GET['expand_token']
         query_set = Job.objects.all()
         sub_query_set = RequisitionCandidate.objects.filter(requisition_id=expand_token)
+        context['query_set'] = query_set
         context['expand_token'] = expand_token
-        context['sub_query_Set'] = sub_query_set
+        context['sub_query_set'] = sub_query_set
 
     elif request.method == 'GET' and 'deleted' in request.GET:
         msg = 'Requisition ( ' + request.GET['deleted'] + ' ) is Deleted'
