@@ -220,6 +220,8 @@
   <div id="header">
     <!--  <h1><br>INCEDO RECRUITMENT PORTAL</h1>-->
   </div><!--closing of header-->
+
+  {{ search_query }}
     <table>
       <tr>
 
@@ -227,7 +229,7 @@
         <th>
           <button class="home_button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
             <!--<label for = "status">Status: </label><br>-->
-          <input type="text" placeholder="Type Requition id or name" name="search_element">
+          <input type="text" placeholder="Type Requition id or name" name="search_element" value="{{ search_query }}">
           <input type="submit" value="Search" name="search">
           <input type="submit" value="List All" name="listall">
         </form>
@@ -259,7 +261,7 @@
 
     <tr>
       <td>{{key}}</td>
-      <td>{{value.requisition_candidate_obj.requisition_id.requisition_id}}</td>
+      <td><a href="{% url 'view_job' job_pk={{ value.requisition_candidate_obj.requisition_id.requisition_id}}" target="_blank" style="text-decoration: none;">{{value.requisition_candidate_obj.requisition_id.requisition_id}}</a></td>
       <td><a href="../view_candidate/{{value.requisition_candidate_obj.candidate_email.email}}/" target="_blank"><input id='view' type="submit" class="view-btn" value="{{ value.requisition_candidate_obj.candidate_email.full_name }}" ></a></td>
       <!-- <td>{{value.email}}<a href="../view_candidate/{{value.email}}"><button>View</button></a></td> -->
       <td><a href="{% url 'file_view' value.requisition_candidate_obj.candidate_email.resume.url %}" target="_blank"><button>download</button></a></td>

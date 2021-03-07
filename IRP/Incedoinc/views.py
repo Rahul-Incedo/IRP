@@ -639,6 +639,8 @@ def search_candidate(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
     request.session['prev_url'] = 'search_candidate/'
+    search_query = request.POST.get('search_element') or ''
+
     if (request.GET and request.GET is not {}) or request.method == 'POST':
         context={}
         if request.method == 'POST':
@@ -647,7 +649,7 @@ def search_candidate(request, *args, **kwargs):
             if 'listall' in request.POST:
                 temp_list_tuple = list(set((RequisitionCandidate.objects.all())))
                 if len(temp_list_tuple)==0:
-                    return render(request, 'search.html',{'error_message':'Oops :(   No Candidate Yet'})
+                    return render(request, 'search.html', {'error_message':'Oops :(   No Candidate Yet', 'search_query':search_query })
                 print(temp_list_tuple,"--------------")
 
             elif 'search' in request.POST:
@@ -661,15 +663,15 @@ def search_candidate(request, *args, **kwargs):
             if 'candidate_email' in request.GET:
                 candidate_email = request.GET['candidate_email']
             else:
-                return render(request, 'search.html',{'error_message':'No Results'})
+                return render(request, 'search.html',{'error_message':'No Results', 'search_query':search_query })
             if len(candidate_email)==0:
-                return render(request, 'search.html',{'error_message':'Please enter something'})
+                return render(request, 'search.html',{'error_message':'Please enter something', 'search_query':search_query })
             temp_list_tuple = list(RequisitionCandidate.objects.filter(candidate_email__in=Candidate.objects.filter(email__contains=candidate_email)))
             if len(temp_list_tuple)==0 :
-                return render(request, 'search.html',{'error_message':'No matching Candidate for \''+str(candidate_email)+'\''})
+                return render(request, 'search.html',{'error_message':'No matching Candidate for \''+str(candidate_email)+'\'', 'search_query' : search_query })
         print(len(temp_list_tuple))
         if len(temp_list_tuple)==0 :
-            return render(request, 'search.html',{'error_message':'No Results'})
+            return render(request, 'search.html',{'error_message':'No Results', 'search_query':search_query })
         y=0
         for x in temp_list_tuple:
             print(x)
@@ -736,9 +738,9 @@ def search_candidate(request, *args, **kwargs):
                         temp_dict[3]='pass'
             context[str(y)]=temp_dict
         print(context)
-        return render(request, 'search.html',{'context':context , 'level_':level_, 'level__':level__, 'l1_id':l1_id, 'l2_id':l2_id, 'l3_id':l3_id})
+        return render(request, 'search.html',{'context':context , 'level_':level_, 'level__':level__, 'l1_id':l1_id, 'l2_id':l2_id, 'l3_id':l3_id , 'search_query':search_query })
     else:
-        return render(request, 'search.html')
+        return render(request, 'search.html', {'search_query': search_query})
 
 def feedback(request, req_id, email_id, level):
     if not request.user.is_authenticated:
