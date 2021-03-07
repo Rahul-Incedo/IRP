@@ -216,7 +216,6 @@ def manage_job_view(request, *args, **kwargs):
         search_query = request.GET['requisition_id']
         query_set = Job.objects.filter(requisition_id = search_query)
         context['query_set'] = query_set
-        return render(request, 'manage_job.html', context)
 
     # elif request.method == 'GET' and 'expand_token' in request.GET:
     #     expand_token = request.GET['expand_token']
