@@ -625,10 +625,10 @@ def view_candidate(request, candidate_email):
             # form_req_cand['requisition_id'].initial = Job.objects.get(requisition_id=saved_req_id)
             if form_req_cand.is_valid():
                 req_cand_obj = form_req_cand.save(commit=False)
-                print(req_cand_obj)
+                # print(req_cand_obj)
                 req_cand_obj.requisition_id = Job.objects.get(requisition_id=saved_req_id)
                 req_cand_obj.save()
-                print(req_cand_obj)
+                # print(req_cand_obj)
 
             else:
                 editable_req_id = saved_req_id
@@ -658,7 +658,7 @@ def search_candidate(request, *args, **kwargs):
                 temp_list_tuple = list(set((RequisitionCandidate.objects.all())))
                 if len(temp_list_tuple)==0:
                     return render(request, 'search.html', {'error_message':'Oops :(   No Candidate Yet', 'search_query':search_query })
-                print(temp_list_tuple,"--------------")
+                # print(temp_list_tuple,"--------------")
 
             elif 'search' in request.POST:
                 temp_list_tuple = list(set((RequisitionCandidate.objects.filter(
@@ -677,12 +677,12 @@ def search_candidate(request, *args, **kwargs):
             temp_list_tuple = list(RequisitionCandidate.objects.filter(candidate_email__in=Candidate.objects.filter(email__contains=candidate_email)))
             if len(temp_list_tuple)==0 :
                 return render(request, 'search.html',{'error_message':'No matching Candidate for \''+str(candidate_email)+'\'', 'search_query' : search_query })
-        print(len(temp_list_tuple))
+        # print(len(temp_list_tuple))
         if len(temp_list_tuple)==0 :
             return render(request, 'search.html',{'error_message':'No Results', 'search_query':search_query })
         y=0
         for x in temp_list_tuple:
-            print(x)
+            # print(x)
             y=y+1
             temp_dict={}
             l1_obj=Feedback.objects.get(requisition_id=x.requisition_id,candidate_email=x.candidate_email, level = 1)
@@ -1178,7 +1178,7 @@ def refer_candidate_view(request,requisition_id):
     requisition_candidate_obj_dict={}
     initial_search_element=None
     if request.method=='POST':
-        print(request.POST)
+        # print(request.POST)
         if 'ok' in request.POST:
             return redirect('../../../referrals/refer_candidate/%s' %str(requisition_id))
 
