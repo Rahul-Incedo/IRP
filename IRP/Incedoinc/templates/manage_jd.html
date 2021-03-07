@@ -197,7 +197,7 @@
     <div class='my_inputs'>
       <form method="post"> {% csrf_token %}
           <button class="button-home glyphicon glyphicon-home" type="submit" name="home_button" aria-hidden="true"> Home</button>
-          <input type="text" placeholder="Search Query" name='search_query'>
+          <input type="text" placeholder="Search Query" name='search_query' value="{{ search_query }}">
           <button type="submit" name="search_button">Search</button>
           <button type="submit" name="list_all_button">List All</button>
           <button type="submit"  class='button-2' name="upload_jd_button">Upload JD</button>

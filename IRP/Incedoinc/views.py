@@ -43,7 +43,7 @@ from .forms import CandidateForm, UploadJdForm, UploadJobForm, ResumeForm, EditC
 from .forms import TestForm
 
 from django.conf import settings
-from urllib.parse import unquote
+from urllib.parse import non_hierarchical, unquote
 
 from django.http import FileResponse
 def file_view(request, file_url):
@@ -138,22 +138,26 @@ def manage_jd_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
     user = Employee.objects.get(email=request.user.username)
+    search_query = request.POST.get('search_query') or ''
+    context = {}
+
     if request.method == 'GET' and 'jd_name' in request.GET:
         search_query = request.GET['jd_name']
         query_set = JD.objects.filter(jd_name = search_query)
         context = {
             'query_set' : query_set
         }
-        return render(request, 'manage_jd.html', context)
+        
     elif request.method == 'GET' and 'deleted' in request.GET:
         msg = 'JD ( '+request.GET['deleted']+' ) is deleted'
         context = {
             'msg' : msg
         }
-        return render(request, 'manage_jd.html', context)
+
     if request.method == 'POST':
         if 'home_button' in request.POST:
             return redirect('home_page')
+
         elif 'search_button' in request.POST:
             search_query = request.POST['search_query']
             if search_query == '':
@@ -168,19 +172,21 @@ def manage_jd_view(request, *args, **kwargs):
                 'query_set': query_set,
                 'msg' : msg,
             }
-            return render(request, 'manage_jd.html', context)
+
         elif 'list_all_button' in request.POST:
             query_set = JD.objects.all()
             context = {
                 'query_set': query_set
             }
-            return render(request, 'manage_jd.html', context)
+
         elif 'upload_jd_button' in request.POST:
             return redirect('upload_jd_page')
+
         elif 'delete_jd_button' in request.POST:
             return HttpResponse('<h1>delete jd</h1>')
 
-    return render(request, 'manage_jd.html/', {})
+    context['search_query'] = search_query
+    return render(request, 'manage_jd.html/', context)
 
     return HttpResponse('<h1>this is managejd</h1>')
 
@@ -189,43 +195,62 @@ def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
     request.session['prev_url'] = 'manage-job/'
+    
+    query_set = None
+    msg = None
+    search_query = request.POST.get('search_query') or ''
+    checkboxes = {
+        'open_to_list' : ['Yes', 'No'],
+        'status_list' : ['Open', 'Closed', 'On-Hold', 'Offered'],
+    }
+
+    context = {
+        'query_set' : None,
+        'sub_query_set' : None,
+        'msg' : None,
+        'checkboxes' : checkboxes,
+        'search_query' : search_query,
+    }
+
     if request.method == 'GET' and 'requisition_id' in request.GET:
         search_query = request.GET['requisition_id']
         query_set = Job.objects.filter(requisition_id = search_query)
-        context = {
-            'query_set' : query_set
-        }
+        context['query_set'] = query_set
         return render(request, 'manage_job.html', context)
+
     elif request.method == 'GET' and 'expand_token' in request.GET:
         expand_token = request.GET['expand_token']
         query_set = Job.objects.all()
-        context = {
-            'query_set' : query_set,
-            'expand_token' : expand_token,
-            'sub_query_set' : RequisitionCandidate.objects.filter(requisition_id=expand_token)
-        }
-        return render(request, 'manage_job.html', context)
+        sub_query_set = RequisitionCandidate.objects.filter(requisition_id=expand_token)
+        context['expand_token'] = expand_token
+        context['sub_query_Set'] = sub_query_set
+
     elif request.method == 'GET' and 'deleted' in request.GET:
-        msg = 'Requisition ( '+request.GET['deleted']+' ) is Deleted'
-        context = {
-            'msg' : msg
-        }
-        return render(request, 'manage_job.html', context)
-    if request.method == 'POST':
+        msg = 'Requisition ( ' + request.GET['deleted'] + ' ) is Deleted'
+        context['msg'] = msg
+
+    elif request.method == 'POST':
+        print('------------------------manage-job | post -------------------')
+        print(request.POST)
+        request.session['open_to_internal'] = request.POST.get('open_to_internal', [])
+        request.session['requisition_status'] = request.POST.get('requisition_status', [])
+
         if 'home_button' in request.POST:
             return redirect('home_page')
+
         if 'search_button' in request.POST:
             search_query = request.POST['search_query']
-            if search_query == '':
-                query_set = None
-                msg = 'Enter something to search'
-            else:
-                open_to_list = ['Yes', 'No']
-                if 'open_to_internal' in request.POST:
-                    open_to_list = ['Yes']
+            open_to_list = ['Yes', 'No']
+            if 'open_to_internal' in request.POST:
+                open_to_list = ['Yes']
+            status_list = request.POST.getlist('requisition_status')
+            checkboxes['open_to_list'] = open_to_list
+            checkboxes['status_list'] = status_list
 
-                status_list = request.POST.getlist('requisition_status')
-                print(status_list)
+            if search_query == '':
+                msg = 'Enter something to search'
+
+            else:
                 query_set = Job.objects.filter(Q(requisition_status__in=status_list)
                                             , Q(open_to_internal__in=open_to_list)
                                             , Q(requisition_id__icontains=search_query)
@@ -235,29 +260,23 @@ def manage_job_view(request, *args, **kwargs):
                                             | Q(raised_by_employee__full_name__icontains=search_query)
                                             | Q(requisition_status__exact = search_query)
                             ).distinct()
-                msg = None
-            context = {
-                'query_set': query_set,
-                'msg' : msg,
-            }
-            return render(request, 'manage_job.html', context)
+                context['query_set'] = query_set
+            
+
         elif 'list_all_button' in request.POST:
             open_to_list = ['Yes', 'No']
             if 'open_to_internal' in request.POST:
                 open_to_list = ['Yes']
-
             status_list = request.POST.getlist('requisition_status')
+            checkboxes['open_to_list'] = open_to_list
+            checkboxes['status_list'] = status_list
             query_set = Job.objects.filter(requisition_status__in=status_list, open_to_internal__in=open_to_list)
-            context = {
-                'query_set': query_set,
-            }
-            return render(request, 'manage_job.html', context)
+            context['query_set'] = query_set
+
         elif 'raise_requisition_button' in request.POST:
             return redirect('upload_job_page')
 
-    return render(request, 'manage_job.html/', {})
-
-    return HttpResponse('<h1>this is managejd</h1>')
+    return render(request, 'manage_job.html/', context)
 
 def upload_jd_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
