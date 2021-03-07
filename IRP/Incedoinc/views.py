@@ -218,13 +218,13 @@ def manage_job_view(request, *args, **kwargs):
         context['query_set'] = query_set
         return render(request, 'manage_job.html', context)
 
-    elif request.method == 'GET' and 'expand_token' in request.GET:
-        expand_token = request.GET['expand_token']
-        query_set = Job.objects.all()
-        sub_query_set = RequisitionCandidate.objects.filter(requisition_id=expand_token)
-        context['query_set'] = query_set
-        context['expand_token'] = expand_token
-        context['sub_query_set'] = sub_query_set
+    # elif request.method == 'GET' and 'expand_token' in request.GET:
+    #     expand_token = request.GET['expand_token']
+    #     query_set = Job.objects.all()
+    #     sub_query_set = RequisitionCandidate.objects.filter(requisition_id=expand_token)
+    #     context['query_set'] = query_set
+    #     context['expand_token'] = expand_token
+    #     context['sub_query_set'] = sub_query_set
 
     elif request.method == 'GET' and 'deleted' in request.GET:
         msg = 'Requisition ( ' + request.GET['deleted'] + ' ) is Deleted'
@@ -276,6 +276,13 @@ def manage_job_view(request, *args, **kwargs):
 
         elif 'raise_requisition_button' in request.POST:
             return redirect('upload_job_page')
+
+    req_cand_dict = {}
+    if query_set:
+        for job_obj in query_set:
+            req = job_obj.requisition_id
+            req_cand_dict[req] = RequisitionCandidate.objects.filter(requisition_id = job_obj)
+    context['req_cand_dict'] = req_cand_dict
 
     return render(request, 'manage_job.html/', context)
 
