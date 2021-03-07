@@ -32,7 +32,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-# from resume_parser import resumeparse
+from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -147,7 +147,7 @@ def manage_jd_view(request, *args, **kwargs):
         context = {
             'query_set' : query_set
         }
-        
+
     elif request.method == 'GET' and 'deleted' in request.GET:
         msg = 'JD ( '+request.GET['deleted']+' ) is deleted'
         context = {
@@ -195,7 +195,7 @@ def manage_job_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return render(request, 'login')
     request.session['prev_url'] = 'manage-job/'
-    
+
     query_set = None
     msg = None
     search_query = request.POST.get('search_query') or ''
@@ -262,7 +262,7 @@ def manage_job_view(request, *args, **kwargs):
                                             | Q(requisition_status__exact = search_query)
                             ).distinct()
                 context['query_set'] = query_set
-            
+
 
         elif 'list_all_button' in request.POST:
             open_to_list = ['Yes', 'No']
