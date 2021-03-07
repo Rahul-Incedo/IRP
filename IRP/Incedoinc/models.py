@@ -88,6 +88,7 @@ class Candidate(models.Model):
 
     def __str__(self):
         return f'{self.f_name} : {self.email}'
+    
     def get_resume_name(self):
         return self.resume.name.split('/')[-1]
 
@@ -106,7 +107,8 @@ class Feedback(models.Model):
     timestamp = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.status} {self.level}'
+        # return f'{self.status} {self.level}'
+        return f'{self.candidate_email.email} / {self.level} / {self.status}'
 
 class Field(models.Model):
     field_id = models.AutoField(primary_key=True)
@@ -136,7 +138,8 @@ class RequisitionCandidate(models.Model):
     candidate_status = models.CharField(choices=status_choices, max_length=20, default = 'In-Progress')
 
     def __str__(self):
-        return f'{self.requisition_candidate_id} {self.candidate_status}'
+        # return f'{self.requisition_candidate_id} {self.candidate_status}'
+        return f'{self.requisition_id} / {self.candidate_email.email}'
 
 class TestModel(models.Model):
     field1 = models.CharField(blank=True, max_length=100)

@@ -148,7 +148,7 @@
         }
         td
         {
-          padding: 5px;
+          padding: 0px 10px;
           border: 1px solid black;
         }
         tr:nth-child(even)
@@ -230,7 +230,13 @@
           padding: 14px 16px;
           text-decoration: none;
         }
-
+        a {
+          display: block;
+          text-decoration: none;
+        }
+        a:hover {
+          text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -297,9 +303,10 @@
 
       <tr>
         <td>{{key}}</td>
-        <td>{{value.requisition_id}}</td>
+        <!-- <td>{{value.requisition_id}}</td> -->
+        <td><a href="{% url 'view_job' job_pk=value.requisition_id %}" target="_blank">{{value.requisition_id}}</a></td>
         <td>{{value.position_owner_id}}</td>
-        <td>{{value.jd}}</td>
+        <td><a href="{% url 'file_view' value.jd.jd_file.url %}" target="_blank">{{value.jd}}</a></td>
         <td>{{value.get_open_positions}}</td>
         <td>{{value.requisition_status}}</td>
         <td>{{value.open_to_internal}}</td>
