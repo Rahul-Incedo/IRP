@@ -289,10 +289,17 @@
           </thead>
           
           {% for obj in query_set %}
-            <tr>
+            <tr data-toggle="toggle">
+              <!-- <td >  
+                <p id="Technology" >  
+                    <b>  
+                        <span class="plusminusTechnology"> + </span>  
+                    </b>  
+                </p>  
+              </td> -->
               <td class="table-cell">{{ forloop.counter }}</td>
               <td class="table-cell">
-                <a href="./?expand_token={{obj.requisition_id}}"><input type='submit' value='+' class='expand-button'></a>
+                <input type='button' value="+" class='expand-button'>
                 <a href="{% url 'view_job' obj.pk %}" target="_blank" ><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a>
               </td>
               <td class="table-cell">{{ obj.raised_by_employee }}</td>
@@ -304,21 +311,20 @@
               <td class="table-cell">{{ obj.open_to_internal }}</td>
               <!-- <td class="table-cell"><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td> -->
             </tr>
-            
+            {% load customfilters %}
             <!-- CANDIDATE TABLE -->
-            {% if expand_token == obj.requisition_id %}
-              <tr>
-                <td colspan='9'>
-                  <table class='sub-table'>
-                    <thead>
-                      <th class="table-head">Sr.</th>
+            <tbody class="hideTr">
+              <td colspan='9'>
+                <table class='sub-table'>
+                  <thead>
+                    <th class="table-head">Sr.</th>
                       <th class="table-head">Candidate Name</th>
                       <th class="table-head">Current Status</th>
                       <th class="table-head">Expected DOJ</th>
                       <th class="table-head">Actual DOJ</th>
                     </thead>
-
-                    {% for obj in sub_query_set %}
+                    
+                    {% for obj in req_cand_dict|get_value_from_dict:obj.requisition_id %}
                       <tr>
                         <td class="table-cell">{{ forloop.counter }}</td>
                         <td class="table-cell"><a href="{% url 'view_candidate' obj.candidate_email.email %}" target="_blank"><input id="view" type="submit" value="{{ obj.candidate_email.full_name }}"></a></td>
@@ -330,8 +336,7 @@
 
                   </table>
                 </td>
-              </tr>
-            {% endif %}
+              </tbody>
 
           {% endfor %}
 
@@ -346,6 +351,27 @@
           
           $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
       });
+    </script>
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>  
+   -->
+    <script type="text/javascript">  
+        $(document).ready(function () {  
+            debugger;  
+            $('.hideTr').slideUp(600);
+        $('[data-toggle="toggle"]').click(function () {  
+            if ($(this).parents().next(".hideTr").is(':visible')) {  
+                $(this).parents().next('.hideTr').slideUp(100);  
+                $(".plusminus" + $(this).children().children().attr("id")).text('+');
+              $(this).css('background-color', 'white');  
+                }  
+            else {  
+                $(this).parents().next('.hideTr').slideDown(100);  
+                $(".plusminus" + $(this).children().children().attr("id")).text('-');
+              $(this).css('background-color', '#c1eaff ');    
+            }  
+        });  
+        });  
     </script>
   </body>
 </html>
