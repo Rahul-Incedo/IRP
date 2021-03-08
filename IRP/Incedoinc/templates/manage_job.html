@@ -13,11 +13,12 @@
         height:100%;
       }
       table {
+        width: 95%;
         border-collapse: collapse;
         margin: auto;
-        width: 90%;
         color: #588c7e;
         font-family: monospace;
+        font-size: 16px;
       }
       .sub-table {
         margin: 20px auto;
@@ -40,8 +41,8 @@
         padding: 2px 10px;
         width: max-content;
       }
-      .my_inputs {
-        width: 90%;
+      form {
+        width: 95%;
         margin: 20px auto;
       }
       button {
@@ -73,15 +74,15 @@
         text-align: center;
         font-size: 15px;
       }
-      .button-table {
+      .btn-rmg {
         border: none;
         color: white;
         width: fit-content;
-        padding :2px 10px 2px 10px;
+        padding : 2px 10px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
-        font-size: 16px;
+        font-size: 14px;
         border-radius: 15px;
         background-color: #fd511c;
         cursor: pointer;
@@ -162,7 +163,6 @@
       {
         border: none;
         color: black;
-
         text-align: center;
         text-decoration: none;
         display: inline-block;
@@ -226,35 +226,34 @@
      -->
     <!-- FILTERS AND BUTTONS -->
     <center><span class="heading">MANAGE REQUISITION</span></center>
-    <div class='my_inputs'>
-      <form method="post"> {% csrf_token %}
-          <button class="button-home glyphicon glyphicon-home" name="home_button"> Home</button>
-          <input type="text" placeholder="Search Query" name='search_query' value="{{search_query}}">
-          <button type="submit" name="search_button">Search</button>
-          <button type="submit" name="list_all_button">List All</button>
-          <button type="submit"  class='button-2' name="raise_requisition_button">Raise Requisition</button>
-          <div>
-            <span class="filters">
-              <label>Open to Internal : </label>
-              <input type="checkbox" id="yes" name="open_to_list" value="Yes" {% if 'Yes' in checkboxes.open_to_list %} checked {% endif %}>
-              <label for="yes">Yes</label>
-              <input type="checkbox" id="no" name="open_to_list" value="No" {% if 'No' in checkboxes.open_to_list %} checked {% endif %}>
-              <label for="no">No</label>
-            </span>
-            <span class="filters">
-              <label>Status  :</label>
-              <input type="checkbox" id="open" name="status_list" value="Open" {% if "Open" in checkboxes.status_list %} checked {% endif %}>
-              <label for="internal">Open</label>
-              <input type="checkbox" id="closed" name="status_list" value="Closed" {% if "Closed" in checkboxes.status_list %} checked {% endif %}>
-              <label for="internal">Closed</label>
-              <input type="checkbox" id="onhold" name="status_list" value="On-Hold" {% if "On-Hold" in checkboxes.status_list %} checked {% endif %}>
-              <label for="internal">On-Hold</label>
-              <input type="checkbox" id="offered" name="status_list" value="Offered" {% if "Offered" in checkboxes.status_list %} checked {% endif %}>
-              <label for="internal">Offered</label>
-            </span>
-          </div>
-      </form>
-    </div>
+
+    <form method="post"> {% csrf_token %}
+      <button class="button-home glyphicon glyphicon-home" name="home_button"> Home</button>
+      <input type="text" pl aceholder="Search Query" name='search_query' value="{{search_query}}">
+      <button type="submit" name="search_button">Search</button>
+      <button type="submit" name="list_all_button">List All</button>
+      <button type="submit"  class='button-2' name="raise_requisition_button">Raise Requisition</button>
+      <div>
+        <span class="filters">
+          <label>Open to Internal : </label>
+          <input type="checkbox" id="yes" name="open_to_list" value="Yes" {% if 'Yes' in checkboxes.open_to_list %} checked {% endif %}>
+          <label for="yes">Yes</label>
+          <input type="checkbox" id="no" name="open_to_list" value="No" {% if 'No' in checkboxes.open_to_list %} checked {% endif %}>
+          <label for="no">No</label>
+        </span>
+        <span class="filters">
+          <label>Status  :</label>
+          <input type="checkbox" id="open" name="status_list" value="Open" {% if "Open" in checkboxes.status_list %} checked {% endif %}>
+          <label for="internal">Open</label>
+          <input type="checkbox" id="closed" name="status_list" value="Closed" {% if "Closed" in checkboxes.status_list %} checked {% endif %}>
+          <label for="internal">Closed</label>
+          <input type="checkbox" id="onhold" name="status_list" value="On-Hold" {% if "On-Hold" in checkboxes.status_list %} checked {% endif %}>
+          <label for="internal">On-Hold</label>
+          <input type="checkbox" id="offered" name="status_list" value="Offered" {% if "Offered" in checkboxes.status_list %} checked {% endif %}>
+          <label for="internal">Offered</label>
+        </span>
+      </div>
+    </form>
 
     <!-- REQUISITION TABLE -->
     {% if msg %}
@@ -287,7 +286,7 @@
                 <td class="table-cell">
                   <div style="display: inline-flex;">
                     <input type='button' value="+" class='expand-button'>
-                    <a href="{% url 'view_job' obj.pk %}" target="_blank" ><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a>
+                    <a href="{% url 'view_job' obj.pk %}" target="_blank" ><button type='submit' class='btn-rmg'>{{obj.requisition_id}}</button></a>
                   </div>
                 </td>
                 <td class="table-cell">{{ obj.raised_by_employee }}</td>
