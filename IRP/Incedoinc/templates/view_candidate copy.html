@@ -219,7 +219,7 @@
       <center>
         <button class="home_button" type="submit" name="home_button" style="float:left"><i class="fa fa-home"></i> Home</button>
         <!-- <button type="submit" name="go_back" value="" style="float:right">Go Back</button> -->
-        <button name="close" value="" style="float:right" onclick="window.close();">Close</button>
+        <button name="go_back" value="" style="float:right" onclick="self.close();">Close</button>
 
         <button class="heading">VIEW CANDIDATE DETAILS</button>
       </center>
@@ -231,66 +231,65 @@
 
         <tr>
           <th><label text-align="left">First Name </label></th>
-          <td>: <label >{{ candidate_obj.f_name|default:"" }}</label></td>
+          <td>: <label >{{f_name}}</label></td>
         </tr>
 
         <tr>
           <th><label >Middle Name </label></th>
-          <!-- <td>: <label >{{ candidate_obj.m_name }}</label></td> -->
-          <td>: <label >{{ candidate_obj.m_name|default:"" }}</label></td>
+          <td>: <label >{{m_name}}</label></td>
         </tr>
 
         <tr>
           <th><label >Last Name </label></th>
-          <td>: <label >{{ candidate_obj.l_name|default:"" }}</label></td>
+          <td>: <label >{{l_name}}</label></td>
         </tr>
 
         <tr>
           <th><label >Registered By </label></th>
-          <td>: <label >{{ candidate_obj.registered_by }}</label></td>
+          <td>: <label >{{registered_by}}</label></td>
         </tr>
 
         <tr>
             <th><label >Email </label></th>
-            <td>: <label >{{ candidate_obj.email }}</label></td>
+            <td>: <label >{{email}}</label></td>
         </tr>
 
         <tr>
             <th><label >Gender </label></th>
-            <td><label >: {{ candidate_obj.gender|default:"" }}</label></td>
+            <td><label >: {{gender}}</label></td>
         </tr>
 
         <tr>
             <th><label >CGPA </label></th>
-            <td>: <label >{{ candidate_obj.CGPA|default:"" }}</label></td>
+            <td>: <label >{{CGPA}}</label></td>
         </tr>
 
         <tr>
             <th><label >College </label></th>
-            <td>: <label >{{ candidate_obj.college_name|default:"" }}</label></td>
+            <td>: <label >{{college_name}}</label></td>
         </tr>
 
         <tr>
             <th><label >(Years.Months) Experience</label></th>
-            <td>: <label >{{ candidate_obj.experience|default:"" }}</label></td>
+            <td>: <label >{{experience}}</label></td>
         </tr>
 
         <tr>
             <th><label >Mobile </label></th>
-            <td>: <label >{{ candidate_obj.mobile|default:"" }}</label></td>
+            <td>: <label >{{mobile}}</label></td>
         </tr>
         <tr>
             <th><label >Projects </label></th>
-            <td>: <label >{{ candidate_obj.projects_link|default:"" }}</label></td>
+            <td>: <label >{{projects_link}}</label></td>
         </tr>
         <tr>
             <th><label >(Months.Days) Notice Period</label></th>
 
-            <td>: <label >{{ candidate_obj.notice_period|default:"" }}</label></td>
+            <td>: <label >{{notice_period}}</label></td>
         </tr>
         <tr>
             <th><label >Resume </label></th>
-            <td>: <a href="{% url 'file_view' candidate_obj.resume.url %}" target="_blank"><label >{{ candidate_obj.get_resume_name }}</label></a></td>
+            <td>: <a href="{% url 'file_view' resume_url %}" target="_blank"><label >{{resume_name}}</label></a></td>
         </tr>
       </table>
 
@@ -308,39 +307,56 @@
         <th>Status Of Candidate</th>
         <th>Expected DOJ</th>
         <th>Actual DOJ</th>
-        <th></th>
       </tr>
-      {% for obj in query_set %}
-        {% if editable_req_id == obj.requisition_id.requisition_id %}
-          {{ form_req_cand.non_field_errors }}
-          {% for field in form_req_cand %}
-            <p>{{ field.errors }}</p>
-          {% endfor %}
-          <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ form_req_cand.requisition_id }}</td>
-            <td>{{ obj.requisition_id.jd }}</td>
-            <td>{{ form_req_cand.referred_by }}</td>
-            <td>{{ form_req_cand.candidate_status }}</td>
-            <td>{{ form_req_cand.expected_doj }}</td>
-            <td>{{ form_req_cand.actual_doj }}</td>
-            <td><button type="submit" name="save_status" value="{{ obj.requisition_id.requisition_id }}">Save</button></td>
-          </tr>
-        {% else %}
+
+      {%for key , value in requisition_candidate_context.items %}
         <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ obj.requisition_id.requisition_id}}</td>
-          <td>{{ obj.requisition_id.jd }}</td>
-          <td>{{ obj.referred_by }}</td>
-          <td>{{ obj.candidate_status }}</td>
-          <td>{{ obj.expected_doj }}</td>
-          <td>{{ obj.actual_doj }}</td>
-          <td><button type="submit" name="editable_req_id" value="{{ obj.requisition_id.requisition_id }}">Edit</button></td>
+          <td>{{key}}</td>
+          <td>{{value.requisition_id.requisition_id}}</td>
+          <td>{{value.requisition_id.jd}}</td>
+          <td>{{value.referred_by}}</td>
+          <td>{{value.candidate_status}}</td>
+          <td>{{value.expected_doj}}</td>
+          <td>{{value.actual_doj}}</td>
         </tr>
-        {% endif %}
       {% endfor %}
     </table>
 
+    <table class="table2" >
+
+      <tr>
+        <th>Sr.No</th>
+        <th>Requition</th>
+        <th>JD</th>
+        <th>Referred By</th>
+        <th>Status Of Candidate</th>
+        <th>Expected DOJ</th>
+        <th>Actual DOJ</th>
+      </tr>
+
+      {%for key , value in requisition_candidate_context.items %}
+        <tr>
+          <!-- <td>{{key}}</td> -->
+          <!-- <td>{{ form_rc.requisition_id }}</td> -->
+          <!-- <td>{{value.requisition_id.requisition_id}}</td>
+
+          <td>{{value.requisition_id.jd}}</td>
+
+          <td>{{ form_rc.referred_by }}</td>
+          <td>{{ form_rc.candidate_status }}</td>
+          <td>{{ form_rc.expected_doj }}</td>
+          <td>{{ form_rc.actual_doj }}</td> -->
+          {% if }
+          <td>{{key}}</td>
+          <td>{{value.requisition_id.requisition_id}}</td>
+          <td>{{value.requisition_id.jd}}</td>
+          <td>{{value.referred_by}}</td>
+          <td>{{value.candidate_status}}</td>
+          <td>{{value.expected_doj}}</td>
+          <td>{{value.actual_doj}}</td>
+        </tr>
+      {% endfor %}
+    </table>
     
   </body>
 </html>

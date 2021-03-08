@@ -172,7 +172,7 @@
         </tr>
         <tr>
             <th><label>File Name</label></th>
-            <td><label>{{obj.get_file_name}}</label></td>
+            <td><a href="{% url 'file_view' obj.jd_file.url %}" target="_blank" ><label>{{obj.get_file_name}}</label></a></td>
         </tr>
         <tr>
             <th><label>Uploaded By</label></th>
@@ -185,7 +185,7 @@
     </table>
     <!-- <center><a href="{% url 'manage_jd_page' %}" ><button>Close</button></a></center> -->
   </form>
-  <center><a href="{% url 'manage_jd_page' %}" ><input type="submit" value="Close"></a></center>
+  <center><a href="{% url 'manage_jd_page' %}" ><input type="submit" value="Close" onclick="self.close()"></a></center>
       </br>
     </br>
   </br>

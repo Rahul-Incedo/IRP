@@ -1,0 +1,36 @@
+{% extends 'forms/base_form.html' %}
+{% block content %}
+<div class='title'>
+  <h1>ENTER CANDIDATE DETAILS TO REFER FOR <font color="orange">{{requisition_id_obj.requisition_id}}</font></h1>
+</div>
+<form method ='POST' name = 'resume_file' enctype="multipart/form-data" action =''>
+  {% csrf_token %}
+  {{form_.as_p}}
+  {% if form_ is not None %}
+  <input style='margin-left:20px; width:60px; float:left' name = 'form_' type='submit' value = 'upload'>
+  {% endif %}
+</form>
+<form method='POST' name = 'details' enctype="multipart/form-data" action = ""> {% csrf_token %}
+  {{ form.as_p }}
+  <input type = 'hidden' name ='resume_name' value = {{resume_name}}><br>
+  {% if form_ is None %}
+  <center>
+      <h2>Please confirm, you checked all the details of the form <br>
+        And You want to refer this candidate for : <br>
+        Requition Id - <font color="red">{{requisition_id_obj.requisition_id}}</font><br>
+        Job Description - <font color="red">{{requisition_id_obj.jd}}</font><br><br>
+      <input type='checkbox' name = 'confirm' style="width: auto; al" required>Yes , I Acknowledge</h2></center>
+  <button type="submit" name = 'form' >Add Candidate</button><br><br>
+  {% else %}
+  <center>
+    <h2>Please confirm, you checked all the details of the form <br>
+      And You want to refer this candidate for : <br>
+      Requisition Id - <font color="red">{{requisition_id_obj.requisition_id}}</font><br>
+      Job Description - <font color="red">{{requisition_id_obj.jd}}</font><br><br>
+    <input type='checkbox' name = 'confirm' style="width: auto;" required disabled>Yes , I Acknowledge</h2></center>
+    <button type="submit" name = 'form' style="width:auto;margin: left 250px;"disabled>Add Candidate And Refer</button><br><br>
+  {% endif %}
+
+</form>
+<a href='../../../delete_temp_for_add_and_refer/{{requisition_id_obj.requisition_id}}'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
+{% endblock %}

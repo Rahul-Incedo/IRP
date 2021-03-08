@@ -180,7 +180,7 @@
             </tr>
             <tr>
                 <th><label>Job Description</label></th>
-                <td><label>{{obj.jd.jd_name}}</label></td>
+                <td><a href="{% url 'file_view' obj.jd.jd_file.url %}" target="_blank" ><label>{{obj.jd.jd_name}}</label></a></td>
             </tr>
             
             <tr>
@@ -217,7 +217,7 @@
 
         <center><input type='submit' value='Edit' name='edit'></center>
       </form>
-  <center><a href= "/manage-job/?requisition_id={{obj.requisition_id}}" ><input type="submit" value="Close"></a></center>
+  <center><a href= "/manage-job/?requisition_id={{obj.requisition_id}}" ><input type="submit" value="Close" onclick="self.close()"></a></center>
       </br>
     </br>
   </br>

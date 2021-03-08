@@ -1,7 +1,7 @@
 from django.core import validators
 from django import forms
 from django.forms.fields import IntegerField
-from .models import Candidate, Job, TestModel, Employee, Feedback, Field, JD
+from .models import Candidate, Job, TestModel, Employee, Feedback, Field, JD, RequisitionCandidate
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
@@ -12,7 +12,7 @@ class ResumeForm(forms.Form):
     pdf_validator = validators.FileExtensionValidator(
         allowed_extensions=['pdf', 'doc', 'docx']
     )
-    resume = forms.FileField(label='*Upload Resume (pdf, doc, and docx extensions are supported)', validators = [pdf_validator])
+    resume = forms.FileField(label='*Upload Resume (pdf, doc, docx extensions are supported)', validators = [pdf_validator])
 
     class Meta:
         model = Candidate
@@ -75,6 +75,8 @@ class EditCandidateForm(forms.ModelForm):
         }
 
 class CandidateForm(forms.ModelForm):
+    f_name = forms.CharField(label="*First Name", required=True)
+    l_name = forms.CharField(label="*Last Name", required=True)
     CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
                             validators=[
                                 validators.MinValueValidator(0),
@@ -125,7 +127,7 @@ class CandidateForm(forms.ModelForm):
             'm_name': 'Middle Name',
             'l_name': '*Last Name',
             'email': '*Email',
-            'gender': '*Gender',
+            'gender': 'Gender',
             'college_name': 'College Name',
             'CGPA': 'CGPA(out of 10)',
             'experience': '*Experience (in months)',
@@ -135,6 +137,61 @@ class CandidateForm(forms.ModelForm):
             'notice_period': '*Notice Period (in months)',
         }
 
+class CandidateAndReferForm(forms.ModelForm):
+    f_name = forms.CharField(label="*First Name", required=True)
+    l_name = forms.CharField(label="*Last Name", required=True)
+    CGPA = forms.DecimalField(required=False,max_digits=5, decimal_places=3,
+                            validators=[
+                                validators.MinValueValidator(0),
+                                validators.MaxValueValidator(10.0),
+                            ]
+    )
+    mobile = forms.CharField(label='*Mobile Number (10 digits)', required=True,
+                            validators=[
+                                validators.RegexValidator('^[0-9]{10}$',
+                                    message='Mobile Number must be 10 digits'
+                                )
+                            ]
+    )
+    pdf_validator = validators.FileExtensionValidator(
+        allowed_extensions=['pdf', 'doc', 'docx']
+    )
+    notice_period = forms.CharField(label='*Notice Period (in Months.Days)',
+                        widget = forms.TextInput(
+                            attrs={'placeholder':'(2.15) represents 2 Months and 15 Days'},
+                        ),
+                        validators = [
+                            validators.RegexValidator(r'^[0-9]*(\.([0-9]|[1-2][0-9]))?$'),
+                        ]
+                    )
+
+    experience = forms.CharField(label='*Experience (in Years.Months)',
+                        widget = forms.TextInput(
+                            attrs={'placeholder':'(1.10) represents 1 Year 10 Months'},
+                        ),
+                        validators = [
+                            validators.RegexValidator(r'^[0-9]*(\.([0-9]|[1][0-1]))?$'),
+                        ]
+                )
+    class Meta:
+        model = Candidate
+        # fields = '__all__'
+        # fields = ['f_name', 'm_name', 'l_name', 'email', 'registered_by', 'gender', 'college_name', 'projects_link', 'CGPA', 'experience', 'mobile', 'notice_period']
+        exclude = ['resume']
+        labels = {
+            'f_name': '*First Name',
+            'm_name': 'Middle Name',
+            'l_name': '*Last Name',
+            'email': '*Email',
+            'gender': '*Gender',
+            'college_name': 'College Name',
+            'CGPA': 'CGPA(out of 10)',
+            'experience': '*Experience (in months)',
+            'mobile': '*10-digit Mobile No.',
+            # 'DOB': 'Date of Birth',
+            # 'resume': '*Upload Resume (pdf, doc, and docx extensions are supported)',
+            'notice_period': '*Notice Period (in months)',
+        }
 
 
 class UploadJdForm(forms.ModelForm):
@@ -254,3 +311,46 @@ class FieldForm(forms.ModelForm):
         if field_name in field_names :
             raise forms.ValidationError("You have already reviewed this field")
         return field_name
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class RequisitionCandidateForm(forms.ModelForm):
+    class Meta:
+        model = RequisitionCandidate
+
+        fields = ['requisition_candidate_id', 'requisition_id', 'referred_by', 'expected_doj', 'actual_doj', 'candidate_status']
+
+    # def clean_candidate_status(self):
+    #     print('-----------------cleaning---------------')
+    #     cleaned_data = self.cleaned_data
+    #     requisition_candidate_id = cleaned_data['requisition_candidate_id']
+    #     try:
+    #         curr_status = RequisitionCandidate.objects.get(requisition_candidate_id=requisition_candidate_id).candidate_status
+    #     except:
+    #         print('id', requisition_candidate_id)
+
+    #     print('self', self)
+    #     print('--------curr_status--------------', curr_status)
+    #     new_status = cleaned_data['candidate_status']
+    #     open_positions = Job.objects.get(requisition_id=cleaned_data['requisition_id'])
+    #     if curr_status != 'Offered' and new_status == 'Offered' and open_positions <= 0:
+    #         raise ValidationError('No more open position to offer')
+    #     return new_status
+
+        fields = ['requisition_id', 'referred_by', 'expected_doj', 'actual_doj', 'candidate_status']
+        widgets = {
+            'expected_doj': DateInput(),
+            'actual_doj': DateInput(),
+        }
+
+    def clean_candidate_status(self):
+        cleaned_data = self.cleaned_data
+
+        curr_status = self.instance.candidate_status
+        new_status = cleaned_data['candidate_status']
+        open_positions = self.instance.requisition_id.get_open_positions()
+        resources = ['Offered', 'Joined']
+        if open_positions <= 0 and curr_status not in resources and new_status in resources:
+            raise ValidationError('No more open position to offer')
+        return new_status

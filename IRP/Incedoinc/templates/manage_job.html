@@ -5,7 +5,6 @@
     <title>IRS</title>
 
     <style>
-
       body {
         margin:0px;
         padding:0px;
@@ -33,6 +32,13 @@
         color: #fff;
         border-radius: 15px;
         cursor: pointer; 
+      }
+      input[type=submit]#view {
+        border: none;
+        background-color: white ;
+      }
+      input[type=submit]#view:hover {
+        text-decoration: underline;
       }
       /* input[type=text] , input[type=number], input[type=url] ,input[type=email] , input[type=date] */
       .expand-button {
@@ -138,7 +144,10 @@
         padding: 14px 16px;
         text-decoration: none;
       }
-
+      li a:hover {
+        text-decoration: none;
+        color: white;
+      }
       .heading
       {
         border: none;
@@ -181,6 +190,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
   </head>
+
+
   <body>
     <header>
       <ul class = 'main'  style="background-color: black">
@@ -191,6 +202,8 @@
         <li style="float:right"><a href="https://www.incedoinc.com/about/about-incedo/">About us</a></li>
       </ul>
     </header>
+
+    <!-- DELETE POP-UP -->
     <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
           <div class="modal-content">
@@ -214,37 +227,46 @@
           </div>
       </div>
     </div>
+    <!-- {{ search_query }}
+    {{ checkboxes }}
+     -->
+    <!-- FILTERS AND BUTTONS -->
     <center><span class="heading">MANAGE REQUISITION</span></center>
     <div class='my_inputs'>
       <form method="post"> {% csrf_token %}
           <button class="button-home glyphicon glyphicon-home" name="home_button"> Home</button>
-          <input type="text" placeholder="Search Query" name='search_query'>
+          <input type="text" placeholder="Search Query" name='search_query' value="{{search_query}}">
           <button type="submit" name="search_button">Search</button>
           <button type="submit" name="list_all_button">List All</button>
           <button type="submit"  class='button-2' name="raise_requisition_button">Raise Requisition</button>
           <div>
             <span class="filters">
-              <label>Open to Internal</label>
-              <input type="checkbox" name="open_to_internal" value="yes">
-              <!-- <label for="internal"></label> -->
+              <label>Open to Internal : </label>
+              <input type="checkbox" id="yes" name="open_to_list" value="Yes" {% if 'Yes' in checkboxes.open_to_list %} checked {% endif %}>
+              <label for="yes">Yes</label>
+              <input type="checkbox" id="no" name="open_to_list" value="No" {% if 'No' in checkboxes.open_to_list %} checked {% endif %}>
+              <label for="no">No</label>
             </span>
             <span class="filters">
-            <label>Status  :</label>
-            <input type="checkbox" id="open" name="requisition_status" value="open" checked>
-            <label for="internal">open</label>
-            <input type="checkbox" id="closed" name="requisition_status" value="closed" checked>
-            <label for="internal">closed</label>
-            <input type="checkbox" id="onhold" name="requisition_status" value="onhold" checked>
-            <label for="internal">onhold</label>
-            <input type="checkbox" id="offered" name="requisition_status" value="offered" checked>
-            <label for="internal">offered</label>
+              <label>Status  :</label>
+              <input type="checkbox" id="open" name="status_list" value="Open" {% if "Open" in checkboxes.status_list %} checked {% endif %}>
+              <label for="internal">Open</label>
+              <input type="checkbox" id="closed" name="status_list" value="Closed" {% if "Closed" in checkboxes.status_list %} checked {% endif %}>
+              <label for="internal">Closed</label>
+              <input type="checkbox" id="onhold" name="status_list" value="On-Hold" {% if "On-Hold" in checkboxes.status_list %} checked {% endif %}>
+              <label for="internal">On-Hold</label>
+              <input type="checkbox" id="offered" name="status_list" value="Offered" {% if "Offered" in checkboxes.status_list %} checked {% endif %}>
+              <label for="internal">Offered</label>
             </span>
           </div>
       </form>
     </div>
+
+    <!-- REQUISITION TABLE -->
     {% if msg %}
     <center><h2>{{ msg }}</h2></center>
     {% endif %}
+
     {% if query_set is not None %}
       <div class="my_class">
         <table>
@@ -264,52 +286,59 @@
                 </tr>
               </table>
             </th>
-
-            <th class="table-head">Open to Internal</th>
+            <th class="table-head">Open For Internal Employee</th>
             <!-- <th class="table-head">Delete</th> -->
           </thead>
+          
           {% for obj in query_set %}
-            <tr>
+            <tr data-toggle="toggle">
+              <!-- <td >  
+                <p id="Technology" >  
+                    <b>  
+                        <span class="plusminusTechnology"> + </span>  
+                    </b>  
+                </p>  
+              </td> -->
               <td class="table-cell">{{ forloop.counter }}</td>
               <td class="table-cell">
-                <a href="./?expand_token={{obj.requisition_id}}"><input type='submit' value='+' class='expand-button'></a>
-                <a href="{% url 'view_job' obj.pk %}"><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a>
+                <input type='button' value="+" class='expand-button'>
+                <a href="{% url 'view_job' obj.pk %}" target="_blank" ><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a>
               </td>
               <td class="table-cell">{{ obj.raised_by_employee }}</td>
               <td class="table-cell">{{ obj.position_owner_id }}</td>
-              <td class="table-cell"><a href="{{obj.jd.jd_file.url}}/" target="_new">{{ obj.jd.jd_name }}</a></td>
+              <td class="table-cell"><a href="{% url 'file_view' obj.jd.jd_file.url %}" target="_blank">{{ obj.jd.jd_name }}</a></td>
               <td class="table-cell">{{ obj.requisition_status }}</td>
               <td class="table-cell">{{ obj.total_positions }}</td>
               <td class="table-cell">{{ obj.get_open_positions }}</td>
               <td class="table-cell">{{ obj.open_to_internal }}</td>
               <!-- <td class="table-cell"><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td> -->
             </tr>
-
-            {% if expand_token == obj.requisition_id %}
-            <tr>
+            {% load customfilters %}
+            <!-- CANDIDATE TABLE -->
+            <tbody class="hideTr" style="display:none;">
               <td colspan='9'>
                 <table class='sub-table'>
                   <thead>
                     <th class="table-head">Sr.</th>
-                    <th class="table-head">Candidate</th>
-                    <th class="table-head">Status</th>
+                    <th class="table-head">Candidate Name</th>
+                    <th class="table-head">Current Status</th>
                     <th class="table-head">Expected DOJ</th>
                     <th class="table-head">Actual DOJ</th>
                   </thead>
-                  {% for obj in sub_query_set %}
-                  <tr>
-                    <td class="table-cell">{{ forloop.counter }}</td>
-                    <td class="table-cell">{{ obj.candidate_email }}</td>
-                    <td class="table-cell">{{ obj.candidate_status }}</td>
-                    <td class="table-cell">{{ obj.expected_doj }}</td>
-                    <td class="table-cell">{{ obj.actual_doj }}</td>
-                  </tr>
-                  {% endfor %}
+                    
+                    {% for obj in req_cand_dict|get_value_from_dict:obj.requisition_id %}
+                      <tr>
+                        <td class="table-cell">{{ forloop.counter }}</td>
+                        <td class="table-cell"><a href="{% url 'view_candidate' obj.candidate_email.email %}" target="_blank"><input id="view" type="submit" value="{{ obj.candidate_email.full_name }}"></a></td>
+                        <td class="table-cell">{{ obj.candidate_status }}</td>
+                        <td class="table-cell">{{ obj.expected_doj }}</td>
+                        <td class="table-cell">{{ obj.actual_doj }}</td>
+                      </tr>
+                    {% endfor %}
+
                 </table>
               </td>
-            </tr>
-            {% endif %}
-
+            </tbody>
 
           {% endfor %}
 
@@ -317,12 +346,36 @@
       </div>
     {% endif %}
 
+    <!-- JAVASCRIPT -->
     <script>
       $('#confirm-delete').on('show.bs.modal', function(e) {
           $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
           
           $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
       });
+    </script>
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>  
+   -->
+    <script type="text/javascript">  
+        $(document).ready(function () { 
+            debugger;  
+          $('.hideTr').slideUp(600);
+          $('[data-toggle="toggle"]').click(function () {  
+            if ($(this).parents().next(".hideTr").is(':visible')) {  
+                $(this).parents().next('.hideTr').slideUp(100);
+                $(".plusminus" + $(this).children().children().attr("id")).text('+');
+                $(this).children().children(".expand-button").val('+');
+                $(this).css('background-color', 'white');  
+              }  
+              else {  
+                $(this).parents().next('.hideTr').slideDown(100);  
+                $(".plusminus" + $(this).children().children().attr("id")).text('-');
+                $(this).children().children(".expand-button").val('-');
+                $(this).css('background-color', '#c1eaff ');
+            }  
+          });  
+        });  
     </script>
   </body>
 </html>

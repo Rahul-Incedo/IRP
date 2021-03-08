@@ -8,7 +8,8 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    path("test/", views.test_view, name='test_page'),
+    # url(r'^test/(?P<file_url>.*)/$', views.test_view, name='test_page'),
+
     #pulkit-kartikeyan
     #path("", views.index, name='home'),
     path("home/",views.home_view, name='home_page'),
@@ -19,6 +20,8 @@ urlpatterns = [
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
 
     #view objects
+    url(r'^files(?P<file_url>.*)/$', views.file_view, name='file_view'),
+
     url(r'^jd/(?P<jd_pk>.*)/view/$', views.view_jd_view, name='view_jd'),
     url(r'^job/(?P<job_pk>.*)/view/$', views.view_job_view, name='view_job'),
 
@@ -46,9 +49,11 @@ urlpatterns = [
     path("view_candidate/<str:candidate_email>/", views.view_candidate, name = 'view_candidate'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/report/', views.report_view, name = "report_view"),
 
+    path('delete_temp_for_add_and_refer/<str:requisition_id>', views.delete_temp_for_add_and_refer, name = 'delete_temp_for_add_and_refer'),
     path('referrals/', views.referrals_view, name = "referrals_page"),
     path('referrals/refer_candidate/<str:requisition_id>/', views.refer_candidate_view, name = "refer_candidate_page"),
-    path('referrals/my_referrals/<str:employee_id>/', views.my_referrals_view, name = "my_referrals_page")
+    path('referrals/my_referrals/<str:employee_id>/', views.my_referrals_view, name = "my_referrals_page"),
+    path('referrals/add_and_refer_new_candidate/<str:requisition_id>/', views.add_and_refer_new_candidate_view, name = "add_and_refer_new_candidate_page")
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

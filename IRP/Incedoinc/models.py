@@ -38,23 +38,23 @@ class Job(models.Model):
     jd = models.ForeignKey(JD, on_delete=models.CASCADE)
     timestamp_created = models.DateTimeField(blank=True, null=True)
     timestamp_updated = models.DateTimeField(blank=True, null=True)
-    requisition_choices = [('open', 'open'),
-                            ('offered', 'offered'),
-                            ('onhold', 'onhold'),
-                            ('closed', 'closed')]
-    requisition_status = models.CharField(choices = requisition_choices, max_length=20, default='open')
-    internal_choices  = [('yes', 'yes'),
-                        ('no', 'no')]
+    requisition_choices = [('Open', 'Open'),
+                            ('Offered', 'Offered'),
+                            ('On-Hold', 'On-Hold'),
+                            ('Closed', 'Closed')]
+    requisition_status = models.CharField(choices = requisition_choices, max_length=20, default='Open')
+    internal_choices  = [('Yes', 'Yes'),
+                        ('No', 'No')]
 
     total_positions = models.IntegerField(default=1)
-    open_to_internal = models.CharField(choices = internal_choices, max_length=3, default='no')
+    open_to_internal = models.CharField(choices = internal_choices, max_length=3, default='No')
 
 
     def __str__(self):
         return f'{self.requisition_id}'
 
     def get_open_positions(self):
-        return (self.total_positions-len(RequisitionCandidate.objects.filter(requisition_id=self, candidate_status='offered')))
+        return (self.total_positions-len(RequisitionCandidate.objects.filter(requisition_id=self, candidate_status__in=['Offered','Joined'])))
 
 class Candidate(models.Model):
     # candidate_id = models.AutoField(primary_key=True)
@@ -75,7 +75,7 @@ class Candidate(models.Model):
     mobile = models.CharField(max_length=10, blank=True)
     # DOB = models.DateField(null=True, blank=True)
     projects_link = models.URLField(null=True, blank=True)
-    resume = models.FileField()
+    resume = models.FileField(upload_to='Resume/')
     notice_period = models.CharField(max_length=5, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, blank=True)
 
@@ -88,8 +88,9 @@ class Candidate(models.Model):
 
     def __str__(self):
         return f'{self.f_name} : {self.email}'
+    
     def get_resume_name(self):
-        return self.resume.name.lstrip('Resume').lstrip('/')
+        return self.resume.name.split('/')[-1]
 
 class Feedback(models.Model):
     feedback_id = models.AutoField(primary_key=True)
@@ -106,7 +107,8 @@ class Feedback(models.Model):
     timestamp = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.status} {self.level}'
+        # return f'{self.status} {self.level}'
+        return f'{self.candidate_email.email} / {self.level} / {self.status}'
 
 class Field(models.Model):
     field_id = models.AutoField(primary_key=True)
@@ -127,16 +129,17 @@ class RequisitionCandidate(models.Model):
     referred_date = models.DateField(null=True, blank=True)
     expected_doj = models.DateField(null=True, blank=True)
     actual_doj = models.DateField(null=True, blank=True)
-    status_choices = [('selected', 'selected'),
-                        ('rejected', 'rejected'),
-                        ('on_hold', 'on_hold'),
-                        ('offered', 'offered'),
-                        ('joined', 'joined'),
-                        ('in_progress', 'in_progress')]
-    candidate_status = models.CharField(choices=status_choices, max_length=20, default = 'in_progress')
+    status_choices = [('Selected', 'Selected'),
+                        ('Rejected', 'Rejected'),
+                        ('On-Hold', 'On-Hold'),
+                        ('Offered', 'Offered'),
+                        ('Joined', 'Joined'),
+                        ('In-Progress', 'In-Progress')]
+    candidate_status = models.CharField(choices=status_choices, max_length=20, default = 'In-Progress')
 
     def __str__(self):
-        return f'{self.requisition_candidate_id} {self.candidate_status}'
+        # return f'{self.requisition_candidate_id} {self.candidate_status}'
+        return f'{self.requisition_id} / {self.candidate_email.email}'
 
 class TestModel(models.Model):
     field1 = models.CharField(blank=True, max_length=100)

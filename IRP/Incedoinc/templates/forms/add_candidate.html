@@ -3,9 +3,9 @@
 <div class='title'>
   <h1>ENTER CANDIDATE DETAILS</h1>
 </div>
-{% if signal == False %}
+<!-- {% if signal == False %}
   <h3 style="margin-left:200px"> candidate already exists </h3>
-{% endif %}
+{% endif %} -->
 <form method ='POST' name = 'resume_file' enctype="multipart/form-data" action = '{% url "add_candidate_page" %}'>
   {% csrf_token %}
   {% if signal_ == True %}
@@ -18,14 +18,26 @@
 </form>
 <form method='POST' name = 'details' enctype="multipart/form-data" action = '{% url "add_candidate_page" %}'> {% csrf_token %}
   {{ form.as_p }}
-  <input type = 'hidden' name ='resume_name' value = {{resume_name}}><br>
-  {% if resume_name != None %}
-  <h4>please confirm, you checked all the details of the form <input type='checkbox' name = 'confirm' required></h4>
-  <button type="submit" name = 'form'>Add Candidate</button><br><br>
-  {% else %}
-  <h4>please confirm, you checked all the details of the form <input type='checkbox' name = 'confirm' required disabled></h4>
-  <button type="submit" name = 'form' disabled>Add Candidate</button><br><br>
+  <!-- <input type = 'hidden' name ='resume_name' value = {{resume_name}}><br> -->
+  <!-- {% if resume_name != None %} -->
+  <!-- <h4>
+    Please note that the details extracted from the resume file may not be 100% accurate, so please verify all the details before proceeding ahead.<br><br>
+    <input id="agree" type='checkbox' name ='confirm' style="width: auto;" required>
+    <label for="agree">I have verified all the details.</label>
+  </h4> -->
+  <button type="submit" name='form'>Add Candidate</button><br><br>
+  <!-- {% else %} -->
+  <!-- <center><h2>please confirm, you checked all the details of the form <input type='checkbox' name = 'confirm' required disabled></h2></center> -->
+  <!-- <h4>please confirm, you checked all the details of the form <input type='checkbox' name = 'confirm' required disabled></h4> -->
+  {% if form_ is None %}
+  <h4>
+    Please note that the details extracted from the resume file may not be 100% accurate, so please verify before proceeding ahead.<br><br>
+    <input id="agree" type='checkbox' name ='confirm' style="width: auto;" required>
+    <label for="agree">I have verified all the details.</label>
+  </h4>
   {% endif %}
+  <button type="submit" name = 'form'>Add Candidate</button><br><br>
+  <!-- {% endif %} -->
 
 </form>
 <a href='../delete_temp/'><button style='margin-left:40%;text-align:center; width:20%'name = 'cancel'>Cancel</button></a>
