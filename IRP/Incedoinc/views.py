@@ -466,8 +466,8 @@ def add_candidate_view(request, *args, **kwargs):
                 # print('------------------------------------------')
 
 
-            if os.path.exists('media/temp_resume'):
-                shutil.rmtree('media/temp_resume')
+            # if os.path.exists('media/temp_resume'):
+            #     shutil.rmtree('media/temp_resume')
 
             requisition_id = form.cleaned_data['requisition_id']
             candidate_email = form.cleaned_data['email']
@@ -514,11 +514,19 @@ def add_candidate_view(request, *args, **kwargs):
 
 
 def delete_temp(request):
+    # try:
+    #     if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
+    #         shutil.rmtree('media/temp')
+    # except:
+    #     return redirect('search_candidate')
     try:
-        if 'temp' in os.listdir(os.path.join(os.getcwd(), 'media')):
-            shutil.rmtree('media/temp')
+        if( 'resume_file_url' in request.session):
+            cur_url = request.session['resume_file_url'].lstrip('/')
+            print("newwwwwwwwwwwwwwwwww  ", cur_url)
+            os.remove(cur_url)
     except:
-        return redirect('search_candidate')
+        pass
+
     return redirect('search_candidate')
 
 def delete_temp_for_add_and_refer(request,requisition_id):
