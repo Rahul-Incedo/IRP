@@ -155,6 +155,7 @@
     }
     button.confirm
     {
+      padding: 15px;
       border: none;
       color: black;
       text-align: center;
@@ -239,107 +240,101 @@
     <th><label text-align="left">Requition Id  </label></th>
     <td>: <label >{{job_obj.requisition_id}}</label></td>
   </tr>
-
   <tr>
     <th><label >Job Description </label></th>
-
     <td>: <label >{{job_obj.jd}}</label></td>
   </tr>
-
-</table>
-{% if confirmation_candidate_obj %}
-
-  <strong>
-    <center>
-      <button class="confirm" disabled>
-        Do You Want to Refer below mentioned candidate</br></br>
-        NAME : {{confirmation_candidate_obj.f_name}}</br>
-        EMAIL : {{confirmation_candidate_obj.email}}
-      </button>
-    </center>
-    <center>
-      <button type="submit" name="yes" value="{{confirmation_candidate_obj.email}}">Yes</button>
-
-      <button type="submit" name="no" value="{{confirmation_candidate_obj.email}}">No</button>
-    </center>
-    <strong>
-
-{% endif %}
-{% if confirmed_message_obj %}
-
-  <strong>
-    <center>
-      <button class="confirm" disabled>
-        You have successfully Referred below Candidate</br></br>
-        NAME : {{confirmed_message_obj.f_name}}</br>
-        EMAIL : {{confirmed_message_obj.email}}</br></br>
-        An E-Mail has been sent to Hr team :)<br>
-      </button>
-    </center>
-    <center>
-      <button type="submit" name="ok" value="{{confirmation_message_obj.email}}">Ok</button>
-
-
-    </center>
-    <strong>
-
-{% endif %}
-</br>
-<table class="table1">
   <tr>
-    <th>
-    <input type="text" placeholder="Enter Name or Email" {% if initial_search_element %} value={{initial_search_element}} {%  endif %}name="search_element">
-    <input type="submit" value="Search" name="search">
-  </th>
-  <th>
-    <input type="submit" value="Add New Candidate & Refer" name="add_new_refer">
-  </th>
-
-
+    <th><label >Total Position(s)</label></th>
+    <td>: <label >{{job_obj.total_positions}}</label></td>
   </tr>
-
+  <tr>
+    <th><label >Open Position(s)</label></th>
+    <td>: <label >{{job_obj.get_open_positions}}</label></td>
+  </tr>
 </table>
 
-</br>
+  {% if job_obj.get_open_positions <= 0 %}
+  <br>
+  <strong>
+    <center>
+      <button class="confirm" disabled>
+        Sorry</br>
+        You Cannot Refer for this Position Anymore :(</br>
 
-
-</br>
-<table class="table2">
-
-  <tr >
-    <th >Sr.No</th>
-    <th >Full Name</th>
-    <th >Email</th>
-    <th >Referral Status</th>
-
-  </tr>
-
-
-  {%for key , value in context.items %}
-
-  <tr >
-
-    <td >{{key}}</td>
-    <td >{{value.candidate_obj.full_name}}</td>
-    <td ><a href="../../../view_candidate/{{value.candidate_obj.email}}" target="_blank">{{value.candidate_obj.email}}</td>
-    {% if value.requisition_candidate_obj  %}
-    <td>Already applied/referred by : {{value.requisition_candidate_obj.referred_by}}</td>
-    {% else %}
-    <td><button type="submit" name="refer_this_candidate" value="{{value.candidate_obj.email}}">Refer Candidate</button></td>
-    {%endif %}
-    </tr>
-  {% endfor %}
-
-</table>
-
-</form>
-{% if error_message_2 %}
-<center><h2>{{error_message_2}}</h2></center>
+      </button>
+    </center>
+  </strong>
+  {% else %}
+    {% if confirmation_candidate_obj %}
+      <strong>
+        <center>
+          <button class="confirm" disabled>
+            Do You Want to Refer below mentioned candidate</br></br>
+            NAME : {{confirmation_candidate_obj.f_name}}</br>
+            EMAIL : {{confirmation_candidate_obj.email}}
+          </button>
+        </center>
+        <center>
+          <button type="submit" name="yes" value="{{confirmation_candidate_obj.email}}">Yes</button>
+          <button type="submit" name="no" value="{{confirmation_candidate_obj.email}}">No</button>
+        </center>
+      </strong>
+    {% endif %}
+    {% if confirmed_message_obj %}
+      <strong>
+        <center>
+          <button class="confirm" disabled>
+            You have successfully Referred below Candidate</br></br>
+            NAME : {{confirmed_message_obj.f_name}}</br>
+            EMAIL : {{confirmed_message_obj.email}}</br></br>
+            An E-Mail has been sent to Hr team :)<br>
+          </button>
+        </center>
+        <center>
+          <button type="submit" name="ok" value="{{confirmation_message_obj.email}}">Ok</button>
+        </center>
+      </strong>
+    {% endif %}
+    </br>
+    <table class="table1">
+      <tr>
+        <th>
+        <input type="text" placeholder="Enter Name or Email" {% if initial_search_element %} value={{initial_search_element}} {%  endif %}name="search_element">
+        <input type="submit" value="Search" name="search">
+      </th>
+      <th>
+        <input type="submit" value="Add New Candidate & Refer" name="add_new_refer">
+      </th>
+      </tr>
+    </table>
+    </br></br>
+    <table class="table2">
+      <tr >
+        <th >Sr.No</th>
+        <th >Full Name</th>
+        <th >Email</th>
+        <th >Referral Status</th>
+      </tr>
+      {%for key , value in context.items %}
+      <tr >
+        <td >{{key}}</td>
+        <td >{{value.candidate_obj.full_name}}</td>
+        <td ><a href="../../../view_candidate/{{value.candidate_obj.email}}" target="_blank">{{value.candidate_obj.email}}</td>
+        {% if value.requisition_candidate_obj  %}
+        <td>Already applied/referred by : {{value.requisition_candidate_obj.referred_by}}</td>
+        {% else %}
+        <td><button type="submit" name="refer_this_candidate" value="{{value.candidate_obj.email}}">Refer Candidate</button></td>
+        {%endif %}
+        </tr>
+      {% endfor %}
+    </table>
+    </form>
+    {% if error_message_2 %}
+    <center><h2>{{error_message_2}}</h2></center>
+    {% endif %}
+    {% endif %}
+    <br>
 {% endif %}
-{% endif %}
-<br>
-
-
-
 </body>
 </html>

@@ -250,41 +250,37 @@
     </ul>
     <strong><center>REFERRALS</center></strong>
   </header>
-    <table >
-      <tr>
-
-        <form action=""  method="post" enctype="multipart/form-data">{% csrf_token %}
-        <th class='search_bar'>
-          <button class="home_button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
-          <input type="text" placeholder="Enter Here To Search" {% if initial_elements.initial_search_element %} value={{initial_elements.initial_search_element}} {% endif %} name="search_element">
-          <input type="submit" value="Search" name="search">
-          <input type="submit" value="List All" name="listallopen">
-          <button type="submit" name="my_referrals" value="{{value.requisition_id}}" style="float:right">My Referrals</button>
-        </th>
-
-      </tr>
-      <tr>
-        <th class='search_bar'>
-        <h4>
+  <table >
+    <tr>
+      <form action=""  method="post" enctype="multipart/form-data">{% csrf_token %}
+      <th class='search_bar'>
+        <button class="home_button" type="submit" name="home_button"><i class="fa fa-home"></i> Home</button>
+        <input type="text" placeholder="Enter Here To Search" {% if initial_elements.initial_search_element %} value={{initial_elements.initial_search_element}} {% endif %} name="search_element">
+        <input type="submit" value="Search" name="search">
+        <input type="submit" value="List All" name="listallopen">
+        <button type="submit" name="my_referrals" value="{{value.requisition_id}}" style="float:right">My Referrals</button>
+      </th>
+    </tr>
+    <tr>
+      <th class='search_bar'>
+      <h4>
         <label>1)Open To Internal? :</label>
         <input type="checkbox" name="open_to_internal" value="Yes" {% if initial_elements.initial_open_internal_yes %} checked {% endif %}>
         <label for="Yes">Yes</label>
         <input type="checkbox" name="open_to_internal" value="No" {% if initial_elements.initial_open_internal_no %} checked {% endif %}>
         <label for="No">No</label>
-        </h4>
-        <h4>
+      </h4>
+      <h4>
         <label>2)Status</label>
         <input type="checkbox" name="requisition_status" value="Open" {% if initial_elements.initial_req_status_open %} checked {% endif %}>
         <label for="Open">Open</label>
         <input type="checkbox" name="requisition_status" value="On-Hold" {% if initial_elements.initial_req_status_onhold %} checked {% endif %}>
         <label for="On-Hold">On-Hold</label>
-        </h4>
-        </th>
-      </tr>
+      </h4>
+      </th>
+    </tr>
     </table>
-
     <table>
-
       <tr>
         <th>Sr.No</th>
         <th>Req Id</th>
@@ -294,13 +290,8 @@
         <th>Status</th>
         <th>Open For internal</th>
         <th>Refer Candidate</th>
-
       </tr>
-
-
-
       {%for key , value in context.items %}
-
       <tr>
         <td>{{key}}</td>
         <!-- <td>{{value.requisition_id}}</td> -->
@@ -310,25 +301,18 @@
         <td>{{value.get_open_positions}}</td>
         <td>{{value.requisition_status}}</td>
         <td>{{value.open_to_internal}}</td>
-        <td><button type="submit" name="refer_candidate" value="{{value.requisition_id}}">Refer Candidate</button>
-          <!-- <input type="submit" value="Refer A Candidate" name="{{value.requisition_id}}"> -->
+        {% if value.get_open_positions > 0 %}
+          <td><button type="submit" name="refer_candidate" value="{{value.requisition_id}}" >Refer Candidate</button>
+        {% else %}
+          <td>---</td>
+        {% endif %}
         </td>
       </tr>
       {% endfor %}
-
     </form>
-</table>
-
-
-
-
+  </table>
     {% if error_message %}
     </br><center><strong>{{ error_message }}</strong></center>
     {% endif %}
-
-
-
-
-
 </body>
 </html>
