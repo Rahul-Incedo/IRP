@@ -241,20 +241,22 @@
           <button type="submit"  class='button-2' name="raise_requisition_button">Raise Requisition</button>
           <div>
             <span class="filters">
-              <label>Open to Internal</label>
-              <input type="checkbox" name="open_to_internal" value="Yes" {% if 'No' not in checkboxes.open_to_list %} checked {% endif %}>
-              <!-- <label for="internal"></label> -->
+              <label>Open to Internal : </label>
+              <input type="checkbox" id="yes" name="open_to_list" value="Yes" {% if 'Yes' in checkboxes.open_to_list %} checked {% endif %}>
+              <label for="yes">Yes</label>
+              <input type="checkbox" id="no" name="open_to_list" value="No" {% if 'No' in checkboxes.open_to_list %} checked {% endif %}>
+              <label for="no">No</label>
             </span>
             <span class="filters">
-            <label>Status  :</label>
-            <input type="checkbox" id="open" name="requisition_status" value="Open" {% if "Open" in checkboxes.status_list %} checked {% endif %}>
-            <label for="internal">Open</label>
-            <input type="checkbox" id="closed" name="requisition_status" value="Closed" {% if "Closed" in checkboxes.status_list %} checked {% endif %}>
-            <label for="internal">Closed</label>
-            <input type="checkbox" id="onhold" name="requisition_status" value="On-Hold" {% if "On-Hold" in checkboxes.status_list %} checked {% endif %}>
-            <label for="internal">On-Hold</label>
-            <input type="checkbox" id="offered" name="requisition_status" value="Offered" {% if "Offered" in checkboxes.status_list %} checked {% endif %}>
-            <label for="internal">Offered</label>
+              <label>Status  :</label>
+              <input type="checkbox" id="open" name="status_list" value="Open" {% if "Open" in checkboxes.status_list %} checked {% endif %}>
+              <label for="internal">Open</label>
+              <input type="checkbox" id="closed" name="status_list" value="Closed" {% if "Closed" in checkboxes.status_list %} checked {% endif %}>
+              <label for="internal">Closed</label>
+              <input type="checkbox" id="onhold" name="status_list" value="On-Hold" {% if "On-Hold" in checkboxes.status_list %} checked {% endif %}>
+              <label for="internal">On-Hold</label>
+              <input type="checkbox" id="offered" name="status_list" value="Offered" {% if "Offered" in checkboxes.status_list %} checked {% endif %}>
+              <label for="internal">Offered</label>
             </span>
           </div>
       </form>

@@ -200,8 +200,8 @@ def manage_job_view(request, *args, **kwargs):
     msg = None
     search_query = request.POST.get('search_query') or ''
     checkboxes = {
-        'open_to_list' : ['Yes', 'No'],
-        'status_list' : ['Open', 'Closed', 'On-Hold', 'Offered'],
+        'open_to_list' : [],
+        'status_list' : [],
     }
 
     context = {
@@ -232,45 +232,48 @@ def manage_job_view(request, *args, **kwargs):
     elif request.method == 'POST':
         # print('------------------------manage-job | post -------------------')
         # print(request.POST)
-        request.session['open_to_internal'] = request.POST.get('open_to_internal', [])
-        request.session['requisition_status'] = request.POST.get('requisition_status', [])
+        # request.session['open_to_internal'] = request.POST.get('open_to_internal', [])
+        # request.session['requisition_status'] = request.POST.get('requisition_status', [])
 
         if 'home_button' in request.POST:
             return redirect('home_page')
 
         if 'search_button' in request.POST:
-            search_query = request.POST['search_query']
-            open_to_list = ['Yes', 'No']
-            if 'open_to_internal' in request.POST:
-                open_to_list = ['Yes']
-            status_list = request.POST.getlist('requisition_status')
+            search_query = request.POST.get('search_query', '')
+            open_to_list = request.POST.getlist('open_to_list')
+            status_list = request.POST.getlist('status_list')
             checkboxes['open_to_list'] = open_to_list
             checkboxes['status_list'] = status_list
 
             if search_query == '':
                 msg = 'Enter something to search'
+                context['msg'] = msg
 
             else:
-                query_set = Job.objects.filter(Q(requisition_status__in=status_list)
-                                            , Q(open_to_internal__in=open_to_list)
-                                            , Q(requisition_id__icontains=search_query)
+                query_set = Job.objects.all()
+                if len(open_to_list)!=0:
+                    query_set = query_set.filter(open_to_internal__in=open_to_list)
+                if len(status_list) != 0:
+                    query_set = query_set.filter(requisition_status__in=status_list)
+                query_set = query_set.filter(Q(requisition_id__icontains=search_query)
                                             | Q(jd__jd_name__icontains=search_query)
                                             | Q(requisitioncandidate__candidate_email__f_name__icontains=search_query)
                                             | Q(position_owner_id__full_name__icontains=search_query)
                                             | Q(raised_by_employee__full_name__icontains=search_query)
-                                            | Q(requisition_status__exact = search_query)
                             ).distinct()
                 context['query_set'] = query_set
 
 
         elif 'list_all_button' in request.POST:
-            open_to_list = ['Yes', 'No']
-            if 'open_to_internal' in request.POST:
-                open_to_list = ['Yes']
-            status_list = request.POST.getlist('requisition_status')
+            open_to_list = request.POST.getlist('open_to_list')
+            status_list = request.POST.getlist('status_list')
             checkboxes['open_to_list'] = open_to_list
             checkboxes['status_list'] = status_list
-            query_set = Job.objects.filter(requisition_status__in=status_list, open_to_internal__in=open_to_list)
+            query_set = Job.objects.all()
+            if len(open_to_list)!=0:
+                query_set = query_set.filter(open_to_internal__in=open_to_list)
+            if len(status_list) != 0:
+                query_set = query_set.filter(requisition_status__in=status_list)
             context['query_set'] = query_set
 
         elif 'raise_requisition_button' in request.POST:
