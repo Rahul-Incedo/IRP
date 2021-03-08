@@ -268,7 +268,7 @@ border: 1px solid black;
 
       <tr>
         <td>{{key}}</td>
-        <td>{{value.candidate_email.f_name}}</td>
+        <td>{{value.candidate_email.full_name}}</td>
         <td><a href="../../../view_candidate/{{value.candidate_email.email}}/?previous=my_referrals_connector_of_2_values_{{employee_id}}" target="_blank">{{value.candidate_email.email}}</a></td>
         <!-- <td>{{value.requisition_id}}</td> -->
         <td><a href="{% url 'view_job' job_pk=value.requisition_id %}" target="_blank">{{value.requisition_id}}</a></td>
