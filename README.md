@@ -2,11 +2,15 @@
 Incedo Recruitment Portal is the platform where Incedo employees can raise Job IDs, create Candidate Profiles and update their details with respect to their recruitment process.
 
 ## Steps and Prerequisites for running the project
-### Installing Django 
 
+### Installing Python and Java
+Python version-3.9 is used (pip should be installed with python setup)  
+Java version-1.8.0 is used with this project  
+
+### Installing Django
 Install(using pip) by typing these commands in your terminal
 ```
-pip install django
+pip install django==3.1.7
 ```
 You can confirm whether its installed or not by typing 
 ```
@@ -24,17 +28,28 @@ pip install pdfkit
 pip install resume-parser
 ```
 ### Resume Parser dependencies
-Resume parser will need other python modules to be installed
-which have been installed automatically and after it these should also need to be installed
+Resume parser will need these python modules to be installed additionally for proper functioning  
+Refer this link for more info - https://pypi.org/project/resume-parser/  
+Note: make sure to install spacy with the given version (newer versions are not supported with the resume-parser module)
+#### spaCy
+```
+pip install spacy==2.3.5
+python -m spacy download en_core_web_sm
+```
+#### nltk
 ```
 pip install nltk
-pip install resume-parser
-pip install spacy==2.3.5
-pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
+python -m nltk.downloader stopwords
+python -m nltk.downloader punkt
+python -m nltk.downloader averaged_perceptron_tagger
+python -m nltk.downloader universal_tagset
+python -m nltk.downloader wordnet
+python -m nltk.downloader brown
+python -m nltk.downloader maxent_ne_chunker
 ```
+#### Note : For extracting .doc resume files  
+Resume parser need java to be installed at the serverside to operate on .doc files
 
-#Note This is for JD files:
-Only PDF file can be view in the browser iteself.Doc and Docx are downloadable
 ### Running the code 
 Just make sure you are in IRP directory and type in terminal 
 ```
@@ -51,3 +66,6 @@ python manage.py migrate
 python manage.py runserver
 ```
 You can use *showmigration*  to list projects migration.
+
+#### Note : For opening files in the browser itself
+Only .pdf files can be viewed directly in the browser iteself .doc and .docx need additional browser extension for viewing directly , although you can dowload and open the files
