@@ -46,7 +46,7 @@ from django.conf import settings
 from urllib.parse import non_hierarchical, unquote
 import logging
 
-logging.basicConfig(filename= 'AuditLog.html', level = logging.INFO, 
+logging.basicConfig(filename= 'users/templates/audit_logs/audit_log.html', level = logging.INFO, 
     format = '%(asctime)s: %(message)s ')
 
 
@@ -1318,6 +1318,4 @@ def refer_candidate_view(request,requisition_id):
 
 
 def audit_log_view(request):
-    hello = 'my_name'
-    if request.method == 'GET':
-        return render(request, 'IRP/Incedoinc/templates/AuditLog.html',) 
+    return render(request, 'audit_log.html')
