@@ -358,12 +358,19 @@ def upload_job_view(request, *args, **kwargs):
 def home_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
+    current_user = request.user
+    username = current_user.username
+    print('--------------------------------------------')
+    print(username)
+    logging.info( '<center><p>' + username + ' logged in <p><center>')
+    # logging.warning('Hello, I am logging from the Home Page! User = ', current_user)
+    print('---------------------------------')
     if request.method == 'POST':
         current_user = request.user
         logging.info('Yaha to pahuch gaye beta ji')
         username = request.user.username
-        user = Employee.objects.get(email=username)
-        logging.info( user,' logged in')  
+        # user = Employee.objects.get(email=username)
+        logging.info( username,' logged in')
         logging.warning('Hello, I am logging from the Home Page! User =',current_user)
         if 'search_requisition_id_button' in request.POST:
             requisition_id = request.POST.get('requisition_id')
@@ -1318,4 +1325,4 @@ def refer_candidate_view(request,requisition_id):
 
 
 def audit_log_view(request):
-    return render(request, 'audit_log.html')
+    return render(request, 'audit_logs/audit_log.html')
