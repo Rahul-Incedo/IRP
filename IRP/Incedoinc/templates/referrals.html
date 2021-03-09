@@ -128,30 +128,58 @@
             text-align: left;
             margin-left: auto;
             margin-right: auto;
-            border: 1px solid black;
+            /* border: 1px solid black; */
         }
-
 
         th
         {
             background-color: #588c7e;
             color: yellow;
             padding: 5px;
-            border: 1px solid black;
+            /* border: 1px solid black; */
         }
         .search_bar
         {
           background-color: white;
           color: black;
           padding: 5px;
-          border: 0px solid black;
+          /* border: 0px solid black; */
         }
         td
         {
           padding: 0px 10px;
-          border: 1px solid black;
+          /* border: 1px solid black; */
         }
-        tr:nth-child(even)
+        table.table2
+        {
+            border-collapse: collapse;
+            width: 98%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 20px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+
+        table.table2 th
+        {
+            background-color: #588c7e;
+            color: yellow;
+            padding: 5px;
+            border: 1px solid black;
+        }
+
+        table.table2 td
+        {
+          padding: 0px 10px;
+          border: 1px solid black;
+          padding: 5px;
+        }
+        table.table2 tr:nth-child(even)
         {
             background-color: #f2f2f2;
             padding: 5px;
@@ -280,7 +308,8 @@
       </th>
     </tr>
     </table>
-    <table>
+    <br>
+    <table class="table2">
       <tr>
         <th>Sr.No</th>
         <th>Req Id</th>
