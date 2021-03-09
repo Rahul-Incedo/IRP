@@ -53,6 +53,8 @@ urlpatterns = [
     path('referrals/refer_candidate/<str:requisition_id>/', views.refer_candidate_view, name = "refer_candidate_page"),
     path('referrals/my_referrals/<str:employee_id>/', views.my_referrals_view, name = "my_referrals_page"),
 
+    # auditlog
+    path('auditlog/', views.audit_log_view, name="auditlog"),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -32,7 +32,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -1295,3 +1295,10 @@ def refer_candidate_view(request,requisition_id):
             candidate_obj=Candidate.objects.filter(email=request.GET['confirmed'])[0]
             return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmed_message_obj':candidate_obj})
     return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'context':context,'requisition_candidate_obj_dict':requisition_candidate_obj_dict , 'initial_search_element':initial_search_element})
+
+def audit_log_view(request):
+    context = {
+        'model_name' : 'JD',
+
+    }
+    return render(request, 'auditlog/temp.html', context)
