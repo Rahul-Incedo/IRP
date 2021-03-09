@@ -694,6 +694,8 @@ def search_candidate(request, *args, **kwargs):
                     return render(request, 'search.html', {'error_message':'Oops :(   No Candidate Yet', 'search_query':search_query })
                 # print(temp_list_tuple,"--------------")
             elif 'search' in request.POST:
+                if len(request.POST['search_element'])==0:
+                    return render(request, 'search.html',{'error_message':'Please Enter Something', 'search_query':search_query })
                 temp_list_tuple = list(set((RequisitionCandidate.objects.filter(
                                                                             Q(requisition_id__in=Job.objects.filter(requisition_id__contains=request.POST['search_element']))
                                                                           | Q(candidate_email__in=Candidate.objects.filter(f_name__contains=request.POST['search_element']))
