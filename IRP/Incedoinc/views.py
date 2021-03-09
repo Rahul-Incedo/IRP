@@ -32,7 +32,7 @@ import os
 import shutil
 import pdfkit
 from datetime import date as date_
-from resume_parser import resumeparse
+# from resume_parser import resumeparse
 
 #include models
 from .models import Employee, Job, Candidate, Feedback, Field, JD, RequisitionCandidate
@@ -44,8 +44,16 @@ from .forms import TestForm
 
 from django.conf import settings
 from urllib.parse import non_hierarchical, unquote
+import logging
+
+logging.basicConfig(filename= 'AuditLog.html', level = logging.INFO, 
+    format = '%(asctime)s: %(message)s ')
+
+
+
 
 from django.http import FileResponse
+
 def file_view(request, file_url):
     full_path = os.path.join(settings.BASE_DIR, file_url[1:])
     file_name = file_url.split('/')[-1]
@@ -64,9 +72,11 @@ def file_view(request, file_url):
     else:
         return FileResponse(open(full_path, 'rb'))
 
+
 def index(request):
     if not request.user.is_authenticated:
         return redirect('login')
+    
     return HttpResponseRedirect(reverse('first_page'))
 
 def delete_jd_view(request, jd_pk):
@@ -74,6 +84,8 @@ def delete_jd_view(request, jd_pk):
     jd_name = query.jd_name
     query.jd_file.delete()
     query.delete()
+    user = Employee.objects.get(email=request.user.username)
+    logging.info( ' deleted JD with query')   
     return redirect('/manage-jd/?deleted='+jd_name)
 
 def delete_job_view(request, job_pk):
@@ -98,6 +110,7 @@ def view_jd_view(request, jd_pk):
     context = {
         'obj' : JD.objects.get(pk=jd_pk)
     }
+    
     return render(request, 'view_jd.html', context)
 
 def view_job_view(request, job_pk):
@@ -304,6 +317,7 @@ def upload_jd_view(request, *args, **kwargs):
             obj.timestamp = datetime.now()
             obj.save()
             response = redirect('/manage-jd/?jd_name='+obj.jd_name)
+           
             return response
             # return custom_redirect('manage_jd_page', arg1='dfo')
     else:
@@ -345,6 +359,12 @@ def home_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == 'POST':
+        current_user = request.user
+        logging.info('Yaha to pahuch gaye beta ji')
+        username = request.user.username
+        user = Employee.objects.get(email=username)
+        logging.info( user,' logged in')  
+        logging.warning('Hello, I am logging from the Home Page! User =',current_user)
         if 'search_requisition_id_button' in request.POST:
             requisition_id = request.POST.get('requisition_id')
             if len(requisition_id) >= 3:
@@ -366,6 +386,8 @@ def home_view(request):
             return redirect('referrals_page')
         else:
             return Http404('Page Not Exist')
+    
+    
     return render(request,'home.html')
 
 from django.core.files.storage import FileSystemStorage, DefaultStorage
@@ -374,7 +396,7 @@ from django.core.files import File
 def add_candidate_view(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect('login')
-    user = Employee.objects.get(email=request.user.username)
+    
 
     form_ = ResumeForm()
     form=None
@@ -1293,3 +1315,9 @@ def refer_candidate_view(request,requisition_id):
             candidate_obj=Candidate.objects.filter(email=request.GET['confirmed'])[0]
             return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmed_message_obj':candidate_obj})
     return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'context':context,'requisition_candidate_obj_dict':requisition_candidate_obj_dict , 'initial_search_element':initial_search_element})
+
+
+def audit_log_view(request):
+    hello = 'my_name'
+    if request.method == 'GET':
+        return render(request, 'IRP/Incedoinc/templates/AuditLog.html',) 

@@ -3,7 +3,11 @@ from django.db import models
 import os
 import re
 
+
 from datetime import datetime
+
+
+
 
 # Create your models here.
 class Employee(models.Model):
@@ -12,6 +16,9 @@ class Employee(models.Model):
     employee_id = models.CharField(max_length=64, primary_key=True, default=None)
     # password = models.CharField(max_length=64)
     # temp_password = models.CharField(max_length=64, null=True, blank=True)
+
+    
+
 
     def __str__(self):
         return f'{self.full_name}'
@@ -22,6 +29,8 @@ class JD(models.Model):
     jd_file = models.FileField(upload_to='JD/')
     uploaded_by_employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(blank=True, null=True)
+
+
 
     def __str__(self):
         return f'{self.jd_name}'

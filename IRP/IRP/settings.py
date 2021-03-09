@@ -53,7 +53,7 @@ INSTALLED_APPS = [
      'users.apps.UsersConfig',
     #vaishnavi
     'django_email_verification',
-
+   
      'Incedoinc.apps.IncedoincConfig',
 ]
 
@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'IRP.urls'
@@ -154,3 +155,8 @@ EMAIL_HOST_PASSWORD = 'qwerty741852963*'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True   #Rishabh
+
+MIDDLEWARE_CLASSES = [
+    'SessionMiddleware',
+    'AuthenticationMiddleware',
+]

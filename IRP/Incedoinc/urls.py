@@ -18,6 +18,7 @@ urlpatterns = [
     path('manage-jd/', views.manage_jd_view, name='manage_jd_page'),
     path('manage-job/', views.manage_job_view, name='manage_job_page'),
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
+    path("audit-log/",views.audit_log_view, name ='audit_log_page'),
 
     #view objects
     url(r'^files(?P<file_url>.*)/$', views.file_view, name='file_view'),
