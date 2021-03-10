@@ -1296,9 +1296,13 @@ def refer_candidate_view(request,requisition_id):
             return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmed_message_obj':candidate_obj})
     return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'context':context,'requisition_candidate_obj_dict':requisition_candidate_obj_dict , 'initial_search_element':initial_search_element})
 
+from auditlog.models import LogEntry
 def audit_log_view(request):
     context = {
         'query_set_job' : Job.objects.all(),
         'query_set_jd' : JD.objects.all(),
+        'logs' : LogEntry.objects.all(),
     }
     return render(request, 'auditlog/temp.html', context)
+
+from django.contrib.admin.models import LogEntry
