@@ -1326,6 +1326,8 @@ def refer_candidate_view(request,requisition_id):
     return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'context':context,'requisition_candidate_obj_dict':requisition_candidate_obj_dict , 'initial_search_element':initial_search_element})
 
 def audit_log_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     context = {
         'query_set' : Job.objects.all(),
     }
