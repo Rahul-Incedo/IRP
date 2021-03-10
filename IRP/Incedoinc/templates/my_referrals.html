@@ -125,7 +125,7 @@
         table
         {
             border-collapse: collapse;
-            width: 100%;
+            width: 98%;
             color: #588c7e;
             font-family: monospace;
             font-size: 20px;
@@ -257,7 +257,7 @@ border: 1px solid black;
         <th>Candidate Name</th>
         <th>Email</th>
         <th>Referred For</th>
-        <th>Referred On</th>
+        <th>Referred Date</th>
         <th>Status Of Candidate</th>
 
       </tr>
@@ -268,7 +268,7 @@ border: 1px solid black;
 
       <tr>
         <td>{{key}}</td>
-        <td>{{value.candidate_email.f_name}}</td>
+        <td>{{value.candidate_email.full_name}}</td>
         <td><a href="../../../view_candidate/{{value.candidate_email.email}}/?previous=my_referrals_connector_of_2_values_{{employee_id}}" target="_blank">{{value.candidate_email.email}}</a></td>
         <!-- <td>{{value.requisition_id}}</td> -->
         <td><a href="{% url 'view_job' job_pk=value.requisition_id %}" target="_blank">{{value.requisition_id}}</a></td>

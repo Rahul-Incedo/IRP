@@ -6,89 +6,22 @@
 
     <style>
       body {
-        margin:0px;
-        padding:0px;
+        margin: 0;
+        margin-bottom: 10%;
+        padding: 0;
         width:100%;
         height:100%;
-        margin-left:auto;
-        margin-right:auto;
-      }
-      .main {
-        margin: 0px;
-      }
-      form {
-        margin: 25px;
-        /* background-color: #588c7e; */
-        /* padding: 10px 25px 10px 25px; */
-        
-      }
-      button {
-        width: 10%;
-        padding: 5px;
-        border: none;
-        background: #fd511c;
-        font-size: 16px;
-        font-weight: 400;
-        color: #fff;
-        border-radius: 15px;
-        cursor: pointer; 
-      }
-      input[type=submit]#view {
-        border: none;
-        background-color: white ;
-      }
-      input[type=submit]#view:hover {
-        text-decoration: underline;
-      }
-      /* input[type=text] , input[type=number], input[type=url] ,input[type=email] , input[type=date] */
-      .expand-button {
-        text-decoration: none;
-        display: inline-block;
-        outline: none;
-        cursor: pointer;
-        border-style: none;
-        background-color: smoke-white;
-        border-radius: 100%;
-        overflow: none;
-        text-align: center;
-        font-size: 15px;
-        margin-top: 2px;
-        margin-bottom: 2px;
-      }
-      .button-table {
-        border: none;
-        color: white;
-        width: fit-content;
-        padding :2px 10px 2px 10px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        border-radius: 15px;
-        background-color: #fd511c;
-        cursor: pointer;
-      }
-
-      .button-2 {
-        float: right;
-        width: 20%;
-        padding: 10px;
-      }
-      .button-home {
-        padding: 8px;
       }
       table {
+        width: 95%;
         border-collapse: collapse;
-        width: 100%;
+        margin: auto;
         color: #588c7e;
         font-family: monospace;
-        font-size: 18px;
-        margin-left: auto;
-        margin-right: auto;
+        font-size: 16px;
       }
       .sub-table {
-        margin-top: 20px;
-        margin-bottom: 20px;
+        margin: 20px auto;
         width: 90%;
       }
       th {
@@ -105,7 +38,69 @@
         text-align: center;
       }
       .table-cell {
-        padding-left: 10px;
+        padding: 2px 10px;
+        width: max-content;
+      }
+      form {
+        width: 95%;
+        margin: 20px auto;
+      }
+      button {
+        width: 10%;
+        padding: 5px;
+        border: none;
+        background: #fd511c;
+        font-size: 14px;
+        font-weight: 400;
+        color: #fff;
+        border-radius: 15px;
+        cursor: pointer; 
+      }
+      .button-home {
+        padding: 8px;
+        font-size: 15px;
+      }
+      .expand-button {
+        text-decoration: none;
+        margin: 2px auto;
+        margin-right: 5px;
+        display: inline-block;
+        outline: none;
+        cursor: pointer;
+        border-style: none;
+        background-color: smoke-white;
+        border-radius: 100%;
+        overflow: none;
+        text-align: center;
+        font-size: 15px;
+      }
+      .btn-rmg {
+        border: none;
+        color: white;
+        width: fit-content;
+        padding : 2px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        border-radius: 15px;
+        background-color: #fd511c;
+        cursor: pointer;
+      }
+
+      .button-2 {
+        float: right;
+        width: 20%;
+        padding: 10px;
+      }
+
+      /* input[type=text] , input[type=number], input[type=url] ,input[type=email] , input[type=date] */
+      input[type=submit]#view {
+        border: none;
+        background-color: white ;
+      }
+      input[type=submit]#view:hover {
+        text-decoration: underline;
       }
       .my_class {
         justify-content: center;
@@ -168,13 +163,12 @@
       {
         border: none;
         color: black;
-
         text-align: center;
         text-decoration: none;
         display: inline-block;
         font-size: 14px;
         padding: 0px 10px;
-        margin: 5px 10px;
+        margin: 5px 5px;
         border-radius: 5px;
         background-color: #e5e5e5;
       }
@@ -192,9 +186,9 @@
   </head>
 
 
-  <body>
+  <body style="margin-bottom: 10%;">
     <header>
-      <ul class = 'main'  style="background-color: black">
+      <ul class = 'main' style="background-color: black; margin: 0;">
         <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
         <li style="float:right"><a href="{% url 'logout' %}">Log out</a></li>
         <li style="float:right"><a href="{%url 'change_password_page'%}">Change Password</a></li>
@@ -232,35 +226,34 @@
      -->
     <!-- FILTERS AND BUTTONS -->
     <center><span class="heading">MANAGE REQUISITION</span></center>
-    <div class='my_inputs'>
-      <form method="post"> {% csrf_token %}
-          <button class="button-home glyphicon glyphicon-home" name="home_button"> Home</button>
-          <input type="text" placeholder="Search Query" name='search_query' value="{{search_query}}">
-          <button type="submit" name="search_button">Search</button>
-          <button type="submit" name="list_all_button">List All</button>
-          <button type="submit"  class='button-2' name="raise_requisition_button">Raise Requisition</button>
-          <div>
-            <span class="filters">
-              <label>Open to Internal : </label>
-              <input type="checkbox" id="yes" name="open_to_list" value="Yes" {% if 'Yes' in checkboxes.open_to_list %} checked {% endif %}>
-              <label for="yes">Yes</label>
-              <input type="checkbox" id="no" name="open_to_list" value="No" {% if 'No' in checkboxes.open_to_list %} checked {% endif %}>
-              <label for="no">No</label>
-            </span>
-            <span class="filters">
-              <label>Status  :</label>
-              <input type="checkbox" id="open" name="status_list" value="Open" {% if "Open" in checkboxes.status_list %} checked {% endif %}>
-              <label for="internal">Open</label>
-              <input type="checkbox" id="closed" name="status_list" value="Closed" {% if "Closed" in checkboxes.status_list %} checked {% endif %}>
-              <label for="internal">Closed</label>
-              <input type="checkbox" id="onhold" name="status_list" value="On-Hold" {% if "On-Hold" in checkboxes.status_list %} checked {% endif %}>
-              <label for="internal">On-Hold</label>
-              <input type="checkbox" id="offered" name="status_list" value="Offered" {% if "Offered" in checkboxes.status_list %} checked {% endif %}>
-              <label for="internal">Offered</label>
-            </span>
-          </div>
-      </form>
-    </div>
+
+    <form method="post"> {% csrf_token %}
+      <button class="button-home glyphicon glyphicon-home" name="home_button"> Home</button>
+      <input type="text" pl aceholder="Search Query" name='search_query' value="{{search_query}}">
+      <button type="submit" name="search_button">Search</button>
+      <button type="submit" name="list_all_button">List All</button>
+      <button type="submit"  class='button-2' name="raise_requisition_button">Raise Requisition</button>
+      <div>
+        <span class="filters">
+          <label>Open to Internal : </label>
+          <input type="checkbox" id="yes" name="open_to_list" value="Yes" {% if 'Yes' in checkboxes.open_to_list %} checked {% endif %}>
+          <label for="yes">Yes</label>
+          <input type="checkbox" id="no" name="open_to_list" value="No" {% if 'No' in checkboxes.open_to_list %} checked {% endif %}>
+          <label for="no">No</label>
+        </span>
+        <span class="filters">
+          <label>Status  :</label>
+          <input type="checkbox" id="open" name="status_list" value="Open" {% if "Open" in checkboxes.status_list %} checked {% endif %}>
+          <label for="internal">Open</label>
+          <input type="checkbox" id="closed" name="status_list" value="Closed" {% if "Closed" in checkboxes.status_list %} checked {% endif %}>
+          <label for="internal">Closed</label>
+          <input type="checkbox" id="onhold" name="status_list" value="On-Hold" {% if "On-Hold" in checkboxes.status_list %} checked {% endif %}>
+          <label for="internal">On-Hold</label>
+          <input type="checkbox" id="offered" name="status_list" value="Offered" {% if "Offered" in checkboxes.status_list %} checked {% endif %}>
+          <label for="internal">Offered</label>
+        </span>
+      </div>
+    </form>
 
     <!-- REQUISITION TABLE -->
     {% if msg %}
@@ -268,114 +261,101 @@
     {% endif %}
 
     {% if query_set is not None %}
-      <div class="my_class">
         <table>
           <thead>
-            <th class="table-head">Sr.</th>
-            <th class="table-head">Requisition ID</th>
-            <th class="table-head">Raised By</th>
-            <th class="table-head">Position Owner</th>
-            <th class="table-head">Job Description</th>
-            <th class="table-head">Current Status</th>
-            <th colspan='2'>
-              <table>
-                <tr><th colspan='2' class="table-head">Positions</th></tr>
-                <tr>
-                  <th class="table-head">Total</th>
-                  <th class="table-head">Open</th>
-                </tr>
-              </table>
-            </th>
-            <th class="table-head">Open For Internal Employee</th>
-            <!-- <th class="table-head">Delete</th> -->
-          </thead>
-          
-          {% for obj in query_set %}
-            <tr data-toggle="toggle">
-              <!-- <td >  
-                <p id="Technology" >  
-                    <b>  
-                        <span class="plusminusTechnology"> + </span>  
-                    </b>  
-                </p>  
-              </td> -->
-              <td class="table-cell">{{ forloop.counter }}</td>
-              <td class="table-cell">
-                <input type='button' value="+" class='expand-button'>
-                <a href="{% url 'view_job' obj.pk %}" target="_blank" ><button type='submit' class='button-table'>{{obj.requisition_id}}</button></a>
-              </td>
-              <td class="table-cell">{{ obj.raised_by_employee }}</td>
-              <td class="table-cell">{{ obj.position_owner_id }}</td>
-              <td class="table-cell"><a href="{% url 'file_view' obj.jd.jd_file.url %}" target="_blank">{{ obj.jd.jd_name }}</a></td>
-              <td class="table-cell">{{ obj.requisition_status }}</td>
-              <td class="table-cell">{{ obj.total_positions }}</td>
-              <td class="table-cell">{{ obj.get_open_positions }}</td>
-              <td class="table-cell">{{ obj.open_to_internal }}</td>
-              <!-- <td class="table-cell"><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td> -->
+            <tr>
+              <th class="table-head" rowspan='2'>Sr.</th>
+              <th class="table-head" rowspan='2'>Requisition ID</th>
+              <th class="table-head" rowspan='2'>Raised By</th>
+              <th class="table-head" rowspan='2'>Position Owner</th>
+              <th class="table-head" rowspan='2'>Job Description</th>
+              <th class="table-head" rowspan='2'>Current Status</th>
+              <th class="table-head" colspan='2'>Positions</th>
+              <th class="table-head" rowspan='2'>Open For Internal Employee</th>
+              <!-- <th class="table-head" rowspan='2'>Delete</th> -->
             </tr>
-            {% load customfilters %}
-            <!-- CANDIDATE TABLE -->
-            <tbody class="hideTr" style="display:none;">
-              <td colspan='9'>
-                <table class='sub-table'>
-                  <thead>
-                    <th class="table-head">Sr.</th>
-                    <th class="table-head">Candidate Name</th>
-                    <th class="table-head">Current Status</th>
-                    <th class="table-head">Expected DOJ</th>
-                    <th class="table-head">Actual DOJ</th>
-                  </thead>
-                    
-                    {% for obj in req_cand_dict|get_value_from_dict:obj.requisition_id %}
-                      <tr>
-                        <td class="table-cell">{{ forloop.counter }}</td>
-                        <td class="table-cell"><a href="{% url 'view_candidate' obj.candidate_email.email %}" target="_blank"><input id="view" type="submit" value="{{ obj.candidate_email.full_name }}"></a></td>
-                        <td class="table-cell">{{ obj.candidate_status }}</td>
-                        <td class="table-cell">{{ obj.expected_doj }}</td>
-                        <td class="table-cell">{{ obj.actual_doj }}</td>
-                      </tr>
-                    {% endfor %}
+            <tr>
+              <th class="table-head">Total</th>
+              <th class="table-head">Open</th>
+            </tr>
+          </thead>
+          </tbody>
+            {% for obj in query_set %}
+              <tr>
+                <td class="table-cell">{{ forloop.counter }}</td>
+                <td class="table-cell">
+                  <div style="display: inline-flex;">
+                    <input type='button' value="+" class='expand-button'>
+                    <a href="{% url 'view_job' obj.pk %}" target="_blank" ><button type='submit' class='btn-rmg'>{{obj.requisition_id}}</button></a>
+                  </div>
+                </td>
+                <td class="table-cell">{{ obj.raised_by_employee }}</td>
+                <td class="table-cell">{{ obj.position_owner_id }}</td>
+                <td class="table-cell"><a href="{% url 'file_view' obj.jd.jd_file.url %}" target="_blank">{{ obj.jd.jd_name }}</a></td>
+                <td class="table-cell">{{ obj.requisition_status }}</td>
+                <td class="table-cell">{{ obj.total_positions }}</td>
+                <td class="table-cell">{{ obj.get_open_positions }}</td>
+                <td class="table-cell">{{ obj.open_to_internal }}</td>
+                <!-- <td class="table-cell"><a href="#" data-href="{% url 'delete_job' obj.pk %}" data-toggle="modal" data-target="#confirm-delete"><input type="button" value="Delete"></a></td> -->
+              </tr>
+              {% load customfilters %}
+              <!-- CANDIDATE TABLE -->
+              <tr class="hideTr" style="display:none;">
+                <td colspan='9'>
+                  <table class='sub-table'>
+                    <thead>
+                      <th class="table-head">Sr.</th>
+                      <th class="table-head">Candidate Name</th>
+                      <th class="table-head">Current Status</th>
+                      <th class="table-head">Expected DOJ</th>
+                      <th class="table-head">Actual DOJ</th>
+                    </thead>
+                      
+                      {% for obj in req_cand_dict|get_value_from_dict:obj.requisition_id %}
+                        <tr>
+                          <td class="table-cell">{{ forloop.counter }}</td>
+                          <td class="table-cell"><a href="{% url 'view_candidate' obj.candidate_email.email %}" target="_blank"><input id="view" type="submit" value="{{ obj.candidate_email.full_name }}"></a></td>
+                          <td class="table-cell">{{ obj.candidate_status }}</td>
+                          <td class="table-cell">{{ obj.expected_doj }}</td>
+                          <td class="table-cell">{{ obj.actual_doj }}</td>
+                        </tr>
+                      {% endfor %}
 
-                </table>
-              </td>
-            </tbody>
+                  </table>
+                </td>
+              </tr>
 
-          {% endfor %}
-
+            {% endfor %}
+          </tbody>
         </table>
-      </div>
     {% endif %}
 
     <!-- JAVASCRIPT -->
     <script>
+      // SCRIPT FOR DELETE POP-UP
       $('#confirm-delete').on('show.bs.modal', function(e) {
           $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
           
           $('.debug-url').html('Delete URL: <strong>' + $(this).find('.btn-ok').attr('href') + '</strong>');
       });
-    </script>
 
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>  
-   -->
-    <script type="text/javascript">  
-        $(document).ready(function () { 
-            debugger;  
-          $('.hideTr').slideUp(600);
-          $('[data-toggle="toggle"]').click(function () {  
-            if ($(this).parents().next(".hideTr").is(':visible')) {  
-                $(this).parents().next('.hideTr').slideUp(100);
-                $(".plusminus" + $(this).children().children().attr("id")).text('+');
-                $(this).children().children(".expand-button").val('+');
-                $(this).css('background-color', 'white');  
-              }  
-              else {  
-                $(this).parents().next('.hideTr').slideDown(100);  
-                $(".plusminus" + $(this).children().children().attr("id")).text('-');
-                $(this).children().children(".expand-button").val('-');
-                $(this).css('background-color', '#c1eaff ');
-            }  
-          });  
+      // SCRIPTT FOR EXPANDABLE ITEMS
+      $(document).ready(function () { 
+        debugger;
+        $('.expand-button').click(function () {  
+          if ($(this).parents().next(".hideTr").is(':visible')) {
+              $(this).parents().next('.hideTr').slideUp(100);
+              $(this).val('+');
+              $(this).parents('tr').css('background-color', 'white');  
+          }
+          else {
+              $(this).parents().next('.hideTr').slideDown(100);  
+              $(this).val('-');
+              $(this).parents('tr').css('background-color', '#c1eaff ');
+          }
         });  
+      });
+
     </script>
   </body>
 </html>

@@ -120,6 +120,7 @@
             background-color: #588c7e;
             color: yellow;
             padding: 5px;
+            border: 1px solid black;
         }
         td
         {
@@ -131,6 +132,19 @@
             background-color: #f2f2f2;
             padding: 5px;
 
+        }
+
+        table.table2
+        {
+            border-collapse: collapse;
+            width: 98%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 20px;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid black;
         }
 
         input[type=submit] {
@@ -230,15 +244,15 @@
           <input type="text" placeholder="Type Requition id or name" name="search_element" value="{{ search_query }}">
           <input type="submit" value="Search" name="search">
           <input type="submit" value="List All" name="listall">
-        </form>
-          <a href="../add-candidate/" style="float:right"><button>Add Candidate</button>
+          <button type="submit" name="add_candiate" style="float:right">Add Candidate</button>
+          </form>
         </th>
       </tr>
     </table>
 
 
 
-  <table>
+  <table class='table2'>
   </br>
     <tr>
       <th>Sr.No</th>
