@@ -1298,6 +1298,7 @@ def refer_candidate_view(request,requisition_id):
 
 def audit_log_view(request):
     context = {
-        'query_set' : Job.objects.all(),
+        'query_set_job' : Job.objects.all(),
+        'query_set_jd' : JD.objects.all(),
     }
     return render(request, 'auditlog/temp.html', context)
