@@ -367,7 +367,7 @@ def home_view(request):
     print('---------------------------------')
     if request.method == 'POST':
         current_user = request.user
-        logging.info('Yaha to pahuch gaye beta ji')
+        logging.info('You have reached the home page')
         username = request.user.username
         # user = Employee.objects.get(email=username)
         logging.info( username,' logged in')
