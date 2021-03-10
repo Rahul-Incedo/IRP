@@ -204,8 +204,8 @@
         <thead>
           <tr>
             <th>Field</th>
-            <th>Timestamp</th>
             <th>Change</th>
+            <th>Timestamp</th>
             <th>From</th>
             <th>To</th>
           </tr>
@@ -214,16 +214,17 @@
           {% for obj in query_set_job %}
               {% with data=obj.history.latest.changes_dict %}
                   <!-- {% if data %} -->
-                      <!-- </br>
+                      </br>
                       --------------------------------------------<br>
                       {{ data }}<br>
-                      ----------------------------------------------<br> -->
                       {% for item in data.items %}
-                        <!-- {{ item }} -->
+                          {{ item }}<br>
                         <tr>
-                          <td>{{ obj.requisition_id }}</td>
-                          <td>{{ data.timestamp_updated.1|default:"None" }}</td>
+                          {% if forloop.counter == 1 %}
+                            <td rowspan="{{data|length}}">{{ obj.requisition_id }}</td>
+                          {% endif %}
                           <td>{{ item.0|default:"None" }}</td>
+                          <td>{{ data.timestamp_updated.1|default:"None" }}</td>
                           <td>{{ item.1.0|default:"None" }}</td>
                           <td>{{ item.1.1|default:"None" }}</td>
                         </tr>
