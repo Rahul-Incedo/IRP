@@ -27,7 +27,7 @@
         width: 100%;
         color: #588c7e;
         font-family: monospace;
-        font-size: 30px;
+        font-size: 15px;
         text-align: left;
         margin-left: auto;
         margin-right: auto;
@@ -173,12 +173,12 @@
           {% for obj in query_set_job %}
               {% with data=obj.history.latest.changes_dict %}
                   <!-- {% if data %} -->
-                      </br>
+                      <!-- </br>
                       --------------------------------------------<br>
                       {{ data }}<br>
-                      ----------------------------------------------<br>
+                      ----------------------------------------------<br> -->
                       {% for item in data.items %}
-                        {{ item }}
+                        <!-- {{ item }} -->
                         <tr>
                           <td>{{ obj.requisition_id }}</td>
                           <td>{{ data.timestamp_updated.1|default:"None" }}</td>
