@@ -2,12 +2,11 @@ from django.core.validators import MaxLengthValidator
 from django.db import models
 import os
 import re
-
-
 from datetime import datetime
 
-
-
+# for auditlog
+from auditlog.registry import auditlog
+from auditlog.models import AuditlogHistoryField
 
 # Create your models here.
 class Employee(models.Model):
@@ -16,6 +15,7 @@ class Employee(models.Model):
     employee_id = models.CharField(max_length=64, primary_key=True, default=None)
     # password = models.CharField(max_length=64)
     # temp_password = models.CharField(max_length=64, null=True, blank=True)
+    history = AuditlogHistoryField()
 
     
 
@@ -29,6 +29,7 @@ class JD(models.Model):
     jd_file = models.FileField(upload_to='JD/')
     uploaded_by_employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(blank=True, null=True)
+    history = AuditlogHistoryField(pk_indexable=False)
 
 
 
@@ -57,7 +58,7 @@ class Job(models.Model):
 
     total_positions = models.IntegerField(default=1)
     open_to_internal = models.CharField(choices = internal_choices, max_length=3, default='No')
-
+    history = AuditlogHistoryField(pk_indexable=False)
 
     def __str__(self):
         return f'{self.requisition_id}'
@@ -87,6 +88,7 @@ class Candidate(models.Model):
     resume = models.FileField(upload_to='Resume/')
     notice_period = models.CharField(max_length=5, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, blank=True)
+    history = AuditlogHistoryField(pk_indexable=False)
 
     @property
     def full_name(self):
@@ -114,6 +116,7 @@ class Feedback(models.Model):
     comments = models.TextField(max_length=500, null=True, blank=True)
     interview_date = models.DateField(null=True, blank=True)
     timestamp = models.DateTimeField(null=True, blank=True)
+    history = AuditlogHistoryField()
 
     def __str__(self):
         # return f'{self.status} {self.level}'
@@ -125,6 +128,7 @@ class Field(models.Model):
     field_name = models.CharField(max_length=64, null=False)
     rating = models.IntegerField(null=True, blank=True)
     comments = models.TextField(max_length=100, null=True, blank=True)
+    history = AuditlogHistoryField()
 
     def __str__(self):
         return f'{self.field_name}'
@@ -145,6 +149,7 @@ class RequisitionCandidate(models.Model):
                         ('Joined', 'Joined'),
                         ('In-Progress', 'In-Progress')]
     candidate_status = models.CharField(choices=status_choices, max_length=20, default = 'In-Progress')
+    history = AuditlogHistoryField()
 
     def __str__(self):
         # return f'{self.requisition_candidate_id} {self.candidate_status}'
@@ -153,3 +158,12 @@ class RequisitionCandidate(models.Model):
 class TestModel(models.Model):
     field1 = models.CharField(blank=True, max_length=100)
     field2 = models.CharField(default=100, max_length=100)
+    history = AuditlogHistoryField()
+
+auditlog.register(Employee)
+auditlog.register(JD)
+auditlog.register(Job)
+auditlog.register(Candidate)
+auditlog.register(Feedback)
+auditlog.register(RequisitionCandidate)
+auditlog.register(TestModel)

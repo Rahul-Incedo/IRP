@@ -723,6 +723,8 @@ def search_candidate(request, *args, **kwargs):
                     return render(request, 'search.html', {'error_message':'Oops :(   No Candidate Yet', 'search_query':search_query })
                 # print(temp_list_tuple,"--------------")
             elif 'search' in request.POST:
+                if len(request.POST['search_element'])==0:
+                    return render(request, 'search.html',{'error_message':'Please Enter Something', 'search_query':search_query })
                 temp_list_tuple = list(set((RequisitionCandidate.objects.filter(
                                                                             Q(requisition_id__in=Job.objects.filter(requisition_id__contains=request.POST['search_element']))
                                                                           | Q(candidate_email__in=Candidate.objects.filter(f_name__contains=request.POST['search_element']))
@@ -1323,6 +1325,8 @@ def refer_candidate_view(request,requisition_id):
             return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'confirmed_message_obj':candidate_obj})
     return render(request, 'refer_candidate.html',{'job_obj':job_obj[0],'context':context,'requisition_candidate_obj_dict':requisition_candidate_obj_dict , 'initial_search_element':initial_search_element})
 
-
 def audit_log_view(request):
-    return render(request, 'audit_logs/audit_log.html')
+    context = {
+        'query_set' : Job.objects.all(),
+    }
+    return render(request, 'auditlog/temp.html', context)
