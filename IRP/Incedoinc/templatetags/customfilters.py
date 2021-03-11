@@ -28,6 +28,6 @@ def convert_action(key):
     elif key==1:
         return 'Updated'
     elif key==2:
-        return 'Delteted'
+        return 'Deleted'
     else:
         return 'Other'

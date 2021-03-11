@@ -364,8 +364,10 @@ def home_view(request):
             return redirect('search_candidate')
         elif 'referrals_button' in request.POST:
             return redirect('referrals_page')
+        elif 'auditlog_button' in request.POST:
+            return redirect('auditlog')
         else:
-            return Http404('Page Not Exist')
+            raise Http404('Page Not Exist')
     return render(request,'home.html')
 
 from django.core.files.storage import FileSystemStorage, DefaultStorage
@@ -1300,8 +1302,6 @@ def refer_candidate_view(request,requisition_id):
 from auditlog.models import LogEntry
 def audit_log_view(request):
     context = {
-        'query_set_job' : Job.objects.all(),
-        'query_set_jd' : JD.objects.all(),
         'query_set_logs' : LogEntry.objects.all(),
         'obj': LogEntry.objects.first,
     }

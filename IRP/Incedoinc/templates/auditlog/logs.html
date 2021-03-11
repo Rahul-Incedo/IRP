@@ -6,8 +6,8 @@
         margin: 0;
         margin-bottom: 10%;
         padding: 0;
-        width:100%;
-        height:100%;
+        width: 100%;
+        height: 100%;
       }
       table {
         width: 100%;
@@ -23,7 +23,7 @@
         width: 90%;
       }
       th {
-        background-color:#588c7e;
+        background-color: #588c7e;
         color: #fff;
         border: 1px solid black;
       }
@@ -53,7 +53,7 @@
         font-weight: 400;
         color: #fff;
         border-radius: 15px;
-        cursor: pointer; 
+        cursor: pointer;
       }
       .button-home {
         padding: 8px;
@@ -73,11 +73,15 @@
         text-align: center;
         font-size: 15px;
       } */
+      .expand-button:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
       .btn-rmg {
         border: none;
         color: white;
         width: fit-content;
-        padding : 2px 10px;
+        padding: 2px 10px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
@@ -94,11 +98,11 @@
       }
 
       /* input[type=text] , input[type=number], input[type=url] ,input[type=email] , input[type=date] */
-      input[type=submit]#view {
+      input[type="submit"]#view {
         border: none;
-        background-color: white ;
+        background-color: white;
       }
-      input[type=submit]#view:hover {
+      input[type="submit"]#view:hover {
         text-decoration: underline;
       }
       .my_class {
@@ -110,12 +114,12 @@
         /* box-shadow: 0 2px 5px #f5f5f5; */
         /* background: #f5f5f5; */
       }
-      .right{
-        float:right;
+      .right {
+        float: right;
       }
-      .rightinside{
-        float:right;
-        color:Green;
+      .rightinside {
+        float: right;
+        color: Green;
       }
 
       ul {
@@ -142,24 +146,22 @@
         text-decoration: none;
         color: white;
       }
-      .heading
-      {
+      .heading {
         border: none;
         color: white;
-        width:100%;
+        width: 100%;
         text-align: center;
-        margin-top:0px;
-        padding-top:5px;
+        margin-top: 0px;
+        padding-top: 5px;
         padding-bottom: 5px;
         text-decoration: none;
         display: inline-block;
         font-size: 20px;
         /* margin: 10px 8px; */
         /* border-radius: 15px; */
-        background-color: #008B8B;
+        background-color: #008b8b;
       }
-      .filters
-      {
+      .filters {
         border: none;
         color: black;
         text-align: center;
@@ -173,7 +175,10 @@
       }
     </style>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -183,7 +188,7 @@
   </head>
   <body>
     <header>
-      <ul class="main" style="background-color: black;">
+      <ul class="main" style="background-color: black; margin-bottom: 0;">
         <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
 
         <li style="float: right"><a href="{%url 'logout'%}">Log out</a></li>
@@ -198,14 +203,13 @@
         </li>
       </ul>
     </header>
-    <h1>Incedo Recruitment Portal</h1>
-    
 
+    <center><span class="heading">AUDIT LOGS</span></center>
 
-     {{ obj }}<br>
-     {{ obj.timestamp }}<br>
-     {{ obj.timestamp|date:'Y-m-d H:i' }}<br>
-     ------------------------------------------------<br>
+    <!-- {{ obj }}<br>
+      {{ obj.timestamp }}<br>
+      {{ obj.timestamp|date:'Y-m-d H:i' }}<br>
+      ------------------------------------------------<br> -->
 
     <div class="table-responsive">
       <table class="table table-striped table-bordered">
@@ -218,47 +222,44 @@
           </tr>
         </thead>
         <tbody>
-          {% load customfilters %}
-          {% for obj in query_set_logs %}
-            <tr>
-              <td>{{ obj.content_type.model }}</td>
-              <td style="width: fit-content;">{{ obj.timestamp|date:'Y-m-d H:i' }}</td>
-              <!-- <td style="width: max-content;">{{ obj.timestamp }}</td> -->
-              <td>{{ obj.action|convert_action }}</td>
-              <td class="expand-button">{{ obj }}</td>
-            </tr>
-            <tr class="hideTr" style="display: none;">
-              <td colspan="4"> 
-                {% for item in obj.changes_dict.items %}
-                  {{ item.0 }}
-                  changed from {{ item.1.0 }}  to {{item.1.1 }}<br>
-                <!-- {{item}}<br> -->
-                {% endfor %}
-              </td>
-            </tr>
+          {% load customfilters %} {% for obj in query_set_logs %}
+          <tr>
+            <td>{{ obj.content_type.model }}</td>
+            <td style="width: fit-content">
+              {{ obj.timestamp|date:'Y-m-d H:i' }}
+            </td>
+            <!-- <td style="width: max-content;">{{ obj.timestamp }}</td> -->
+            <td>{{ obj.action|convert_action }}</td>
+            <td class="expand-button">{{ obj }}</td>
+          </tr>
+          <tr class="hideTr" style="display: none">
+            <td colspan="4">
+              {% for item in obj.changes_dict.items %} {{ item.0 }} changed from
+              {{ item.1.0 }} to {{item.1.1 }}<br />
+              <!-- {{item}}<br> -->
+              {% endfor %}
+            </td>
+          </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
 
-
     <script>
-      $(document).ready(function () { 
+      $(document).ready(function () {
         debugger;
-        $('.expand-button').click(function () {  
-          if ($(this).parents().next(".hideTr").is(':visible')) {
-              $(this).parents().next('.hideTr').slideUp(100);
-              // $(this).val('+');
-              $(this).parents('tr').css('background-color', 'white');  
+        $(".expand-button").click(function () {
+          if ($(this).parents().next(".hideTr").is(":visible")) {
+            $(this).parents().next(".hideTr").slideUp(100);
+            // $(this).val('+');
+            $(this).parents("tr").css("background-color", "white");
+          } else {
+            $(this).parents().next(".hideTr").slideDown(100);
+            // $(this).val('-');
+            $(this).parents("tr").css("background-color", "#c1eaff ");
           }
-          else {
-              $(this).parents().next('.hideTr').slideDown(100);  
-              // $(this).val('-');
-              $(this).parents('tr').css('background-color', '#c1eaff ');
-          }
-        });  
+        });
       });
     </script>
   </body>
-
 </html>
