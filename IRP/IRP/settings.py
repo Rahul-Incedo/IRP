@@ -51,11 +51,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
+    'Incedoinc.apps.IncedoincConfig',
+    'auditlog.apps.AuditlogConfig',
+
     #vaishnavi
     'django_email_verification',
 
-    'Incedoinc.apps.IncedoincConfig',
-    'auditlog.apps.AuditlogConfig',
+    # not-required
+    # 'django-extensions',
 ]
 
 MIDDLEWARE = [
