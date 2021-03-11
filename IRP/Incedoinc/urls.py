@@ -41,7 +41,7 @@ urlpatterns = [
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/field/<str:feedback_id>/', views.field_view, name = 'field'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/<str:field_name><int:del_level>/', views.delete_field, name = 'delete_field'),
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/Download/', views.download_report, name = "download_report"),
-
+    path('visualisation/', views.visual, name = 'visual'),
     path('delete_temp/', views.delete_temp, name = 'delete_temp'),
     path('delete_resume/media/Resume/<str:resume_name>', views.delete_resume, name="delete_temp_resume"),
     path("search_candidate/<str:candidate_email>", views.search_candidate, name = 'search_candidate_email'),

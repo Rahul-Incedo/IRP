@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <title>Data Visualisation </title>
+  <style>
+
+    body {
+      text-align: center;
+    }
+
+    .piechart {
+      text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+
+<h1 style='color:green'>Data Visualisation</h1>
+
+<div id="piechart" class='piechart'></div><nobr>
+<h5> Requisition Manage </h5>
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+// Draw the chart and set the chart values
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+  ['requisition', 'Number of requisitions'],
+  ['Less than 30 days of opening requisition', 8],
+  ['Greater than 30 days of opening requisition', 2],
+  ['About to close', 4],
+]);
+
+  // Optional; add a title and set the width and height of the chart
+  var options = {'width':1400, 'height':400};
+
+  // Display the chart inside the <div> element with id="piechart"
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  chart.draw(data, {
+    width: 1400,
+    height: 400,
+    colors: ['green', 'orange', 'red']
+  });
+}
+</script>
+
+</body>
+</html>
