@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'django_email_verification',
 
     # not-required
-    # 'django-extensions',
+    # 'django_extensions',
 ]
 
 MIDDLEWARE = [
