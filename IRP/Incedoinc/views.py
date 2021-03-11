@@ -1301,8 +1301,7 @@ def audit_log_view(request):
     context = {
         'query_set_job' : Job.objects.all(),
         'query_set_jd' : JD.objects.all(),
-        'logs' : LogEntry.objects.all(),
+        'query_set_logs' : LogEntry.objects.all(),
     }
-    return render(request, 'auditlog/temp.html', context)
+    return render(request, 'auditlog/logs.html', context)
 
-from django.contrib.admin.models import LogEntry
