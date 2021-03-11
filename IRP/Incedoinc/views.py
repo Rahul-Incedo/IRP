@@ -725,8 +725,9 @@ def search_candidate(request, *args, **kwargs):
             l3_obj=Feedback.objects.get(requisition_id=x.requisition_id,candidate_email=x.candidate_email, level = 3)
 
             l1=l1_obj.status
-            l3=l2_obj.status
-            l2=l3_obj.status
+            l2=l2_obj.status
+            l3=l3_obj.status
+
             status_dict = {
                 'selected' : 'pass',
                 'rejected' : 'fail',
