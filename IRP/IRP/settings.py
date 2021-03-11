@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'django_email_verification',
 
     'Incedoinc.apps.IncedoincConfig',
-    'auditlog',
+    'auditlog.apps.AuditlogConfig',
 ]
 
 MIDDLEWARE = [
