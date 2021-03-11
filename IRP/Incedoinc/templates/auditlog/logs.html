@@ -59,7 +59,7 @@
         padding: 8px;
         font-size: 15px;
       }
-      .expand-button {
+      /* .expand-button {
         text-decoration: none;
         margin: 2px auto;
         margin-right: 5px;
@@ -72,7 +72,7 @@
         overflow: none;
         text-align: center;
         font-size: 15px;
-      }
+      } */
       .btn-rmg {
         border: none;
         color: white;
@@ -172,12 +172,18 @@
         background-color: #e5e5e5;
       }
     </style>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   </head>
   <body>
     <header>
-      <ul class="main" style="background-color: black"></ul>
-
-      <ul class="main" style="background-color: black">
+      <ul class="main" style="background-color: black;">
         <li><a href='{% url "home_page" %}'>Incedo Recruitment Portal</a></li>
 
         <li style="float: right"><a href="{%url 'logout'%}">Log out</a></li>
@@ -219,12 +225,40 @@
               <td style="width: fit-content;">{{ obj.timestamp|date:'Y-m-d H:i' }}</td>
               <!-- <td style="width: max-content;">{{ obj.timestamp }}</td> -->
               <td>{{ obj.action|convert_action }}</td>
-              <td>{{ obj }}</td>  
+              <td class="expand-button">{{ obj }}</td>
+            </tr>
+            <tr class="hideTr" style="display: none;">
+              <td colspan="4"> 
+                {% for item in obj.changes_dict.items %}
+                  {{ item.0 }}
+                  changed from {{ item.1.0 }}  to {{item.1.1 }}<br>
+                <!-- {{item}}<br> -->
+                {% endfor %}
+              </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
 
+
+    <script>
+      $(document).ready(function () { 
+        debugger;
+        $('.expand-button').click(function () {  
+          if ($(this).parents().next(".hideTr").is(':visible')) {
+              $(this).parents().next('.hideTr').slideUp(100);
+              // $(this).val('+');
+              $(this).parents('tr').css('background-color', 'white');  
+          }
+          else {
+              $(this).parents().next('.hideTr').slideDown(100);  
+              // $(this).val('-');
+              $(this).parents('tr').css('background-color', '#c1eaff ');
+          }
+        });  
+      });
+    </script>
   </body>
+
 </html>
