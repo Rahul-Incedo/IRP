@@ -1302,6 +1302,7 @@ def audit_log_view(request):
         'query_set_job' : Job.objects.all(),
         'query_set_jd' : JD.objects.all(),
         'query_set_logs' : LogEntry.objects.all(),
+        'obj': LogEntry.objects.first,
     }
     return render(request, 'auditlog/logs.html', context)
 
