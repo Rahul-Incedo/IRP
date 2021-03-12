@@ -54,11 +54,11 @@ INSTALLED_APPS = [
     'Incedoinc.apps.IncedoincConfig',
     'auditlog.apps.AuditlogConfig',
 
-    #vaishnavi
+    # modules
     'django_email_verification',
 
     # not-required
-    'django_extensions',
+    # 'django_extensions',
 ]
 
 MIDDLEWARE = [

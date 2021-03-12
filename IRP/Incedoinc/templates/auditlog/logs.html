@@ -216,24 +216,24 @@
         <thead>
           <tr>
             <th>Field</th>
-            <th>Timestamp</th>
-            <th>Action</th>
-            <th>Log</th>
+            <th>Username</th>
+            <th>Time</th>
+            <th>Action Type</th>
+            <th>Message</th>
           </tr>
         </thead>
         <tbody>
           {% load customfilters %} {% for obj in query_set_logs %}
           <tr>
             <td>{{ obj.content_type.model }}</td>
-            <td style="width: fit-content">
-              {{ obj.timestamp|date:'Y-m-d H:i' }}
-            </td>
-            <!-- <td style="width: max-content;">{{ obj.timestamp }}</td> -->
+            <td>{{ obj.actor.name }}</td>
+            <td>{{ obj.timestamp }}</td>
+            <!-- <td>{{ obj.timestamp|date:'Y-m-d H:i' }}</td> -->
             <td>{{ obj.action|convert_action }}</td>
             <td class="expand-button">{{ obj }}</td>
           </tr>
           <tr class="hideTr" style="display: none">
-            <td colspan="4">
+            <td colspan="5">
               {% for item in obj.changes_dict.items %} {{ item.0 }} changed from
               {{ item.1.0 }} to {{item.1.1 }}<br />
               <!-- {{item}}<br> -->

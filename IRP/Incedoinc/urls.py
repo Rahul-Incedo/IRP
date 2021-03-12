@@ -1,17 +1,14 @@
 from django.urls import path, re_path
 from . import views
 from django.conf.urls import url
-from  . import views as core_views
 from .views import dashboard, manage_jd_view, manage_job_view, upload_jd_view, upload_job_view, view_jd_view, view_job_view
 from django.contrib.auth import views as auth_views
-#download-file
+
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    # url(r'^test/(?P<file_url>.*)/$', views.test_view, name='test_page'),
 
-    #pulkit-kartikeyan
-    #path("", views.index, name='home'),
+    # path("", views.index, name='home'),
     path("home/",views.home_view, name='home_page'),
     path("manage-jd/upload/", views.upload_jd_view, name='upload_jd_page'),
     path("manage-job/upload/", views.upload_job_view, name='upload_job_page'),
@@ -19,21 +16,21 @@ urlpatterns = [
     path('manage-job/', views.manage_job_view, name='manage_job_page'),
     path("add-candidate/", views.add_candidate_view, name='add_candidate_page'),
 
-    #view objects
+    # view objects
     url(r'^files(?P<file_url>.*)/$', views.file_view, name='file_view'),
 
     url(r'^jd/(?P<jd_pk>.*)/view/$', views.view_jd_view, name='view_jd'),
     url(r'^job/(?P<job_pk>.*)/view/$', views.view_job_view, name='view_job'),
 
-    #edit objects
+    # edit objects
     url(r'^job/(?P<job_pk>.*)/edit/$', views.edit_job_view, name='edit_job'),
 
 
-    #delete objects
+    # delete objects
     url(r'^jd/(?P<jd_pk>.*)/delete/$', views.delete_jd_view, name='delete_jd'),
     url(r'^job/(?P<job_pk>.*)/delete/$', views.delete_job_view, name='delete_job'),
 
-    ## rudra
+    # manage candidates and feedback
     path('search_candidate/feedback/<str:req_id>/<str:email_id><int:level>/', views.feedback, name='feedback'),
     path("search_candidate/", views.search_candidate, name = 'search_candidate'),
     path('test/', views.test, name = 'test_name'),
