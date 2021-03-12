@@ -5,7 +5,13 @@ import time
 
 from django.conf import settings
 from django.db.models.signals import pre_save
-from django.utils.functional import curry
+
+# deleted
+# from django.utils.functional import curry
+
+# added
+from functools import partial as curry
+
 from django.apps import apps
 from .models import LogEntry
 from .compat import is_authenticated

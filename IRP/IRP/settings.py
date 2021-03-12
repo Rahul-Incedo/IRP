@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'django_email_verification',
 
     # not-required
-    # 'django_extensions',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +69,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #audit-log  
+    'auditlog.middleware.AuditlogMiddleware',
 ]
 
 ROOT_URLCONF = 'IRP.urls'
