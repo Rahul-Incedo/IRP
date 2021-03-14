@@ -21,10 +21,12 @@ django-admin --version
 Install these modules
 1) django_email_verification
 2) pdfkit
-3) resume-parser
+3) jsonfield
+4) resume-parser
 ```
 pip install django_email_verification
 pip install pdfkit
+pip install jsonfield
 pip install resume-parser
 ```
 ### Resume Parser dependencies

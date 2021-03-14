@@ -50,11 +50,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     'users.apps.UsersConfig',
-    #vaishnavi
+    'users.apps.UsersConfig',
+    'Incedoinc.apps.IncedoincConfig',
+    'auditlog.apps.AuditlogConfig',
+
+    # modules
     'django_email_verification',
 
-     'Incedoinc.apps.IncedoincConfig',
+    # not-required
+    # 'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +69,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #audit-log  
+    'auditlog.middleware.AuditlogMiddleware',
 ]
 
 ROOT_URLCONF = 'IRP.urls'

@@ -370,8 +370,10 @@ def home_view(request):
             return redirect('referrals_page')
         elif 'visualization' in request.POST:
             return redirect('visual')
+        elif 'auditlog_button' in request.POST:
+            return redirect('auditlog')
         else:
-            return Http404('Page Not Exist')
+            raise Http404('Page Not Exist')
     return render(request,'home.html')
 
 from django.core.files.storage import FileSystemStorage, DefaultStorage
@@ -1353,3 +1355,11 @@ def visual(request):
     request.session['visual'] = True
 
     return render(request, 'registration/visual.html', context)
+
+from auditlog.models import LogEntry
+def audit_log_view(request):
+    context = {
+        'query_set_logs' : LogEntry.objects.all(),
+        'obj': LogEntry.objects.first,
+    }
+    return render(request, 'auditlog/logs.html', context)
