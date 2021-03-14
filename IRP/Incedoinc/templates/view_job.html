@@ -182,22 +182,22 @@
                 <th><label>Job Description</label></th>
                 <td><a href="{% url 'file_view' obj.jd.jd_file.url %}" target="_blank" ><label>{{obj.jd.jd_name}}</label></a></td>
             </tr>
-            
+
             <tr>
                 <th><label>Status</label></th>
                 <td><label>{{obj.requisition_status}}</label></td>
             </tr>
-            
+
             <tr>
                 <th><label>Total Positions</label></th>
                 <td><label>{{obj.total_positions}}</label></td>
             </tr>
-            
+
             <tr>
               <th><label>Open Positions</label></th>
               <td><label>{{obj.get_open_positions}}</label></td>
             </tr>
-          
+
 
             <tr>
                 <th><label>Open To Internal</label></th>
@@ -208,7 +208,7 @@
                 <th><label>Raised on</label></th>
                 <td><label>{{obj.timestamp_created}}</label></td>
             </tr>
-            
+
             <tr>
               <th><label>Last Updated</label></th>
               <td><label>{{obj.timestamp_updated}}</label></td>
@@ -217,7 +217,11 @@
 
         <center><input type='submit' value='Edit' name='edit'></center>
       </form>
-  <center><a href= "/manage-job/?requisition_id={{obj.requisition_id}}" ><input type="submit" value="Close" onclick="self.close()"></a></center>
+      {% if visual is not None %}
+        <center><a href= "../../../visualisation/" ><input type="submit" value="Close" onclick="self.close()"></a></center>
+      {% else %}
+        <center><a href= "/manage-job/?requisition_id={{obj.requisition_id}}" ><input type="submit" value="Close" onclick="self.close()"></a></center>
+      {% endif %}
       </br>
     </br>
   </br>

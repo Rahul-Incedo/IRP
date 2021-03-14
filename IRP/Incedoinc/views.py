@@ -106,8 +106,12 @@ def view_job_view(request, job_pk):
     if 'edit' in request.GET:
         return redirect('../edit/')
     job_object = Job.objects.get(pk=job_pk)
+    visual = None
+    if 'visual' in request.session:
+        visual = request.session['visual']
     context = {
         'obj' : job_object,
+        'visual' : visual,
     }
     return render(request, 'view_job.html', context)
 
@@ -1306,4 +1310,46 @@ def refer_candidate_view(request,requisition_id):
 
 
 def visual(request):
-    return render(request, 'registration/visual.html')
+    reqs = Job.objects.all().filter(requisition_status='Open')
+
+    def find(req):
+        return req.requisition_id
+    req_names = list(map(find, reqs))
+    open_list1 = []
+    open_list2 = []
+    open_list3 = []
+
+    reqs_date = [req.timestamp_created for req in reqs]
+    now = datetime.now()
+    for i in range(len(reqs_date)):
+        reqs_date[i] = datetime(reqs_date[i].year, reqs_date[i].month, reqs_date[i].day)
+        reqs_date[i] = now - reqs_date[i]
+
+    req_dict = dict()
+    for idx in range(len(reqs_date)):
+        req_dict[req_names[idx]] = reqs_date[idx]
+
+
+    for req in req_dict:
+        if(req_dict[req].days < 30):
+            open_list1.append(req)
+        elif(req_dict[req].days < 45):
+            open_list2.append(req)
+        else:
+            open_list3.append(req)
+
+    print(open_list1)
+    print(open_list2)
+    print(open_list3)
+    context = {
+        'open_1' : len(open_list1),
+        'open_2' : len(open_list2),
+        'open_3' : len(open_list3),
+        'reqs' : reqs,
+        'open_list1' : open_list1,
+        'open_list2' : open_list2,
+        'open_list3' : open_list3,
+    }
+    request.session['visual'] = True
+
+    return render(request, 'registration/visual.html', context)

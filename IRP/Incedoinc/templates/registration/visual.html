@@ -12,15 +12,103 @@
       text-align: center;
     }
 
+    #open_1 {
+      margin-left: 30%;
+      margin-right: 30%;
+      background-color: #A4FAA3;
+    }
+
+    #open_2 {
+      margin-left: 30%;
+      margin-right: 30%;
+      background-color: #F5D0B1;
+    }
+
+    #open_3 {
+      margin-left: 30%;
+      margin-right: 30%;
+      background-color: #F5B2B1;
+    }
+    .heading {
+      background-color: #B4B7BA;
+      padding:1px;
+    }
+
+    .heading a {
+      font-size: 20px;
+      padding : 6px;
+    }
+
+    a {
+      text-decoration: None;
+    }
+
   </style>
+<div class='heading'>
+  <header>
+    <ul class = 'main'>
+      <a style="float:left" href='{% url "home_page" %}'>Incedo Recruitment Portal</a>
+      <a style="float:right;" href="{% url 'logout' %}">Log out</a>
+      <a style="float:right;" href="https://www.incedoinc.com/contact/">Contact</a>
+      <a style="float:right;" href="https://www.incedoinc.com/about/about-incedo/">About us</a><br>
+    </ul>
+  </header>
+</div>
 </head>
 <body>
 
-<h1 style='color:green'>Data Visualisation</h1>
+<h1 style='color:#d4cd0b'>Data Visualisation</h1>
 
 <div id="piechart" class='piechart'></div><nobr>
-<h5> Requisition Manage </h5>
+<!-- <h5> Requisition Manage </h5> -->
 
+<div id='data' syle='text-decoration:underline;'> <h3>See Details</h3>
+  <ul>
+    <h4 onclick='open_1()' style='color:green'>Less than 30 days of opening requisition </h4>
+    <ol id='open_1'></ol>
+    <h4 onclick='open_2()' style='color:orange'>Greater than 30 days of opening requisition </h4>
+    <ol id='open_2'></ol>
+    <h4 onclick='open_3()' style='color:red'>About to close</h4>
+    <ol id='open_3'></ol>
+  </ul>
+</div>
+
+<script>
+
+var open_1_click = 0;
+var open_2_click = 0;
+var open_3_click = 0;
+function open_1() {
+  if(open_1_click%2 == 0) {
+    document.querySelector('#open_1').innerHTML = '{% for i in open_list1 %} <li><a href="../job/{{i}}/view/">{{i}}</a></li> {% endfor %}';
+  }
+  else {
+    document.querySelector('#open_1').innerHTML = '';
+  }
+  open_1_click++;
+
+}
+
+function open_2() {
+  if(open_2_click%2 == 0) {
+    document.querySelector('#open_2').innerHTML = '{% for i in open_list2 %} <li><a href="../job/{{i}}/view/">{{i}}</a></li> {% endfor %}';
+  }
+  else {
+    document.querySelector('#open_2').innerHTML = '';
+  }
+  open_2_click++;
+}
+
+function open_3() {
+  if(open_3_click%2 == 0) {
+    document.querySelector('#open_3').innerHTML = '{% for i in open_list3 %} <li><a href="../job/{{i}}/view/">{{i}}</a></li> {% endfor %}';
+  }
+  else {
+    document.querySelector('#open_3').innerHTML = '';
+  }
+  open_3_click++;
+}
+</script>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -33,9 +121,9 @@ google.charts.setOnLoadCallback(drawChart);
 function drawChart() {
   var data = google.visualization.arrayToDataTable([
   ['requisition', 'Number of requisitions'],
-  ['Less than 30 days of opening requisition', 8],
-  ['Greater than 30 days of opening requisition', 2],
-  ['About to close', 4],
+  ['Less than 30 days of opening requisition', {{open_1}}],
+  ['Greater than 30 days of opening requisition', {{open_2}}],
+  ['About to close', {{open_3}}],
 ]);
 
   // Optional; add a title and set the width and height of the chart
