@@ -1340,9 +1340,20 @@ def visual(request):
         else:
             open_list3.append(req)
 
-    print(open_list1)
-    print(open_list2)
-    print(open_list3)
+    # print(open_list1)
+    # print(open_list2)
+    # print(open_list3)
+
+    for req in open_list3:
+        if len(list(RequisitionCandidate.objects.all().filter(requisition_id=req))) > 0:
+            open_list1.append(req)
+            open_list3.remove(req)
+
+    for req in open_list2:
+        if len(list(RequisitionCandidate.objects.all().filter(requisition_id=req))) > 0:
+            open_list1.append(req)
+            open_list2.remove(req)
+
     context = {
         'open_1' : len(open_list1),
         'open_2' : len(open_list2),

@@ -30,13 +30,15 @@
       background-color: #F5B2B1;
     }
     .heading {
-      background-color: #B4B7BA;
+      /* background-color: #B4B7BA; */
+      background-color: black;
       padding:1px;
     }
 
     .heading a {
       font-size: 20px;
       padding : 6px;
+      color: white;
     }
 
     a {
@@ -57,18 +59,18 @@
 </head>
 <body>
 
-<h1 style='color:#d4cd0b'>Data Visualisation</h1>
+<h1 style='color:black;background-color: #ABCDEF'>Data Visualisation</h1>
 
 <div id="piechart" class='piechart'></div><nobr>
 <!-- <h5> Requisition Manage </h5> -->
 
 <div id='data' syle='text-decoration:underline;'> <h3>See Details</h3>
   <ul>
-    <h4 onclick='open_1()' style='color:green'>Less than 30 days of opening requisition </h4>
+    <h4 onclick='open_1()' style='color:blue'>Less than 30 days of opening requisition </h4>
     <ol id='open_1'></ol>
-    <h4 onclick='open_2()' style='color:orange'>Greater than 30 days of opening requisition </h4>
+    <h4 onclick='open_2()' style='color:blue'>Greater than 30 days of opening requisition </h4>
     <ol id='open_2'></ol>
-    <h4 onclick='open_3()' style='color:red'>About to close</h4>
+    <h4 onclick='open_3()' style='color:blue'>About to close</h4>
     <ol id='open_3'></ol>
   </ul>
 </div>
