@@ -69,8 +69,9 @@ python manage.py runserver
 ```
 You can use *showmigration*  to list projects migration.
 
+#### Note:Check once with resume parsed value because its accuracy is not high
+
 #### Note : For opening files in the browser itself
 Only .pdf files can be viewed directly in the browser iteself .doc and .docx need additional browser extension for viewing directly , although you can dowload and open the files
 
 ##Note: Make sure that whether you installed JDK on your machine(Java) to start tika server
-
