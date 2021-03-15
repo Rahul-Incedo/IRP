@@ -43,13 +43,13 @@ Edit candidate information
       <br/>
       <label for ="interview_date"> Interview Date :</label><br>
       {% if level == 1 %}
-        <input type ="date" id = "interview_date" name ="interview_date" value = "{{interview_date}}" max={{current_date}}>
+        <input type ="date" id = "interview_date" name ="interview_date" value = "{{interview_date}}" max={{current_date}} required>
       {% endif %}
       {% if level == 2 %}
-        <input type ="date" id = "interview_date" name ="interview_date" value = "{{interview_date}}" max={{current_date}} min={{interview_date_1}}>
+        <input type ="date" id = "interview_date" name ="interview_date" value = "{{interview_date}}" max={{current_date}} min={{interview_date_1}} required>
       {% endif %}
       {% if level == 3 %}
-        <input type ="date" id = "interview_date" name ="interview_date" value = "{{interview_date}}" max={{current_date}} min={{interview_date_2}}>
+        <input type ="date" id = "interview_date" name ="interview_date" value = "{{interview_date}}" max={{current_date}} min={{interview_date_2}} required>
       {% endif %}
       <lebel for = 'comments'> Enter your overall feedback here:<lebel> <br/>
       <textarea rows = "5" cols = "60" name = "comments" value = {{comments}}>{{comments}}
