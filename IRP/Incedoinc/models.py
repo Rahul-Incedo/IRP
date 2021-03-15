@@ -142,7 +142,8 @@ class RequisitionCandidate(models.Model):
                         ('On-Hold', 'On-Hold'),
                         ('Offered', 'Offered'),
                         ('Joined', 'Joined'),
-                        ('In-Progress', 'In-Progress')]
+                        ('In-Progress', 'In-Progress'),
+                        ('Offered(Buffer)', 'Offered(Buffer)')]
     candidate_status = models.CharField(choices=status_choices, max_length=20, default = 'In-Progress')
     history = AuditlogHistoryField()
 

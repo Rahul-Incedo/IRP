@@ -31,11 +31,12 @@ SECRET_KEY = 'gd%mzz!w7+(uw*j80y(dyrusk_ojmb_)np2!0a)m-9_@7yid%)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+TIME_ZONE = 'Asia/Kolkata'
+USE_TZ = True
+
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    '192.168.43.9',
-
-    # '3.141.17.148',
+    '3.7.68.159'
 ]
 
 
